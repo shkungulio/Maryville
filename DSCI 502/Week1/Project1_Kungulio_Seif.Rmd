@@ -1,0 +1,100 @@
+---
+title: "Project 1"
+author: "Seif Kungulio"
+date: "2025-01-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Awesome Insurance Analytics (AIA)**
+You are a data scientist in Awesome Insurance Analytics (AIA). AIA is a public company traded in Stock exchange focus on consulting on auto insurance. It is well known that full coverage car insurance is more expensive than the liability only insurance.To choose the cheapest car insurance rates at different states, you are given a data set containing the average annual premiums from available carriers.
+
+Data Source: https://www.nerdwallet.com/blog/insurance/best-cheap-car-insurance/Links to an external site.
+
+This data set contains the following columns:
+
+* State: The list of states of the United States
+* MRC: The average annual price of minimum required coverage
+* FC: The average annual price of full coverage
+* AD: The annual price differences of minimum required coverage and full coverage
+
+You are asked to perform the following tasks by writing a script in R and submit both R codes and a Word document.
+
+1. Read the dataset in CarInsurances.xlsx into R. Call the loaded data Insurance. Make sure that you have the directory set to the correct location for the data.
+```{r}
+# Set the working directory
+setwd("C:/Projects/DSCI 502/Week 1")
+
+# Import necessary libraries
+library(readxl)
+
+# Import the dataset
+Insurance <- read_excel("CarInsurances.xlsx")
+
+# Display the dimension of the dataframe
+dim(Insurance)
+
+```
+2. How many rows in the data set?
+```{r}
+# Display the number of rows
+cat("There are", nrow(Insurance), "rows\n")
+```
+3. How many columns in the data set?
+```{r}
+# Display the number of columns
+cat("There are", ncol(Insurance), "columns\n")
+```
+4. Assign the first eight rows of the data set to a variable: first.eight.rows and print it out using print() function.
+```{r}
+# Assign the first eight rows to first.eight.rows variable
+first.eight.rows <- head(Insurance, 8)
+
+# Print the first eight rows
+print(first.eight.rows)
+```
+5. Assign the last five rows of the data set to a variable: five.rows and print it out using print() function.
+```{r}
+# Assign the last five rows to five.rows variable
+five.rows <- tail(Insurance, 5)
+
+# Print the last five rows
+print(five.rows)
+```
+6. List all objects in the memory using two methods.
+```{r}
+# Using ls() method to list all the objects
+ls()
+
+# Using objects() method to list all the objects
+objects()
+```
+7. We want to summarize the data. To do it, we may use the summary function. Before asking others for help, it’s generally a good idea for you to try to help yourself either using help() function or google it. Please help yourself and summarize the data first. Then answer the following questions:
+```{r}
+# Remove the first row which represents the Averages
+Insurance <- Insurance[-1, ]
+
+# Display the statistical summary of the "Insurance" data frame
+summary(Insurance)
+```
+
+- 7.1. What is the mean of MRC (annual premium of Minimum Required Coverage)?
+```{r}
+# Display mean of MRC
+summary(Insurance$MRC)["Mean"]
+```
+  
+- 7.2 What is the mean of FC (annual premium of Full Coverage)?
+```{r}
+# Display mean of FC
+summary(Insurance$FC)["Mean"]
+```
+- 7.3 What is the mean of AD (annual premium differences between MRC and FC)?
+```{r}
+# Display mean of AD
+summary(Insurance$AD)["Mean"]
+```
+
