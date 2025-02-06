@@ -37,10 +37,11 @@ str(loan)
 # Identify continuous (numerical) and categorical (factor) variables
 numerical_vars <- sapply(loan, is.numeric)
 categorical_vars <- sapply(loan, is.factor)
-numerical_columns <- names(numerical_vars[numerical_vars])
-categorical_columns <- names(categorical_vars[categorical_vars])
 
+numerical_columns <- names(numerical_vars[numerical_vars])
 cat("Numerical Variables:\n", numerical_columns, "\n\n")
+
+categorical_columns <- names(categorical_vars[categorical_vars])
 cat("Categorical Variables:\n", categorical_columns, "\n\n")
 
 
@@ -48,41 +49,58 @@ cat("Categorical Variables:\n", categorical_columns, "\n\n")
 ## 3. Calculate the minimum, maximum, mean, median, standard deviation and 
 ###   three quartiles (25th, 50th and 75th percentiles) of loan_amnt.
 
-# Summary statistics for loan_amnt
+# 
 cat("Minimum of loan_amnt:", min(loan$loan_amnt), "\n")
 
+# 
 cat("Maximum of loan_amnt:", max(loan$loan_amnt), "\n")
 
+# 
 cat("Mean of loan_amnt:", mean(loan$loan_amnt),"\n")
 
+# 
 cat("Median of loan_amnt:", median(loan$loan_amnt), "\n")
 
+# 
 cat("Satandard deviation of loan_amnt:", sd(loan$loan_amnt, na.rm = TRUE), "\n")
 
+# 
 quantile(loan$loan_amnt, probs = c(0.25, 0.50, 0.75), na.rm = TRUE)
-
 
 
 
 ## 4. Calculate the minimum, maximum, mean, median, standard deviation and 
 ###   three quartiles (25th, 50th and 75th percentiles) of int_rate.
 
-# Summary statistics for loan_amnt
-cat("Minimum of int_rate:", min(loan$int_rate), "\n")
+summary(loan$int_rate)
 
-cat("Maximum of int_rate:", max(loan$int_rate), "\n")
+# 
+cat("Minimum of int_rate:", summary(loan$int_rate)["Min."], "\n")
 
-cat("Mean of int_rate:", mean(loan$int_rate),"\n")
+# 
+cat("Maximum of int_rate:", summary(loan$int_rate)["Max."], "\n")
 
-cat("Median of int_rate:", median(loan$int_rate), "\n")
+# 
+cat("Mean of int_rate:", summary(loan$int_rate)["Mean"],"\n")
 
+# 
+cat("Median of int_rate:", summary(loan$int_rate)["Median"], "\n")
+
+# 
 cat("Satandard deviation of int_rate:", sd(loan$int_rate, na.rm = TRUE), "\n")
 
-quantile(loan$int_rate, probs = c(0.25, 0.50, 0.75), na.rm = TRUE)
+# 
+percentile <- quantile(loan$int_rate, probs = c(0.25, 0.50, 0.75), na.rm = TRUE)
+percentile
 
-loan_summary <- summary(loan$int_rate)
-minimum <- loan_summary[1]
-print(minimum)
+# 
+cat("25% of int_rate:", percentile[1], "\n")
+
+# 
+cat("50% of int_rate:", percentile["50%"], "\n")
+
+# 
+cat("75% of int_rate:", percentile[3], "\n")
 
 
 
@@ -109,7 +127,8 @@ cat("Mode of term:", mode_term, "\n")
 
 # Proportion table of loan_status and mode
 loan_status_table <- prop.table(table(loan$loan_status))
-mode_loan_status <- names(loan_status_table[loan_status_table == max(loan_status_table)])
+mode_loan_status <- names(loan_status_table[loan_status_table == 
+                                              max(loan_status_table)])
 print(loan_status_table)
 cat("Mode of loan_status:", mode_loan_status, "\n")
 
@@ -120,10 +139,13 @@ cat("Mode of loan_status:", mode_loan_status, "\n")
 
 # Cross table of term and loan_status with proportions
 table_term_status <- table(loan$term, loan$loan_status)
-cross_table_row <- prop.table(table_term_status, margin = 1) # Row proportions
-cross_table_col <- prop.table(table_term_status, margin = 2) # Column proportions
 
+# Row proportions
+cross_table_row <- prop.table(table_term_status, margin = 1)
 print(cross_table_row)
+
+# Column proportions
+cross_table_col <- prop.table(table_term_status, margin = 2)
 print(cross_table_col)
 
 
