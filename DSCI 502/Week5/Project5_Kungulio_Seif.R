@@ -33,11 +33,13 @@ dim(loan) # Shows the number of rows and columns in the dataset.
 ###   graphics.
 
 # Histogram Plot using Basic Graphics
-hist(loan$loan_amnt, main="Histogram of Loan Amount", 
+hist(loan$loan_amnt, 
+     main="Histogram of Loan Amount Using Basic Graphics", 
      xlab="Loan Amount", col="green", border="black")
 
 # Density Plot using Basic Graphics
-plot(density(loan$loan_amnt), main="Density Plot of Loan Amount", 
+plot(density(loan$loan_amnt), 
+     main="Density Plot of Loan Amount Using Basic Graphics", 
      xlab="Loan Amount", col="blue", lwd=2)
 
 
