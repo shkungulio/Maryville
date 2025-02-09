@@ -1,0 +1,57 @@
+# Load necessary libraries
+library(ggplot2)
+
+# Read the dataset
+loan <- read.csv("loan.csv")
+
+# 1. Histogram and Density Plot using Basic Graphics
+hist(loan$loan_amnt, main="Histogram of Loan Amount", xlab="Loan Amount", col="lightblue", border="black")
+plot(density(loan$loan_amnt), main="Density Plot of Loan Amount", xlab="Loan Amount", col="blue", lwd=2)
+
+# 2. Histogram and Density Plot using ggplot2
+ggplot(loan, aes(x=loan_amnt)) + 
+  geom_histogram(binwidth=1000, fill="lightblue", color="black", alpha=0.7) +
+  geom_vline(aes(xintercept=mean(loan_amnt, na.rm=TRUE)), color="red", linetype="dashed", size=1) +
+  ggtitle("Histogram of Loan Amount with Mean") +
+  xlab("Loan Amount") + ylab("Count")
+
+ggplot(loan, aes(x=loan_amnt)) + 
+  geom_density(fill="blue", alpha=0.4) +
+  geom_vline(aes(xintercept=mean(loan_amnt, na.rm=TRUE)), color="red", linetype="dashed", size=1) +
+  ggtitle("Density Plot of Loan Amount with Mean") +
+  xlab("Loan Amount") + ylab("Density")
+
+# 3. Scatter Plot using Basic Graphics
+plot(loan$annual_inc, loan$loan_amnt, main="Loan Amount vs Annual Income", 
+     xlab="Annual Income", ylab="Loan Amount", pch=19, col=rgb(0, 0, 1, 0.5))
+abline(lm(loan_amnt ~ annual_inc, data=loan), col="red", lwd=2)
+
+# 4. Scatter Plot using ggplot2
+ggplot(loan, aes(x=annual_inc, y=loan_amnt)) + 
+  geom_point(alpha=0.5, color="blue") +
+  geom_smooth(method="lm", color="red", se=FALSE) +
+  ggtitle("Loan Amount vs Annual Income with Trend Line") +
+  xlab("Annual Income") + ylab("Loan Amount")
+
+# 5. Barplot of Term and Grade using Basic Graphics
+barplot(table(loan$term, loan$grade), beside=TRUE, legend=rownames(table(loan$term, loan$grade)), 
+        col=c("blue", "green"), main="Loan Term and Grade Distribution", xlab="Grade", ylab="Count")
+
+# 6. Barplot of Term and Grade using ggplot2
+ggplot(loan, aes(x=grade, fill=term)) + 
+  geom_bar(position="dodge") +
+  ggtitle("Loan Term and Grade Distribution") +
+  xlab("Grade") + ylab("Count") + 
+  scale_fill_manual(values=c("blue", "green"))
+
+# 7. Boxplot of Loan Amount by Term using Basic Graphics
+jpeg("loanterm.jpg")
+boxplot(loan$loan_amnt ~ loan$term, main="Loan Amount by Term", xlab="Term", ylab="Loan Amount", col="lightblue")
+dev.off()
+
+# 8. Boxplot of Loan Amount by Term using ggplot2
+ggplot(loan, aes(x=term, y=loan_amnt)) + 
+  geom_boxplot(fill="lightblue") +
+  ggtitle("Loan Amount by Term") +
+  xlab("Term") + ylab("Loan Amount")
+ggsave("loanterm.jpg")
