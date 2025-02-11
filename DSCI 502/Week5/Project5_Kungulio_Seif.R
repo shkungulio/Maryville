@@ -72,9 +72,18 @@ ggplot(loan, aes(x=loan_amnt)) +
 
 # Scatter Plot using Basic Graphics
 plot(loan$annual_inc, loan$loan_amnt, 
-     main="Loan Amount vs Annual Income", 
+     main="Loan Amount vs Annual Income Using Basic Graphics", 
      xlab="Annual Income", 
      ylab="Loan Amount", pch=19, col="blue")
+abline(lm(loan_amnt ~ annual_inc, data=loan), col="red", lwd=2)
+
+# Scatter Plot using Basic Graphics with xlim
+plot(loan$annual_inc, loan$loan_amnt, 
+     main="Loan Amount vs Annual Income Using Basic Graphics", 
+     xlab="Annual Income", 
+     ylab="Loan Amount", 
+     pch=19, col="blue", 
+     xlim = c(0, 200000))
 abline(lm(loan_amnt ~ annual_inc, data=loan), col="red", lwd=2)
 
 
@@ -83,7 +92,15 @@ abline(lm(loan_amnt ~ annual_inc, data=loan), col="red", lwd=2)
 
 # Scatter Plot using ggplot2
 ggplot(loan, aes(x=annual_inc, y=loan_amnt)) + 
-  geom_point(color="blue", size = 2) +
+  geom_point(color="green", size = 2) +
+  geom_smooth(method="lm", color="red", se=FALSE, lwd = 1) +
+  ggtitle("Loan Amount vs Annual Income with Trend Line Using GGPlot2") +
+  xlab("Annual Income") + ylab("Loan Amount") + theme_test()
+
+# Scatter Plot using ggplot2 with filtered data
+ggplot(data = loan[which(loan$annual_inc < 200000),], 
+       aes(x=annual_inc, y=loan_amnt)) + 
+  geom_point(color="green", size = 2) +
   geom_smooth(method="lm", color="red", se=FALSE, lwd = 1) +
   ggtitle("Loan Amount vs Annual Income with Trend Line Using GGPlot2") +
   xlab("Annual Income") + ylab("Loan Amount") + theme_test()
