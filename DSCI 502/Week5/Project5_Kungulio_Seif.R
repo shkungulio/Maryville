@@ -1,14 +1,14 @@
-#########################################################
-#                                                       #
-# Student:    Seif Kungulio                             #
-# Date:       02/16/2025                                #
-# Subject:    Project 5                                 #
-# Class:      DSCI 502                                  #
-# Section:    01W                                       #
-# Instructor: Sean Yang                                 #
-# File Name:  Project5_Kungulio_Seif.R                  #
-#                                                       #
-#########################################################
+################################################################################
+#                                                                              #
+# Student:    Seif Kungulio                                                    #
+# Date:       02/16/2025                                                       #
+# Subject:    Project 5                                                        #
+# Class:      DSCI 502                                                         #
+# Section:    01W                                                              #
+# Instructor: Sean Yang                                                        #
+# File Name:  Project5_Kungulio_Seif.R                                         #
+#                                                                              #
+################################################################################
 
 
 ## 1. Read the dataset in loan.csv into R. Call the loaded data, loan. 
@@ -67,17 +67,11 @@ ggplot(loan, aes(x=loan_amnt)) +
   theme_test()
 
 
+
 ## 4. Please scatter plot of loan_amnt (y-axis) against annual_inc (x-axis) 
 ###   and add the trend line using basic graphics.
 
 # Scatter Plot using Basic Graphics
-plot(loan$annual_inc, loan$loan_amnt, 
-     main="Loan Amount vs Annual Income Using Basic Graphics", 
-     xlab="Annual Income", 
-     ylab="Loan Amount", pch=19, col="blue")
-abline(lm(loan_amnt ~ annual_inc, data=loan), col="red", lwd=2)
-
-# Scatter Plot using Basic Graphics with xlim
 plot(loan$annual_inc, loan$loan_amnt, 
      main="Loan Amount vs Annual Income Using Basic Graphics", 
      xlab="Annual Income", 
@@ -91,19 +85,13 @@ abline(lm(loan_amnt ~ annual_inc, data=loan), col="red", lwd=2)
 ###   and add the trend line using ggplot2.
 
 # Scatter Plot using ggplot2
-ggplot(loan, aes(x=annual_inc, y=loan_amnt)) + 
-  geom_point(color="green", size = 2) +
-  geom_smooth(method="lm", color="red", se=FALSE, lwd = 1) +
-  ggtitle("Loan Amount vs Annual Income with Trend Line Using GGPlot2") +
-  xlab("Annual Income") + ylab("Loan Amount") + theme_test()
-
-# Scatter Plot using ggplot2 with filtered data
 ggplot(data = loan[which(loan$annual_inc < 200000),], 
        aes(x=annual_inc, y=loan_amnt)) + 
   geom_point(color="green", size = 2) +
   geom_smooth(method="lm", color="red", se=FALSE, lwd = 1) +
   ggtitle("Loan Amount vs Annual Income with Trend Line Using GGPlot2") +
   xlab("Annual Income") + ylab("Loan Amount") + theme_test()
+
 
 
 ## 6. Please plot the barplot of term and grade on the same barplot using 
@@ -113,8 +101,9 @@ ggplot(data = loan[which(loan$annual_inc < 200000),],
 barplot(table(loan$term, loan$grade), beside=TRUE, 
         legend=rownames(table(loan$term, loan$grade)), 
         col=c("blue", "green"), 
-        main="Loan Term and Grade Distribution", 
+        main="Loan Term and Grade Distribution Using Basic Graphics", 
         xlab="Grade", ylab="Count")
+
 
 
 ## 7. Please plot the barplot of term and grade on the same barplot 
@@ -129,6 +118,7 @@ ggplot(loan, aes(x=grade, fill=term)) +
   theme_test()
 
 
+
 ## 8. Please boxplot loan_amnt (y-axis) against term (x-axis) 
 ###   and save the graph in a file, loanterm.jpg, using basic graphics.
 
@@ -138,6 +128,7 @@ boxplot(loan$loan_amnt ~ loan$term,
         main="Loan Amount by Term Using Basic Graphics", 
         xlab="Term", ylab="Loan Amount", col="blue")
 dev.off()
+
 
 
 ## 9. Please boxplot loan_amnt (y-axis) against term (x-axis) and 
@@ -150,4 +141,3 @@ ggplot(loan, aes(x=term, y=loan_amnt)) +
   ggtitle("Loan Amount by Term Using GGPlot2") +
   xlab("Term") + ylab("Loan Amount")  + theme_test()
 ggsave("loanterm.jpg")
-
