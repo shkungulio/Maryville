@@ -1,0 +1,39 @@
+**Data Analytics, M.S.**
+Data analytics is the use of data to make data-informed business decisions. The Master of Science (MS) in Data Analytics focuses on gathering and securely storing data that can be effectively mined to develop forecasting and predictive models and create interactive data visualizations for sound business decisions and communications. Through project-based learning and industry-relevant projects, students apply data analytics skills throughout the program to analyze complex data using widely adopted software to develop business recommendations. The program provides key technical skills for statistical analyses, modeling, and coding while balancing the needs of effective communication and practical business applications.
+
+DATA 600 - Data Analytics Foundation
+Data analytics is generally defined as the use of data, quantitative analysis, and modeling to drive business decisions. This course serves as an introduction to data analytics and the key analytical techniques used for business decision-making. This introductory course aims to provide an overview and exposure to programming and data analytics software to develop foundational programming skills. The course covers basic principles and practical issues combined with hands-on projects that effectively integrate analytics topics using various software.
+
+DATA 610 - Data Management
+This course examines database management applications to design, develop, and manage relational databases and data resources. The course also covers the integration of these databases with applications across the enterprise with a specific application towards business intelligence. Topics include the relational database model, requirements gathering, entity-relationship modeling, architecture, normalization, design for data warehousing, and extracting, transforming, and loading strategies to support business intelligence applications through a hands-on project.
+
+DATA 620 - Data Mining
+This course examines data mining techniques to explore patterns or relationships in data using methods such as classification, regression, cluster analysis, and recommendation systems. This course covers the analysis of both structured and unstructured data. Topics include data preparation, modeling, evaluation, and application. Widely adopted data mining software tools will be employed through a project-based learning approach to detecting patterns.
+
+DATA 630 - Data Visualization
+This course discusses techniques for developing effective dashboards to facilitate data-driven business decision-making. The course focuses on creating visualizations to communicate patterns and relationships in data effectively. Several software applications will be employed to enable storytelling through project-based learning.
+
+DATA 640 - Predictive Models
+This course covers the concept of predictive analytics, which combines business strategy, information technology, and modeling methods. The course focuses on appropriate data selection, mathematical and/or statistical method selection, reporting, and visualization to assist business leaders in decision-making. Predictive models will be created using a hands-on approach of project-based learning.
+
+DATA 650 - Data Analytics Capstone
+This course is the final course of the data analytics program. This course allows students to demonstrate and integrate the skills learned in the program in a final capstone project experience. Students should plan to take this course in the last term of their studies.
+
+
+**Machine Learning Post Baccalaureate Certificate**
+The Post-Baccalaureate Certificate in Machine Learning will provide students with the practical skills required to apply machine learning algorithms to guide business decisions. Students who complete this program will build a strong foundation in Machine Learning and Predictive Modeling, and will develop skills related to programming in R, Python, and SQL.
+
+DSCI 502 - R Programming
+This course covers practical issues in data analysis and graphics such as programming in R, debugging R code, Jupyter Notebook, cloud computing, data exploration, and data visualization. Project based learning is used to help students develop effective problem solving skills and effective collaboration skills.
+
+DSCI 503 - Python
+This course covers data types, statements, expressions, control flow, top Python core libraries (NumPy, SciPy, Pandas, Matplotlib, and Seaborn) and modeling libraries (Statsmodels and Scikit-learn). Project based learning is used to help students develop effective problem solving skills and effective collaboration skills.
+
+DSCI 504 - SQL
+This course covers practical issues in relational database systems that includes creating databases, updating data, retrieving data, and saving data in databases. Project based learning is used to help students develop effective problem solving skills and effective collaboration skills.
+
+DSCI 508 - Machine Learning
+This course provides an introduction to machine learning. Topics include: supervised learning, machine learning algorithms, learning theory, reinforcement learning and adaptive control, neural networks, and applications of machine learning to data mining, autonomous navigation, and web data processing.
+
+DSCI 512 - Predictive Modeling
+This course introduces students to fundamental statistical learning techniques that can be applied to real-world business problems. Topics include generalized linear models, tree-based models, clustering methods, and principal components analysis. It trains students to understand key steps and considerations in building predictive models, selecting a best model, and effectively communicating the model results. Project based learning is used to help students develop effective problem solving skills and effective collaboration skills.
