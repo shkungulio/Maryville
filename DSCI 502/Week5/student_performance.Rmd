@@ -1,0 +1,120 @@
+---
+title: "Student Performance Analysis"
+author: "Seif Kungulio"
+date: "2025-02-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Visualize One Continuous Variable**
+
+### **Histogram Plots**
+Load the student performance data into memory
+
+```{r}
+library(readxl)
+StudentsPerformance <- read_excel("StudentsPerformance.xlsx")
+```
+Look the variable names
+```{r}
+colnames(StudentsPerformance)
+```
+Let's look at the math score in the given data set. We know it is a continuous variable since it may have infinite many scores between 0 and 100 in theory. Let check the data format in R either using is.numeric() or class() function
+
+First, look at the variable names
+```{r}
+is.numeric(StudentsPerformance$MathScore)
+```
+Since is.numeric() returns **TRUE**, that means the math score variable is continuous.
+```{r}
+class(StudentsPerformance$MathScore)
+```
+Similarly, class function returns **"numeric"**, which means the maths score variable is continuous.<br><br>
+
+### **Histogram of StudentsPerformance$MathScore**
+Let's make a histogram using base R command
+```{r}
+hist(StudentsPerformance$MathScore)
+```
+
+We can see the graphs above shows the distribution of math scores. Most scores concentrate around 65. We may change several default parameters of this function. For example
+
+* main: the title of the graph
+* xlab: horizontal label
+* ylab: vertical label
+* xlim: the range of x values from the smaller number to a larger number.
+* ylim: the range of y values from the smaller number to a larger number.
+
+There are more parameters that can be changed. Please consult the help info using help(hist) in R.
+
+<br>
+
+### **Histogram of Math Test Score**
+The image below shows the histogram of math test scores based on the following R command.
+```{r}
+hist(StudentsPerformance$MathScore, main = "Histogram of Math Test Score",
+     xlab = "Math Scores", ylab = "Count", xlim = c(0, 100), ylim = c(0, 300))
+```
+<br>
+
+### **Kernel Density Plot of Math Test Score**
+If we let the length of all bins approach zero, then we can obtain the density plot of the continuous variables. The geometric interpretation of the density plot between two numbers is the area under the curve is the probability between these two numbers.
+
+To generate the density plot, we can use the density() function first, then we plot it.
+```{r}
+dmath <- density(StudentsPerformance$MathScore)
+plot(dmath, main = "Kernel Density Plot of Math Test Score")
+```
+
+<br>
+
+### **Histogram and Density Plots of Math Test Score**
+If we want to plot histogram and density on the same graph, we can use the following R codes;
+```{r}
+hist(StudentsPerformance$MathScore,
+     main = "Histogram and density plots of Math Test Scores",
+     prob = TRUE, # show densities instead of frequencies/ count
+     xlab = "Math Scores", ylab = "Probability")
+lines(density(StudentsPerformance$MathScore), # density plot
+      lwd = 2, # line width ratio to the default. 2 is twice as wide as the default
+      col = "red") # set the color of the density line to be red
+```
+
+The codes above perform the following tasks:
+
+* Produces histogram with probability instead of frequency by setting prob to be TRUE
+* Add density plot to the histogram by calling line function and specify the line width and color etc.
+
+There are many parameters to specify in R. You can visit the following website to know how to specify them: [Advanced Graphical Parameters] <https://www.datacamp.com/doc/r/parameters>
+
+<br>
+
+### **Continuous Variables**
+For continuous variables, we may plot all the points on the dot chart to have a complete picture of the dataset.
+```{r}
+dotchart(StudentsPerformance$MathScore,
+         cex = 0.5, pch = 19, xlab = "Math Scores")
+```
+
+The two arguments cex show the scaling factor of the dot with respect to the default 1; pch =19 denotes the plotting symbols using solid circles.
+
+<br>
+
+### **Boxplots**
+For continuous variables, we can summarize the distribution of the data using boxplots. Boxplots summarize five important numbers according to Wiki Box plotLinks to an external site. and whisker of boxplotLinks to an external site.
+
+* The bottom of the box shows the 25th percentile, generally denoted by (the lower quartile)
+* The middle of the box shows the 50th percentile, generally denoted by (median)
+* The top of the box shows the 75th percentile, generally denoted by (the upper quartile)
+* The upper whisker = , which approximately shows the “maximum”
+* The Lower whisker = ,which approximately shows the “minimum”
+
+where ***IQR = Q3 - Q1***, denoted the Interquartile Range. The points below the lower whisker or above the upper whisker are the outliers, which differ significantly from other observations.
+```{r}
+boxplot(StudentsPerformance$MathScore, 
+        main = "Box plot of math score", 
+        ylab = "Math scores")
+```
