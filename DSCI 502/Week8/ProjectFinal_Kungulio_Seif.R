@@ -6,7 +6,7 @@
 # Class:      DSCI 502                                                         #
 # Section:    01W                                                              #
 # Instructor: Sean Yang                                                        #
-# File Name:  Final_Project_Kungulio_Seif.R                                    #
+# File Name:  ProjectFinal_Kungulio_Seif.R                                     #
 #                                                                              #
 ################################################################################
 
@@ -184,8 +184,9 @@ ggsave("cntweather.jpg")
 ## 13. Build the following multiple linear regression models:
 ###### a. Perform multiple linear regression with cnt as the response and the 
 ######    predictors are: season, weathersit, atemp, and registered. 
-######    Write down the math formula with numerical coefficients for predictors
-######    atemp and registered and skip the coefficients for season and weathersit.
+######    Write down the math formula with numerical coefficients for 
+######    predictors atemp and registered and skip the coefficients 
+######    for season and weathersit.
 
 # Model 1
 model1 <- lm(cnt ~ season + weathersit + atemp + 
@@ -193,10 +194,10 @@ model1 <- lm(cnt ~ season + weathersit + atemp +
 summary(model1)
 
 ###### b. Preform multiple linear regression with cnt as the response and the 
-######    predictors are: season, workingday, weathersit, atemp, and registered. 
-######    Write down the math formula with numerical coefficients for predictors
-######    atemp and registered and skip the coefficients for season, workingday 
-######    and weathersit.
+######    predictors are: season, workingday, weathersit, atemp, and 
+######    registered. Write down the math formula with numerical 
+######    coefficients for predictors atemp and registered and skip the 
+######    coefficients for season, workingday, and weathersit.
 
 # Model 2
 model2 <- lm(cnt ~ season + workingday + weathersit + 
@@ -207,8 +208,9 @@ summary(model2)
 ###### c. Preform multiple linear regression with cnt as the response and the 
 ######    predictors are: season, holiday, workingday, weathersit, atemp, hum, 
 ######    windspeed, and registered. Write down the math formula with numerical 
-######    coefficients for predictors  atemp, hum, windspeed, and  registered 
-######    and skip the coefficients for season, holiday, workingday and  weathersit.
+######    coefficients for predictors atemp, hum, windspeed, and registered 
+######    and skip the coefficients for season, holiday, 
+######    workingday and weathersit.
 
 # Model 3
 model3 <- lm(cnt ~ season + holiday + workingday + weathersit + 
@@ -227,14 +229,30 @@ best_model <- which.max(adjusted_r_squared)
 paste("Best model based on Adjusted R-squared: Model", best_model)
 
 
-## 14. Summarize Question 13-C using R markdown to generate a reproducible report.  Include the following scripts in your R markdown file:
-
+## 14. Summarize Question 13-C using R markdown to generate a reproducible 
+##     report.  Include the following scripts in your R markdown file:
 ###### A. Load the data as specified in Question 1.
+
 ###### B. Convert the two variables as specified in Question 2.
-###### C. Convert the categorical variables to factors as specified in Question 3
-###### D. Build a linear model as specified in Question 13-C.  Use R markdown to report the math formula with numerical coefficients for predictors  atemp, hum, windspeed, and  registered.  Skip the coefficients for season, holiday, workingday and  weathersit.
+
+###### C. Convert the categorical variables to factors as specified in 
+######    Question 3
+
+###### D. Build a linear model as specified in Question 13-C. Use R markdown 
+######    to report the math formula with numerical coefficients for predictors
+######    atemp, hum, windspeed, and registered. Skip the coefficients for 
+######    season, holiday, workingday and  weathersit.
+
+
+
 ## 15. Build the following logistic models:
 ###### a. forecast holiday using cnt, season, and registered.
-###### b. forecast the holiday using cnt, season, weathersit , and registered
-###### c. forecast the holiday using cnt, season, weathersit , workingday, and registered
-###### d. Which model do you recommend to the management based on McFadden/pseudo R squared to? Justify your answer
+
+###### b. forecast the holiday using cnt, season, weathersit, and registered
+
+###### c. forecast the holiday using cnt, season, weathersit, workingday, 
+######    and registered
+
+###### d. Which model do you recommend to the management based on 
+######    McFadden/pseudo R squared to? Justify your answer
+
