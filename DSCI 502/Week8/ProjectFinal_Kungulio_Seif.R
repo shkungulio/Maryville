@@ -19,7 +19,6 @@ setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
 # Import necessary libraries
 library(dplyr)
 library(ggplot2)
-#library(car)
 library(MASS)
 library(knitr)
 
@@ -36,6 +35,7 @@ colnames(Bikes.df)
 str(Bikes.df)
 
 
+
 ## 2. Perform the following data preparations using control structures:
 ##### a. Convert numerical season (1,2,3, 4) to characters (springer, summer, 
 #####    fall and winter)
@@ -45,6 +45,10 @@ Bikes.df$season <- factor(Bikes.df$season,
                           levels = c(1, 2, 3, 4),
                           labels = c("spring", "summer", "fall", "winter"))
 
+# Check if the variable was converted to factor
+str(Bikes.df$season)
+
+
 ##### b. Convert numerical weathersit (1,2,3,4) to characters (Good, Mist, Bad, 
 #####    Severe)
 
@@ -52,6 +56,10 @@ Bikes.df$season <- factor(Bikes.df$season,
 Bikes.df$weathersit <- factor(Bikes.df$weathersit,
                               levels = c(1, 2, 3, 4),
                               labels = c("Good", "Mist", "Bad", "Severe"))
+
+# Check the structure to see if the variable was converted to factor
+str(Bikes.df$weathersit)
+
 
 
 ## 3. Consider the following predictors, season, holiday, workingday, 
@@ -61,6 +69,7 @@ Bikes.df$weathersit <- factor(Bikes.df$weathersit,
 # Convert categorical variables to factors
 categorical_vars <- c("season", "holiday", "workingday", "weathersit", "casual")
 Bikes.df[categorical_vars] <- lapply(Bikes.df[categorical_vars], as.factor)
+
 
 
 ## 4. Calculate the minimum, maximum, mean, median, standard deviation and 
@@ -74,6 +83,7 @@ cnt_stats <- Bikes.df %>%
 
 #
 kable(cnt_stats)
+
 
 
 ## 5. Calculate the minimum, maximum, mean, median, standard deviation and 
@@ -90,12 +100,14 @@ registered_stats <- Bikes.df %>%
 kable(registered_stats)
 
 
+
 ## 6. Calculate the correlation coefficient of the two variables: registered 
 ##    and cnt. Do they have a strong relationship?
 
 # Correlation between registered and cnt
 correlation <- cor(Bikes.df$registered, Bikes.df$cnt)
 print(correlation)
+
 
 
 ## 7. Calculate the frequency table of season? What’s the mode of 
@@ -107,6 +119,7 @@ print(season_freq)
 
 mode_season <- names(which.max(season_freq))
 print(paste("Mode of season: ", mode_season))
+
 
 
 ## 8. Calculate the cross table of season and weathersit, then produce 
@@ -127,6 +140,7 @@ kable(season_weather_row_prop)
 kable(season_weather_col_prop)
 
 
+
 ## 9. Please plot the histogram and density of the cnt and add the vertical 
 ##    line denoting the mean using ggplot2.
 
@@ -140,6 +154,7 @@ ggplot(Bikes.df, aes(x = cnt)) +
 #print(cnt_plot)
 
 
+
 ## 10. Please scatter plot of cnt (y-axis) against registered (x-axis) and add 
 ##     the trend line using ggplot2.
 
@@ -149,6 +164,7 @@ scatter_plot <- ggplot(Bikes.df, aes(x = registered, y = cnt)) +
   geom_smooth(method = "lm", col = "red") +
   theme_test()
 print(scatter_plot)
+
 
 
 ## 11. Please plot the barplot of season and weathersit on the same barplot 
@@ -161,6 +177,7 @@ ggplot(Bikes.df, aes(x = season, fill = weathersit)) +
   scale_fill_manual(values=c("#008000", "#0000FF", "#FF0000")) +
   ggtitle("Barplot of season and weathersit") +
   theme_test()
+
 
 
 ## 12. Please boxplot cnt (y-axis) against weathersit (x-axis) and save the 
@@ -179,6 +196,7 @@ plot(cnt_weather_boxplot)
 
 # Save the graph in a file
 ggsave("cntweather.jpg")
+
 
 
 ## 13. Build the following multiple linear regression models:
@@ -229,6 +247,11 @@ best_model <- which.max(adjusted_r_squared)
 paste("Best model based on Adjusted R-squared: Model", best_model)
 
 
+
+################################################################################
+## For Question 14, see the ProjectFinal_Kungulio_Seif.Rmd file                #
+################################################################################
+
 ## 14. Summarize Question 13-C using R markdown to generate a reproducible 
 ##     report.  Include the following scripts in your R markdown file:
 ###### A. Load the data as specified in Question 1.
@@ -243,16 +266,25 @@ paste("Best model based on Adjusted R-squared: Model", best_model)
 ######    atemp, hum, windspeed, and registered. Skip the coefficients for 
 ######    season, holiday, workingday and  weathersit.
 
+################################################################################
 
 
 ## 15. Build the following logistic models:
 ###### a. forecast holiday using cnt, season, and registered.
 
+
+
 ###### b. forecast the holiday using cnt, season, weathersit, and registered
+
+
 
 ###### c. forecast the holiday using cnt, season, weathersit, workingday, 
 ######    and registered
 
+
+
 ###### d. Which model do you recommend to the management based on 
 ######    McFadden/pseudo R squared to? Justify your answer
+
+
 

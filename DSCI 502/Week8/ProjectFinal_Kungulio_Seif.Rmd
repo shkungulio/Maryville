@@ -1,0 +1,65 @@
+---
+title: "Final Project"
+author: "Seif Kungulio"
+date: "2025-02-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Question 14
+14 Summarize Question 13-C using R markdown to generate a reproducible report.  Include the following scripts in your R markdown file:
+
+A. Load the data as specified in Question 1.
+
+Set the working directory to the correct location for the dataset.
+```{r}
+setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
+```
+
+Import necessary libraries
+```{r}
+#library(dplyr)
+#library(ggplot2)
+#library(MASS)
+#library(knitr)
+```
+Load the data from loan.csv
+```{r}
+Bikes.df <- read.csv("day.csv")
+```
+
+Display the dimensions (rows and columns) of the dataframe
+```{r}
+dim(Bikes.df)
+```
+
+Display column names of the data frame
+```{r}
+colnames(Bikes.df)
+```
+
+Display the structure of the data frame
+```{r}
+str(Bikes.df)
+```
+
+
+B. Convert the two variables as specified in Question 2.
+```{r}
+
+```
+
+C. Convert the categorical variables to factors as specified in Question 3
+```{r}
+
+```
+
+D. Build a linear model as specified in Question 13-C. Use R markdown to report the math formula with numerical coefficients for predictors atemp, hum, windspeed, and registered. Skip the coefficients for season, holiday, workingday and  weathersit.
+```{r}
+
+```
+
+
+
