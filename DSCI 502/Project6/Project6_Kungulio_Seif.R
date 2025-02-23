@@ -16,7 +16,7 @@
 ##    location for the data.
 
 # Set the working directory to the correct location for the dataset.
-setwd("C:/PROJECTS/Maryville/DSCI 502/Week6")
+setwd("C:/PROJECTS/Maryville/DSCI 502/Project6")
 
 # Load the data from loan.csv
 kc_house_data <- read.csv("kc_house_data.csv")
@@ -34,6 +34,14 @@ str(kc_house_data)
 
 ## 2. Build a linear model to forecast the price using bedrooms, bathrooms, 
 ##    and sqft_living.
+
+# Convert the following features to factor
+features <- c("waterfront", "floors", "view", "condition")
+
+# Loop over each feature and convert it to a factor
+for (feature in features) {
+  kc_house_data[[feature]] <- as.factor(kc_house_data[[feature]])
+}
 
 # Build a basic multiple linear regression model
 qn2.fit <- lm(price ~ bedrooms + bathrooms + sqft_living, data = kc_house_data)
@@ -185,6 +193,14 @@ new_house <- data.frame(bedrooms = 4,
                         condition = 5,
                         grade = 10
                         )
+
+# Convert the following features to factor
+features <- c("waterfront", "floors", "view", "condition")
+
+# Loop over each feature and convert it to a factor
+for (feature in features) {
+  new_house[[feature]] <- as.factor(new_house[[feature]])
+}
 
 # Predict and display the average price
 predicted_price <- predict(qn6.fit, newdata = new_house)
