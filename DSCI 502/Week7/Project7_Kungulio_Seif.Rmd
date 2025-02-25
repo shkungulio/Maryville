@@ -1,0 +1,168 @@
+---
+title: "Project 7: House Price Analysis"
+author: "Seif Kungulio"
+date: "2025-02-24"
+output: html_document
+---
+
+## **Data Loading**
+
+```{r data-loading, echo=FALSE}
+# Set the working directory to the correct location for the dataset.
+setwd("C:/PROJECTS/Maryville/DSCI 502/Week7")
+
+# Load the data from kc_house_data.csv
+kc_house_data <- read.csv("kc_house_data.csv")
+```
+
+Structure of the dataset
+```{r structure, echo=FALSE}
+str(kc_house_data)
+```
+
+Statistical summary of the dataset
+```{r summary, echo=FALSE}
+summary(kc_house_data)
+```
+
+---
+
+<br>
+
+## **1. Numerical Summary of Price Information**
+
+To calculate and display the minimum, maximum, range, mean, median, and standard deviation of the ***price*** variable.
+```{r echo=FALSE}
+# Increase the penalty for scientific notation
+options(scipen = 999)
+```
+
++ The Minimum of the math scores is **`r min(kc_house_data$price, na.rm = TRUE)`**
++ The Maximum of the house price is **`r max(kc_house_data$price, na.rm = TRUE)`**
++ The range of the house price is **`r max(kc_house_data$price, na.rm = TRUE) - min(kc_house_data$price, na.rm = TRUE)`**
++ The mean of the house price is **`r mean(kc_house_data$price, na.rm = TRUE)`**
++ The median of the house price is **`r median(kc_house_data$price, na.rm = TRUE)`**
++ The standard deviation of the house price is **`r sd(kc_house_data$price, na.rm = TRUE)`**
+
+
+---
+
+<br>
+
+## **2. Graphical Summary**
+### a) Histogram of Prices
+
+Histogram to show the distribution of house prices.
+```{r histogram, fig.width = 10, fig.height = 6, echo = FALSE}
+hist(kc_house_data$price,
+     main = "Histogram of House Prices",
+     xlab = "Price",
+     col = "green",
+     border = "white"
+     )
+```
+
+### b) Box Plot of Prices Against View
+
+Create a box plot to compare the distribution of prices by the view variable.
+```{r boxplot, fig.width = 10, fig.height = 6, echo=FALSE}
+boxplot(price ~ view, data = kc_house_data,
+        main = "Boxplot of Prices by View",
+        xlab = "View",
+        ylab = "Price",
+        col = "red")
+```
+
+### c) Scatter Plot of Prices Against Sqft Living
+
+Generate a scatter plot to explore the relationship between price and sqft_living.
+```{r scatterplot, fig.width = 10, fig.height = 6, echo=FALSE}
+plot(kc_house_data$sqft_living, kc_house_data$price,
+     main = "Scatter Plot of Price vs. Sqft Living",
+     xlab = "Sqft Living",
+     ylab = "Price",
+     pch = 19,
+     col = "blue")
+```
+
+---
+
+<br>
+
+## **3. Linear Models for Forecasting Price**
+
+Now, I will build three different linear models.
+
+### a) Model 1: 
+Forecast price using Bedrooms, Bathrooms, and Sqft Living
+
+```{r model1, echo=FALSE}
+# Build the model
+model1 <- lm(price ~ bedrooms + bathrooms + sqft_living, data = kc_house_data)
+summary(model1)
+```
+Adjusted R-Squared for Model 1 is **`r summary(model1)$adj.r.squared`**
+
+
+### b) Model 2: 
+Forecast price including all cross-effects between Bedrooms, Bathrooms, and Sqft Living
+
+The model includes all interaction terms among these three variables.
+
+```{r model2, echo=FALSE}
+# Build the model
+model2 <- lm(price ~ bedrooms * bathrooms * sqft_living, data = kc_house_data)
+summary(model2)
+```
+Adjusted R-Squared for Model 2 is **`r summary(model2)$adj.r.squared`**
+
+
+### c) Model 3: 
+Forecast price using Bedrooms, Bathrooms, Sqft Living, Waterfront, and Grade
+
+```{r factoring, echo=FALSE}
+kc_house_data$waterfront <- as.factor(kc_house_data$waterfront)
+```
+
+```{r model3, echo=FALSE}
+# Build the model
+model3 <- lm(price ~ bedrooms + bathrooms + sqft_living + waterfront + grade, data = kc_house_data)
+summary(model3)
+```
+Adjusted R-Squared for Model 3 is **`r summary(model3)$adj.r.squared`**
+
+
+### Model Comparison and Recommendation
+
+Compare the models using adjusted R-squared metrics. The model with a higher adjusted R-squared is generally preferred.
+
++ Adjusted R-Squared for Model 1 is **`r summary(model1)$adj.r.squared`**
++ Adjusted R-Squared for Model 2 is **`r summary(model2)$adj.r.squared`**
++ Adjusted R-Squared for Model 3 is **`r summary(model3)$adj.r.squared`**
+
+```{r model-comparison, echo=FALSE}
+adjusted_r_squared_values <- c(summary(model1)$adj.r.squared,
+                               summary(model2)$adj.r.squared,
+                               summary(model3)$adj.r.squared
+                               )
+
+# Better model recommendation
+models <- list("Model 1" = model1, 
+               "Model 2" = model2, 
+               "Model 3" = model3
+               )
+
+# Iterates through models and extracts adjusted R-squared values for comparison
+for (i in seq_along(models)) {
+  adjusted_r_squared_values[i] <- summary(models[[i]])$adj.r.squared
+}
+best_model_index <- which(adjusted_r_squared_values == 
+                            max(adjusted_r_squared_values))
+
+# Identifies and prints the best model based on adjusted R-squared.
+cat("The best model is", names(models)[best_model_index],
+    "with Adjusted R-Squared of", 
+    summary(models[[best_model_index]])$adj.r.squared)
+```
+
+---

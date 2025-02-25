@@ -1,65 +1,96 @@
 ---
 title: "Final Project"
 author: "Seif Kungulio"
-date: "2025-02-18"
+date: "2025-02-25"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-### Question 14
-14 Summarize Question 13-C using R markdown to generate a reproducible report.  Include the following scripts in your R markdown file:
+### **Question 14**
+Summarize Question 13-C using R markdown to generate a reproducible report.  Include the following scripts in your R markdown file:
 
-A. Load the data as specified in Question 1.
+#### **A. Load the data as specified in Question 1.**
 
 Set the working directory to the correct location for the dataset.
 ```{r}
 setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
 ```
 
-Import necessary libraries
-```{r}
-#library(dplyr)
-#library(ggplot2)
-#library(MASS)
-#library(knitr)
-```
 Load the data from loan.csv
 ```{r}
 Bikes.df <- read.csv("day.csv")
 ```
 
 Display the dimensions (rows and columns) of the dataframe
-```{r}
+```{r echo=FALSE}
 dim(Bikes.df)
 ```
 
 Display column names of the data frame
-```{r}
+```{r echo=FALSE}
 colnames(Bikes.df)
 ```
 
 Display the structure of the data frame
-```{r}
+```{r echo=FALSE}
 str(Bikes.df)
 ```
 
+---
 
-B. Convert the two variables as specified in Question 2.
+<br>
+
+#### **B. Convert the two variables as specified in Question 2.**
+
+Convert numerical season (1,2,3, 4) to characters (springer, summer, fall and winter)
+```{r}
+Bikes.df$season <- factor(Bikes.df$season,
+                          levels = c(1, 2, 3, 4),
+                          labels = c("spring", "summer", "fall", "winter"))
+```
+
+Display statistical summary of the season variable
+```{r summarize-season, echo=FALSE}
+summary(Bikes.df$season)
+```
+
+Convert numerical weathersit (1,2,3,4) to characters (Good, Mist, Bad, Severe)
+```{r convert-weathersit}
+Bikes.df$weathersit <- factor(Bikes.df$weathersit,
+                              levels = c(1, 2, 3, 4),
+                              labels = c("Good", "Mist", "Bad", "Severe"))
+```
+
+Display statistical summary of the weathersit variable
+```{r summarize-weathersit, echo=FALSE}
+summary(Bikes.df$weathersit)
+```
+---
+
+<br>
+
+#### **C. Convert the categorical variables to factors as specified in Question 3**
+Convert categorical variables to factors
+```{r}
+categorical_vars <- c("season", "holiday", "workingday", "weathersit", "casual")
+Bikes.df[categorical_vars] <- lapply(Bikes.df[categorical_vars], as.factor)
+```
+
+Display statistical summary of the categorical variables
+```{r summarize-categorical-variables, echo=FALSE}
+summary(Bikes.df[categorical_vars])
+```
+---
+
+<br>
+
+#### **D. Build a linear model as specified in Question 13-C. Use R markdown to report the math formula with numerical coefficients for predictors atemp, hum, windspeed, and registered. Skip the coefficients for season, holiday, workingday and  weathersit.**
 ```{r}
 
 ```
-
-C. Convert the categorical variables to factors as specified in Question 3
-```{r}
-
-```
-
-D. Build a linear model as specified in Question 13-C. Use R markdown to report the math formula with numerical coefficients for predictors atemp, hum, windspeed, and registered. Skip the coefficients for season, holiday, workingday and  weathersit.
-```{r}
-
-```
+---
 
 
 

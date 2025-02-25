@@ -20,7 +20,7 @@ setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
 library(dplyr)
 library(ggplot2)
 library(MASS)
-library(knitr)
+#library(knitr)
 
 # Load the data from loan.csv
 Bikes.df <- read.csv("day.csv")
@@ -145,13 +145,11 @@ kable(season_weather_col_prop)
 ##    line denoting the mean using ggplot2.
 
 # Histogram and Density Plot of cnt
-#cnt_plot <- 
 ggplot(Bikes.df, aes(x = cnt)) +
   geom_histogram(binwidth = 500, fill = "green") +
   geom_density(color = "blue") +
   geom_vline(aes(xintercept = mean(cnt)), color = "red", linetype = "dashed") +
   theme_test()
-#print(cnt_plot)
 
 
 
