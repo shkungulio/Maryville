@@ -22,7 +22,7 @@ library(pscl)     # For McFadden's R-squared calculation
 library(rlang)
 
 # Set the working directory to the correct location for the dataset.
-setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
+setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
 
 # Load the data from breast_cancer_data.csv
 breast_cancer_data <- read.csv("breast_cancer_data.csv")
@@ -48,15 +48,15 @@ breast_cancer_data$diagnosis <- factor(breast_cancer_data$diagnosis,
                                        levels = c("B", "M"), 
                                        labels = c("Benign", "Malignant"))
 
-# # Define the user-defined function for boxplot
-# BoxplotPredictorOnTarget <- function(target, predictor) {
-#   ggplot(breast_cancer_data, aes(x = !!sym(target),
-#                                  y = !!sym(predictor),
-#                                  fill = !!sym(target))) +
-#     geom_boxplot() + theme_test() +
-#     labs(title = paste("Boxplot of", predictor, "by", target),
-#          x = target, y = predictor)
-# }
+# Define the user-defined function for boxplot
+BoxplotPredictorOnTarget <- function(target, predictor) {
+  ggplot(breast_cancer_data, aes(x = !!sym(target),
+                                 y = !!sym(predictor),
+                                 fill = !!sym(target))) +
+    geom_boxplot() + theme_test() +
+    labs(title = paste("Boxplot of", predictor, "by", target),
+         x = target, y = predictor)
+}
 
 # # Define the user-defined function for boxplot
 # BoxplotPredictorOnTarget <- function(target, predictor) {
@@ -67,14 +67,13 @@ breast_cancer_data$diagnosis <- factor(breast_cancer_data$diagnosis,
 #          x = target, y = predictor)
 # }
 
-# Define the user-defined function for boxplot
-BoxplotPredictorOnTarget <- function(target, predictor) {
-  ggplot(breast_cancer_data,
-         aes(x = target, y = predictor, fill = target)) +
-    geom_boxplot() + theme_test() +
-    labs(title = paste("Boxplot of", predictor, "by", target),
-         x = target, y = predictor)
-}
+# # Define the user-defined function for boxplot
+# BoxplotPredictorOnTarget <- function(target, predictor) {
+#   ggplot(breast_cancer_data, aes(x = target, y = predictor, fill = target)) +
+#     geom_boxplot() + theme_test() +
+#     labs(title = paste("Boxplot of", predictor, "by", target),
+#          x = target, y = predictor)
+# }
 
 ##### a) area_mean against diagnosis
 # Boxplot of area_mean against diagnosis
