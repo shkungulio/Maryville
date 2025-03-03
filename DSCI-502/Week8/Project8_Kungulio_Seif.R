@@ -20,6 +20,7 @@ library(ggplot2)  # For visualization
 library(dplyr)    # For data manipulation
 library(pscl)     # For McFadden's R-squared calculation
 library(rlang)
+#library(knitr)
 
 # Set the working directory to the correct location for the dataset.
 setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
@@ -37,7 +38,6 @@ colnames(breast_cancer_data)
 str(breast_cancer_data)
 
 
-
 ## 2. Define a user defined function BoxplotPredictorOnTarget with two 
 ##    arguments, the target and one predictor to plot the box plot of predictor 
 ##    based on different category of the target. Then use this user defined 
@@ -53,9 +53,13 @@ BoxplotPredictorOnTarget <- function(target, predictor) {
   ggplot(breast_cancer_data, aes(x = !!sym(target),
                                  y = !!sym(predictor),
                                  fill = !!sym(target))) +
-    geom_boxplot() + theme_test() +
-    labs(title = paste("Boxplot of", predictor, "by", target),
-         x = target, y = predictor)
+    geom_boxplot() +
+    ggtitle(paste("Boxplot of", predictor, "by", target)) +
+    xlab(target) + 
+    ylab(predictor) +
+    theme_test()
+    # labs(title = paste("Boxplot of", predictor, "by", target),
+    #      x = target, y = predictor)
 }
 
 # # Define the user-defined function for boxplot
@@ -86,7 +90,6 @@ BoxplotPredictorOnTarget("diagnosis", "area_se")
 ##### c) texture_mean against diagnosis
 # Boxplot of texture_mean against diagnosis
 BoxplotPredictorOnTarget("diagnosis", "texture_mean")
-
 
 
 ## 3. Build the following logistic models to forecast the Diagnosis and 
@@ -143,6 +146,7 @@ r_squared_values <- sapply(models, r_squared)
 
 # Display the R-squared values, rounded to 4 decimal places
 round(r_squared_values, 4)
+#kable(round(r_squared_values, 4))
 
 # Recommend the best model based on the highest R-squared value
 best_model <- names(models)[which.max(r_squared_values)]

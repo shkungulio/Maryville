@@ -1,7 +1,7 @@
 ################################################################################
 #                                                                              #
 # Student:    Seif Kungulio                                                    #
-# Date:       03/09/2025                                                       #
+# Date:       03/03/2025                                                       #
 # Subject:    Final Project                                                    #
 # Class:      DSCI 502                                                         #
 # Section:    01W                                                              #
@@ -11,16 +11,16 @@
 ################################################################################
 
 
-## 1. Load the dataset day.csv  Download day.csvinto memory.
+## 1. Load the dataset day.csv into memory.
 
 # Set the working directory to the correct location for the dataset.
-setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
+setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
 
 # Import necessary libraries
 library(dplyr)
 library(ggplot2)
-library(MASS)
-#library(knitr)
+#library(MASS)
+library(knitr)
 
 # Load the data from loan.csv
 Bikes.df <- read.csv("day.csv")
@@ -220,7 +220,6 @@ model2 <- lm(cnt ~ season + workingday + weathersit +
                atemp + registered, data = Bikes.df)
 summary(model2)
 
-
 ###### c. Preform multiple linear regression with cnt as the response and the 
 ######    predictors are: season, holiday, workingday, weathersit, atemp, hum, 
 ######    windspeed, and registered. Write down the math formula with numerical 
@@ -243,7 +242,6 @@ adjusted_r_squared <- c(summary(model1)$adj.r.squared,
 
 best_model <- which.max(adjusted_r_squared)
 paste("Best model based on Adjusted R-squared: Model", best_model)
-
 
 
 ################################################################################
@@ -269,20 +267,32 @@ paste("Best model based on Adjusted R-squared: Model", best_model)
 
 ## 15. Build the following logistic models:
 ###### a. forecast holiday using cnt, season, and registered.
-
-
+logit1 <- glm(holiday ~ cnt + season + registered, 
+              data = Bikes.df, 
+              family = binomial()
+              )
 
 ###### b. forecast the holiday using cnt, season, weathersit, and registered
-
-
+logit2 <- glm(holiday ~ cnt + season + weathersit + registered, 
+              data = Bikes.df, 
+              family = binomial()
+              )
 
 ###### c. forecast the holiday using cnt, season, weathersit, workingday, 
 ######    and registered
-
-
+logit3 <- glm(holiday ~ cnt + season + weathersit + workingday + registered, 
+              data = Bikes.df, 
+              family = binomial()
+              )
 
 ###### d. Which model do you recommend to the management based on 
 ######    McFadden/pseudo R squared to? Justify your answer
 
+# McFadden R-squared
+pseudo_r2 <- function(model) {
+  1 - (model$deviance / model$null.deviance)
+}
 
-
+mcfadden_r2 <- c(pseudo_r2(logit1), pseudo_r2(logit2), pseudo_r2(logit3))
+best_logit_model <- which.max(mcfadden_r2)
+paste("Best logistic model based on McFadden R-squared: Model", best_logit_model)

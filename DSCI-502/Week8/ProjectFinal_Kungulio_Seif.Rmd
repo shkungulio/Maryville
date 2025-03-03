@@ -1,7 +1,7 @@
 ---
 title: "Final Project"
 author: "Seif Kungulio"
-date: "2025-02-25"
+date: "2025-03-03"
 output: html_document
 ---
 
@@ -15,7 +15,7 @@ Summarize Question 13-C using R markdown to generate a reproducible report.  Inc
 
 Set the working directory to the correct location for the dataset.
 ```{r}
-setwd("C:/PROJECTS/Maryville/DSCI 502/Week8")
+setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
 ```
 
 Load the data from loan.csv
