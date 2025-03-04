@@ -52,10 +52,8 @@ BoxplotPredictorOnTarget <- function(target, predictor) {
                                  y = .data[[predictor]],
                                  fill = .data[[target]])) +
     geom_boxplot() + theme_test() +
-    labs(title = "Boxplot of", predictor, "by", target,
+    labs(title = paste("Boxplot of", predictor, "by", target),
          x = target, y = predictor)
-    #labs(title = paste("Boxplot of", predictor, "by", target),
-    #     x = target, y = predictor)
 }
 
 ##### a) area_mean against diagnosis
