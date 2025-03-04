@@ -49,18 +49,18 @@ breast_cancer_data$diagnosis <- factor(breast_cancer_data$diagnosis,
                                        labels = c("Benign", "Malignant"))
 
 # Define the user-defined function for boxplot
-BoxplotPredictorOnTarget <- function(target, predictor) {
-  ggplot(breast_cancer_data, aes(x = !!sym(target),
-                                 y = !!sym(predictor),
-                                 fill = !!sym(target))) +
-    geom_boxplot() +
-    ggtitle(paste("Boxplot of", predictor, "by", target)) +
-    xlab(target) + 
-    ylab(predictor) +
-    theme_test()
-    # labs(title = paste("Boxplot of", predictor, "by", target),
-    #      x = target, y = predictor)
-}
+# BoxplotPredictorOnTarget <- function(target, predictor) {
+#   ggplot(breast_cancer_data, aes(x = !!sym(target),
+#                                  y = !!sym(predictor),
+#                                  fill = !!sym(target))) +
+#     geom_boxplot() +
+#     ggtitle(paste("Boxplot of", predictor, "by", target)) +
+#     xlab(target) + 
+#     ylab(predictor) +
+#     theme_test()
+#     # labs(title = paste("Boxplot of", predictor, "by", target),
+#     #      x = target, y = predictor)
+# }
 
 # # Define the user-defined function for boxplot
 # BoxplotPredictorOnTarget <- function(target, predictor) {
@@ -71,17 +71,18 @@ BoxplotPredictorOnTarget <- function(target, predictor) {
 #          x = target, y = predictor)
 # }
 
-# # Define the user-defined function for boxplot
-# BoxplotPredictorOnTarget <- function(target, predictor) {
-#   ggplot(breast_cancer_data, aes(x = target, y = predictor, fill = target)) +
-#     geom_boxplot() + theme_test() +
-#     labs(title = paste("Boxplot of", predictor, "by", target),
-#          x = target, y = predictor)
-# }
+# Define the user-defined function for boxplot
+BoxplotPredictorOnTarget <- function(target, predictor) {
+  ggplot(breast_cancer_data, aes(x = target, y = predictor, fill = target)) +
+    geom_boxplot() + theme_test() +
+    labs(title = paste("Boxplot of", predictor, "by", target),
+         x = target, y = predictor)
+}
 
 ##### a) area_mean against diagnosis
 # Boxplot of area_mean against diagnosis
 BoxplotPredictorOnTarget("diagnosis", "area_mean")
+#BoxplotPredictorOnTarget(breast_cancer_data$diagnosis, breast_cancer_data$area_mean)
 
 ##### b) area_se against diagnosis
 # Boxplot of area_se against diagnosis
@@ -146,7 +147,6 @@ r_squared_values <- sapply(models, r_squared)
 
 # Display the R-squared values, rounded to 4 decimal places
 round(r_squared_values, 4)
-#kable(round(r_squared_values, 4))
 
 # Recommend the best model based on the highest R-squared value
 best_model <- names(models)[which.max(r_squared_values)]
