@@ -19,8 +19,6 @@
 library(ggplot2)  # For visualization
 library(dplyr)    # For data manipulation
 library(pscl)     # For McFadden's R-squared calculation
-library(rlang)
-#library(knitr)
 
 # Set the working directory to the correct location for the dataset.
 setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
@@ -49,40 +47,20 @@ breast_cancer_data$diagnosis <- factor(breast_cancer_data$diagnosis,
                                        labels = c("Benign", "Malignant"))
 
 # Define the user-defined function for boxplot
-# BoxplotPredictorOnTarget <- function(target, predictor) {
-#   ggplot(breast_cancer_data, aes(x = !!sym(target),
-#                                  y = !!sym(predictor),
-#                                  fill = !!sym(target))) +
-#     geom_boxplot() +
-#     ggtitle(paste("Boxplot of", predictor, "by", target)) +
-#     xlab(target) + 
-#     ylab(predictor) +
-#     theme_test()
-#     # labs(title = paste("Boxplot of", predictor, "by", target),
-#     #      x = target, y = predictor)
-# }
-
-# # Define the user-defined function for boxplot
-# BoxplotPredictorOnTarget <- function(target, predictor) {
-#   ggplot(breast_cancer_data, 
-#          aes_string(x = target, y = predictor, fill = target)) +
-#     geom_boxplot() + theme_test() +
-#     labs(title = paste("Boxplot of", predictor, "by", target),
-#          x = target, y = predictor)
-# }
-
-# Define the user-defined function for boxplot
 BoxplotPredictorOnTarget <- function(target, predictor) {
-  ggplot(breast_cancer_data, aes(x = target, y = predictor, fill = target)) +
+  ggplot(breast_cancer_data, aes(x = .data[[target]],
+                                 y = .data[[predictor]],
+                                 fill = .data[[target]])) +
     geom_boxplot() + theme_test() +
-    labs(title = paste("Boxplot of", predictor, "by", target),
+    labs(title = "Boxplot of", predictor, "by", target,
          x = target, y = predictor)
+    #labs(title = paste("Boxplot of", predictor, "by", target),
+    #     x = target, y = predictor)
 }
 
 ##### a) area_mean against diagnosis
 # Boxplot of area_mean against diagnosis
 BoxplotPredictorOnTarget("diagnosis", "area_mean")
-#BoxplotPredictorOnTarget(breast_cancer_data$diagnosis, breast_cancer_data$area_mean)
 
 ##### b) area_se against diagnosis
 # Boxplot of area_se against diagnosis
