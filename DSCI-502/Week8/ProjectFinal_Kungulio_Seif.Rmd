@@ -88,7 +88,9 @@ summary(Bikes.df[categorical_vars])
 
 #### **D. Build a linear model as specified in Question 13-C. Use R markdown to report the math formula with numerical coefficients for predictors atemp, hum, windspeed, and registered. Skip the coefficients for season, holiday, workingday and  weathersit.**
 ```{r}
-
+model <- lm(cnt ~ season + holiday + workingday + weathersit + 
+               atemp + hum + windspeed + registered, data = Bikes.df)
+summary(model)
 ```
 ---
 

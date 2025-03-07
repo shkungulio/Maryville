@@ -11,7 +11,7 @@
 
 <meta name="author" content="Seif Kungulio" />
 
-<meta name="date" content="2025-02-25" />
+<meta name="date" content="2025-03-03" />
 
 <title>Final Project</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Final Project</h1>
 <h4 class="author">Seif Kungulio</h4>
-<h4 class="date">2025-02-25</h4>
+<h4 class="date">2025-03-03</h4>
 
 </div>
 
@@ -441,6 +441,38 @@ Bikes.df[categorical_vars] &lt;- lapply(Bikes.df[categorical_vars], as.factor)</
 markdown to report the math formula with numerical coefficients for
 predictors atemp, hum, windspeed, and registered. Skip the coefficients
 for season, holiday, workingday and weathersit.</strong></h4>
+<pre class="r"><code>model &lt;- lm(cnt ~ season + holiday + workingday + weathersit + 
+               atemp + hum + windspeed + registered, data = Bikes.df)
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = cnt ~ season + holiday + workingday + weathersit + 
+##     atemp + hum + windspeed + registered, data = Bikes.df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -845.72 -228.33  -35.32  171.66 1611.31 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     580.0198   101.9434   5.690 1.85e-08 ***
+## seasonsummer    239.8855    50.0548   4.792 2.00e-06 ***
+## seasonfall       39.9719    63.8698   0.626  0.53162    
+## seasonwinter    -26.5911    45.5651  -0.584  0.55968    
+## holiday1       -245.4140    82.7552  -2.966  0.00312 ** 
+## workingday1    -977.0324    32.0082 -30.524  &lt; 2e-16 ***
+## weathersitMist  -32.9389    35.6562  -0.924  0.35590    
+## weathersitBad   -44.8026    93.3135  -0.480  0.63128    
+## atemp          1378.9261   156.8044   8.794  &lt; 2e-16 ***
+## hum            -363.9911   130.9036  -2.781  0.00557 ** 
+## windspeed      -637.7530   189.6037  -3.364  0.00081 ***
+## registered        1.1607     0.0125  92.872  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 360.8 on 719 degrees of freedom
+## Multiple R-squared:  0.9658, Adjusted R-squared:  0.9653 
+## F-statistic:  1848 on 11 and 719 DF,  p-value: &lt; 2.2e-16</code></pre>
 <hr />
 </div>
 </div>

@@ -147,8 +147,9 @@ kable(season_weather_col_prop)
 # Histogram and Density Plot of cnt
 ggplot(Bikes.df, aes(x = cnt)) +
   geom_histogram(binwidth = 500, fill = "green") +
-  geom_density(color = "blue") +
-  geom_vline(aes(xintercept = mean(cnt)), color = "red", linetype = "dashed") +
+  geom_density(color = "red") +
+  geom_vline(aes(xintercept = mean(cnt)), color = "black", linetype = "dashed") +
+  ggtitle("Histogram of cnt") +
   theme_test()
 
 
@@ -160,7 +161,8 @@ ggplot(Bikes.df, aes(x = cnt)) +
 scatter_plot <- ggplot(Bikes.df, aes(x = registered, y = cnt)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
-  theme_test()
+  theme_test() +
+  ggtitle("Scatter plot of cnt vs registered")
 print(scatter_plot)
 
 
