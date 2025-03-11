@@ -1,7 +1,7 @@
 ---
 title: "Final Project"
 author: "Seif Kungulio"
-date: "2025-03-03"
+date: "2025-03-08"
 output: html_document
 ---
 
@@ -18,7 +18,7 @@ Set the working directory to the correct location for the dataset.
 setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
 ```
 
-Load the data from loan.csv
+Load the data from day.csv
 ```{r}
 Bikes.df <- read.csv("day.csv")
 ```
@@ -51,9 +51,9 @@ Bikes.df$season <- factor(Bikes.df$season,
                           labels = c("spring", "summer", "fall", "winter"))
 ```
 
-Display statistical summary of the season variable
+Verify conversion of 'season' variable
 ```{r summarize-season, echo=FALSE}
-summary(Bikes.df$season)
+str(Bikes.df$season)
 ```
 
 Convert numerical weathersit (1,2,3,4) to characters (Good, Mist, Bad, Severe)
@@ -63,9 +63,9 @@ Bikes.df$weathersit <- factor(Bikes.df$weathersit,
                               labels = c("Good", "Mist", "Bad", "Severe"))
 ```
 
-Display statistical summary of the weathersit variable
+Verify conversion of 'weathersit' variable
 ```{r summarize-weathersit, echo=FALSE}
-summary(Bikes.df$weathersit)
+str(Bikes.df$weathersit)
 ```
 ---
 
@@ -74,7 +74,7 @@ summary(Bikes.df$weathersit)
 #### **C. Convert the categorical variables to factors as specified in Question 3**
 Convert categorical variables to factors
 ```{r}
-categorical_vars <- c("season", "holiday", "workingday", "weathersit", "casual")
+categorical_vars <- c("season", "holiday", "workingday", "weathersit")
 Bikes.df[categorical_vars] <- lapply(Bikes.df[categorical_vars], as.factor)
 ```
 
@@ -92,6 +92,21 @@ model <- lm(cnt ~ season + holiday + workingday + weathersit +
                atemp + hum + windspeed + registered, data = Bikes.df)
 summary(model)
 ```
+
+*Math Formula:*
+```{r echo=FALSE}
+# Extracting specific coefficient estimates
+coefficients <- coef(model)  # Get all coefficients
+
+# Extract values for (Intercept), atemp, hum, registered, and windspeed
+intercept <- coefficients["(Intercept)"]
+atemp <- coefficients["atemp"]
+hum <- coefficients["hum"]
+registered <- coefficients["registered"]
+windspeed <- coefficients["windspeed"]
+```
+##### **cnt = `r round(intercept,4)` + (`r round(atemp,4)` * atemp) + (`r round(registered,4)` * registered) + (`r round(windspeed,4)` * windspeed) + (`r round(hum,4)` * hum)**
+
 ---
 
 

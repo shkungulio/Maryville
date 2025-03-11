@@ -1,7 +1,7 @@
 ################################################################################
 #                                                                              #
 # Student:    Seif Kungulio                                                    #
-# Date:       03/03/2025                                                       #
+# Date:       03/08/2025                                                       #
 # Subject:    Final Project                                                    #
 # Class:      DSCI 502                                                         #
 # Section:    01W                                                              #
@@ -16,13 +16,12 @@
 # Set the working directory to the correct location for the dataset.
 setwd("C:/PROJECTS/Maryville/DSCI-502/Week8")
 
-# Import necessary libraries
-library(dplyr)
-library(ggplot2)
-#library(MASS)
-library(knitr)
+# Load necessary libraries for data manipulation, visualization, and reporting
+library(dplyr)  # For data manipulation
+library(ggplot2) # For visualization
+library(knitr)  # For creating formatted tables
 
-# Load the data from loan.csv
+# Load the data from day.csv
 Bikes.df <- read.csv("day.csv")
 
 # Display the dimensions (rows and columns) of the dataframe
@@ -45,7 +44,7 @@ Bikes.df$season <- factor(Bikes.df$season,
                           levels = c(1, 2, 3, 4),
                           labels = c("spring", "summer", "fall", "winter"))
 
-# Check if the variable was converted to factor
+# Verify conversion of 'season' variable
 str(Bikes.df$season)
 
 
@@ -57,7 +56,7 @@ Bikes.df$weathersit <- factor(Bikes.df$weathersit,
                               levels = c(1, 2, 3, 4),
                               labels = c("Good", "Mist", "Bad", "Severe"))
 
-# Check the structure to see if the variable was converted to factor
+# Verify conversion of 'weathersit' variable
 str(Bikes.df$weathersit)
 
 
@@ -67,10 +66,11 @@ str(Bikes.df$weathersit)
 ##    variables from this list and convert them to factors
 
 # Convert categorical variables to factors
-categorical_vars <- c("season", "holiday", "workingday", "weathersit", "casual")
+categorical_vars <- c("season", "holiday", "workingday", "weathersit")
 Bikes.df[categorical_vars] <- lapply(Bikes.df[categorical_vars], as.factor)
 
-
+# Display the statistical summary for factor variables
+summary(Bikes.df[categorical_vars])
 
 ## 4. Calculate the minimum, maximum, mean, median, standard deviation and 
 ##    three quartiles (25th, 50th and 75th percentiles) of cnt.
@@ -81,7 +81,7 @@ cnt_stats <- Bikes.df %>%
             median = median(cnt), sd = sd(cnt), Q1 = quantile(cnt, 0.25), 
             Q2 = quantile(cnt, 0.5), Q3 = quantile(cnt, 0.75))
 
-#
+# Display summary statistics in a table
 kable(cnt_stats)
 
 
@@ -89,14 +89,14 @@ kable(cnt_stats)
 ## 5. Calculate the minimum, maximum, mean, median, standard deviation and 
 ##    three quartiles (25th, 50th and 75th percentiles) of registered.
 
-# Summary Statistics for registered
+# Summary Statistics for registered users
 registered_stats <- Bikes.df %>%
   summarise(minimum = min(registered), maximum = max(registered), 
             mean = mean(registered), median = median(registered),
             sd = sd(registered), Q1 = quantile(registered, 0.25), 
             Q2 = quantile(registered, 0.5), Q3 = quantile(registered, 0.75))
 
-#
+# Display summary statistics in a table
 kable(registered_stats)
 
 
@@ -106,6 +106,8 @@ kable(registered_stats)
 
 # Correlation between registered and cnt
 correlation <- cor(Bikes.df$registered, Bikes.df$cnt)
+
+# Print correlation result
 print(correlation)
 
 
@@ -113,10 +115,9 @@ print(correlation)
 ## 7. Calculate the frequency table of season? What’s the mode of 
 ##    season variable?
 
-# Frequency table of season
+# Frequency table of 'season' and identify the most common season
 season_freq <- table(Bikes.df$season)
 print(season_freq)
-
 mode_season <- names(which.max(season_freq))
 print(paste("Mode of season: ", mode_season))
 
@@ -125,18 +126,12 @@ print(paste("Mode of season: ", mode_season))
 ## 8. Calculate the cross table of season and weathersit, then produce 
 ##    proportions by rows and columns respectively.
 
-# Cross table of season and weathersit
+# Create a cross table between 'season' and 'weathersit' and compute proportions
 season_weather_table <- table(Bikes.df$season, Bikes.df$weathersit)
 season_weather_row_prop <- prop.table(season_weather_table, 1)
 season_weather_col_prop <- prop.table(season_weather_table, 2)
-
-#
 kable(season_weather_table)
-
-#
 kable(season_weather_row_prop)
-
-#
 kable(season_weather_col_prop)
 
 
@@ -144,26 +139,25 @@ kable(season_weather_col_prop)
 ## 9. Please plot the histogram and density of the cnt and add the vertical 
 ##    line denoting the mean using ggplot2.
 
-# Histogram and Density Plot of cnt
+# Plot histogram and density of 'cnt' with mean line
 ggplot(Bikes.df, aes(x = cnt)) +
   geom_histogram(binwidth = 500, fill = "green") +
-  geom_density(color = "red") +
-  geom_vline(aes(xintercept = mean(cnt)), color = "black", linetype = "dashed") +
-  ggtitle("Histogram of cnt") +
-  theme_test()
+  geom_density(color = "red", lwd = 2) +
+  geom_vline(aes(xintercept = mean(cnt)), 
+             color = "black", linetype = "dashed", lwd = 1) +
+  ggtitle("Histogram of cnt") + theme_test()
 
 
 
 ## 10. Please scatter plot of cnt (y-axis) against registered (x-axis) and add 
 ##     the trend line using ggplot2.
 
-# Scatter plot of cnt vs registered
-scatter_plot <- ggplot(Bikes.df, aes(x = registered, y = cnt)) +
+# Scatter plot of 'cnt' vs 'registered' with trend line
+ggplot(Bikes.df, aes(x = registered, y = cnt)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
   theme_test() +
   ggtitle("Scatter plot of cnt vs registered")
-print(scatter_plot)
 
 
 
@@ -172,11 +166,9 @@ print(scatter_plot)
 
 # Barplot of season and weathersit
 ggplot(Bikes.df, aes(x = season, fill = weathersit)) +
-  #geom_bar() +
   geom_bar(position = "dodge") +
   scale_fill_manual(values=c("#008000", "#0000FF", "#FF0000")) +
-  ggtitle("Barplot of season and weathersit") +
-  theme_test()
+  ggtitle("Barplot of season and weathersit") + theme_test()
 
 
 
@@ -184,17 +176,15 @@ ggplot(Bikes.df, aes(x = season, fill = weathersit)) +
 ##     graph in a file, cntweather.jpg, using ggplot2. Are there any differences
 ##     in cnt with respect to weathersit?
 
-# Boxplot cnt vs weathersit
+# Box plot of 'cnt' vs 'weathersit', saved as 'cntweather.jpg'
 cnt_weather_boxplot <- ggplot(Bikes.df, 
-                              aes(x = weathersit, y = cnt, fill = weathersit)) +
+                              aes(x = weathersit, 
+                                  y = cnt, 
+                                  fill = weathersit)) +
   geom_boxplot() + theme_test() +
-  scale_fill_manual(values=c("#008000", "#0000FF", "#FF0000")) +
+  scale_fill_manual(values = c("#008000", "#0000FF", "#FF0000")) +
   ggtitle("Boxplot cnt vs weathersit")
-
-# Plot the boxplot graph
 plot(cnt_weather_boxplot)
-
-# Save the graph in a file
 ggsave("cntweather.jpg")
 
 
@@ -237,7 +227,7 @@ summary(model3)
 ###### d. Which model do you recommend to the management based on 
 ######    adjusted R squared? Justify your answer.
 
-## Choosing the best model
+# Select best regression model based on adjusted R-squared
 adjusted_r_squared <- c(summary(model1)$adj.r.squared, 
                         summary(model2)$adj.r.squared, 
                         summary(model3)$adj.r.squared)
@@ -268,33 +258,30 @@ paste("Best model based on Adjusted R-squared: Model", best_model)
 
 
 ## 15. Build the following logistic models:
+
+# McFadden/pseudo R squared
+pseudo_r2 <- function(model) { 1 - (model$deviance / model$null.deviance) }
+
 ###### a. forecast holiday using cnt, season, and registered.
 logit1 <- glm(holiday ~ cnt + season + registered, 
-              data = Bikes.df, 
-              family = binomial()
-              )
+              data = Bikes.df, family = binomial())
+pseudo_r2(logit1)
 
 ###### b. forecast the holiday using cnt, season, weathersit, and registered
 logit2 <- glm(holiday ~ cnt + season + weathersit + registered, 
-              data = Bikes.df, 
-              family = binomial()
-              )
+              data = Bikes.df, family = binomial())
+pseudo_r2(logit2)
 
 ###### c. forecast the holiday using cnt, season, weathersit, workingday, 
 ######    and registered
 logit3 <- glm(holiday ~ cnt + season + weathersit + workingday + registered, 
-              data = Bikes.df, 
-              family = binomial()
-              )
+              data = Bikes.df, family = binomial())
+pseudo_r2(logit3)
 
 ###### d. Which model do you recommend to the management based on 
 ######    McFadden/pseudo R squared to? Justify your answer
 
-# McFadden R-squared
-pseudo_r2 <- function(model) {
-  1 - (model$deviance / model$null.deviance)
-}
-
+# Select best logistic model based on McFadden's pseudo R-squared
 mcfadden_r2 <- c(pseudo_r2(logit1), pseudo_r2(logit2), pseudo_r2(logit3))
 best_logit_model <- which.max(mcfadden_r2)
 paste("Best logistic model based on McFadden R-squared: Model", best_logit_model)

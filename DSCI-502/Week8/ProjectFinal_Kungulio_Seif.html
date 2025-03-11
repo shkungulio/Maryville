@@ -11,7 +11,7 @@
 
 <meta name="author" content="Seif Kungulio" />
 
-<meta name="date" content="2025-03-03" />
+<meta name="date" content="2025-03-08" />
 
 <title>Final Project</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Final Project</h1>
 <h4 class="author">Seif Kungulio</h4>
-<h4 class="date">2025-03-03</h4>
+<h4 class="date">2025-03-08</h4>
 
 </div>
 
@@ -366,7 +366,7 @@ report. Include the following scripts in your R markdown file:</p>
 <p>Set the working directory to the correct location for the
 dataset.</p>
 <pre class="r"><code>setwd(&quot;C:/PROJECTS/Maryville/DSCI-502/Week8&quot;)</code></pre>
-<p>Load the data from loan.csv</p>
+<p>Load the data from day.csv</p>
 <pre class="r"><code>Bikes.df &lt;- read.csv(&quot;day.csv&quot;)</code></pre>
 <p>Display the dimensions (rows and columns) of the dataframe</p>
 <pre><code>## [1] 731  16</code></pre>
@@ -404,17 +404,15 @@ fall and winter)</p>
 <pre class="r"><code>Bikes.df$season &lt;- factor(Bikes.df$season,
                           levels = c(1, 2, 3, 4),
                           labels = c(&quot;spring&quot;, &quot;summer&quot;, &quot;fall&quot;, &quot;winter&quot;))</code></pre>
-<p>Display statistical summary of the season variable</p>
-<pre><code>## spring summer   fall winter 
-##    181    184    188    178</code></pre>
+<p>Verify conversion of ‘season’ variable</p>
+<pre><code>##  Factor w/ 4 levels &quot;spring&quot;,&quot;summer&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 <p>Convert numerical weathersit (1,2,3,4) to characters (Good, Mist,
 Bad, Severe)</p>
 <pre class="r"><code>Bikes.df$weathersit &lt;- factor(Bikes.df$weathersit,
                               levels = c(1, 2, 3, 4),
                               labels = c(&quot;Good&quot;, &quot;Mist&quot;, &quot;Bad&quot;, &quot;Severe&quot;))</code></pre>
-<p>Display statistical summary of the weathersit variable</p>
-<pre><code>##   Good   Mist    Bad Severe 
-##    463    247     21      0</code></pre>
+<p>Verify conversion of ‘weathersit’ variable</p>
+<pre><code>##  Factor w/ 4 levels &quot;Good&quot;,&quot;Mist&quot;,..: 2 2 1 1 1 1 2 2 1 1 ...</code></pre>
 <hr />
 <p><br></p>
 </div>
@@ -422,17 +420,14 @@ Bad, Severe)</p>
 <h4><strong>C. Convert the categorical variables to factors as specified
 in Question 3</strong></h4>
 <p>Convert categorical variables to factors</p>
-<pre class="r"><code>categorical_vars &lt;- c(&quot;season&quot;, &quot;holiday&quot;, &quot;workingday&quot;, &quot;weathersit&quot;, &quot;casual&quot;)
+<pre class="r"><code>categorical_vars &lt;- c(&quot;season&quot;, &quot;holiday&quot;, &quot;workingday&quot;, &quot;weathersit&quot;)
 Bikes.df[categorical_vars] &lt;- lapply(Bikes.df[categorical_vars], as.factor)</code></pre>
 <p>Display statistical summary of the categorical variables</p>
-<pre><code>##     season    holiday workingday  weathersit      casual   
-##  spring:181   0:710   0:231      Good  :463   120    :  4  
-##  summer:184   1: 21   1:500      Mist  :247   968    :  4  
-##  fall  :188                      Bad   : 21   123    :  3  
-##  winter:178                      Severe:  0   140    :  3  
-##                                               163    :  3  
-##                                               244    :  3  
-##                                               (Other):711</code></pre>
+<pre><code>##     season    holiday workingday  weathersit 
+##  spring:181   0:710   0:231      Good  :463  
+##  summer:184   1: 21   1:500      Mist  :247  
+##  fall  :188                      Bad   : 21  
+##  winter:178                      Severe:  0</code></pre>
 <hr />
 <p><br></p>
 </div>
@@ -473,7 +468,12 @@ summary(model)</code></pre>
 ## Residual standard error: 360.8 on 719 degrees of freedom
 ## Multiple R-squared:  0.9658, Adjusted R-squared:  0.9653 
 ## F-statistic:  1848 on 11 and 719 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><em>Math Formula:</em></p>
+<div id="cnt-580.0198-1378.9261-atemp-1.1607-registered--637.753-windspeed--363.9911-hum" class="section level5">
+<h5><strong>cnt = 580.0198 + (1378.9261 * atemp) + (1.1607 * registered)
++ (-637.753 * windspeed) + (-363.9911 * hum)</strong></h5>
 <hr />
+</div>
 </div>
 </div>
 
