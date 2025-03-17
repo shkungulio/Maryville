@@ -1,0 +1,121 @@
+#########################################################
+#                                                       #
+# Author:     Seif Kungulio                             #
+# Date:       03/23/2025                                #
+# Subject:    Project 2                                 #
+# Class:      DSCI 512                                  #
+# Section:    01W                                       #
+# Instructor: Dr. Nengbing Tao                          #
+# File Name:  Project2_Kungulio_Seif.R                  #
+#                                                       #
+#########################################################
+
+
+# Install necessary packages if not installed
+if (!requireNamespace("readxl", quietly = TRUE)) {
+  install.packages("readxl")
+}
+
+#load the data set into memory
+library(readxl)
+
+# Set the working directory
+setwd("C:/PROJECTS/Maryville/DSCI-512/Project2")
+
+# Load the Boston dataset
+mtcars <- read_excel("data/mtcars.xlsx", sheet = "mtcars")
+
+# Check the dimension of the data frame
+dim(mtcars)
+
+
+# 1. Use the lm() function to perform a simple linear regression with the 
+#    response mpg and the predictor hp.
+
+# Visualize the data pairwise
+pairs(mtcars[,c("mpg","hp")])
+
+# Build the simple linear model
+simple_model = lm(mpg ~ hp, data = mtcars)
+
+#print out the model results
+summary(simple_model)
+
+
+# 2. Is there a relationship between the target mpg and predator hp?
+      #### Yes, the t-test for hp results in a p-value of 2.72e-09, which is 
+      #### significantly low, indicating a strong relationship. Since this is a 
+      #### simple linear regression, the F-test yields the same conclusion:
+      ####  - t-value = -7.658
+      ####  - Squaring the t-value: (-7.658)^2 = 58.65, which equals the F-value
+      #### Thus, the p-values from both the t-test and F-test are 
+      #### identical in this case.
+
+
+# 3. How strong is the relationship between the response and predictor?
+      #### The p-value from the t-test is far below the 0.05 threshold, 
+      #### indicating a strong relationship between the predictor and the 
+      #### response variable. Additionally, the R^2 value suggests that 
+      #### this variable alone explains 60% of the variation in the model. 
+      #### The F-test can also serve as a useful indicator.
+
+
+# 4. Is the relationship between mpg and hp positive or negative?
+      #### Negative, as hp goes up, mpg goes down.
+
+
+# 5. What is the predicted mpg associated with a horsepower (hp) of 100?
+#    What’s the 95% confidence interval for the predicted mpg?
+
+# Predict mpg for hp = 100 with confidence interval
+predicted_mpg <- predict(simple_model, data.frame(hp = 100), 
+                         interval = "confidence", level = 0.95)
+
+# Print the predicted mpg
+predicted_mpg
+
+
+# 6. Plot the response and the predictor and add the regression line 
+#    using abline().
+
+# Plot the response and predictor with the regression line
+plot(mtcars$hp, mtcars$mpg, main = "MPG vs Horsepower",
+     xlab = "Horsepower (hp)", ylab = "Miles per Gallon (mpg)")
+abline(simple_model, lwd = 2, col = "blue")
+
+
+# 
+# 7. Perform a multiple linear regression with mpg as the response and 
+#    the predictors cyl, disp, hp, wt, vs, and gear. Print out the results 
+#    using summary() function.
+
+# Perform multiple linear regression
+multiple_model <- lm(mpg ~ cyl + disp + hp + wt + vs + gear, data = mtcars)
+
+# Print the summary of the model
+summary(multiple_model)
+
+
+# 8. Is there a relationship between the predictors and the response?
+      #### Some predictors show a significant relationship with the response 
+      #### variable, as evidenced by the F-statistic of 30.5 and 
+      #### a p-value of 2.568e-12.
+
+
+# 9. Which predictors appears to have a statistically significant relationship 
+#    to the response?
+      #### The variables wt (weight) and hp (gross horsepower) have 
+      #### p-values of 0.00012 and 0.02, respectively, based on their t-tests.
+
+
+# 10. Use * symbols to fit linear regression models with interaction effects 
+#     between hp and wt. Does this interaction appear to be statistically 
+#     significant?
+
+# Fit a model with interaction effects between hp and wt
+interaction_model <- lm(mpg ~ hp * wt, data = mtcars)
+
+# Print the summary of the interaction model
+summary(interaction_model)
+
+      #### Yes, the interaction has a p-value of 0.000362 < alpha = 0.05

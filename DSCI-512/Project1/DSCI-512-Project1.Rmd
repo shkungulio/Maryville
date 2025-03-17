@@ -1,0 +1,235 @@
+---
+title: "DSCI-512: Project 1"
+author: "by Seif Kungulio"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<hr>
+
+### **Question 1**
+**Read the dataset in Boston.csv into R. Call the loaded data Boston. Make sure that you have the directory set to the correct location for the data.**
+
+Read the data set into R memory  
+```{r echo=TRUE}
+Boston <- read.csv("data/Boston.csv")
+```
+
+Check the dimension of the data frame  
+```{r}
+dim(Boston)
+```
+
+Display the column names  
+```{r}
+colnames(Boston)
+```
+
+Display the structure of the data frame  
+```{r}
+str(Boston)
+```
+
+Display the stastical summary of the data frame  
+```{r}
+summary(Boston)
+```
+
+<hr>
+
+### **Question 2**
+**How many rows are in the data frame? How many columns? What do the rows and columns represent?**
+
++ There are **`r nrow(Boston)`** number of rows in the data frame.  
++ There are **`r ncol(Boston)`** number of columns int the data frame.  
++ Each row represents suburbs in the Boston area, while each column corresponds to a different attribute of these suburbs.  
+
+<hr>
+
+### **Question 3**
+**Select the 1st, 100th, and 500th rows with columns tax and medv.**  
+
+Extract 1st, 100th, and 500th rows with columns 'tax' and 'medv'  
+```{r}
+selected_rows <- Boston[c(1, 100, 500), c("tax", "medv")]
+print(selected_rows)
+```
+
+<hr>
+
+### **Question 4**
+**Look at the data using cor function. Are any of the predictors associated with per capita crime rate? If so, explain the relationship based on correlation coefficents.**
+
+Correlation analysis to identify associations with crime rate.  
+```{r echo=TRUE}
+cor_matrix <- cor(Boston)
+```
+
+Print the crime rate correlation matrix  
+```{r}
+print(cor_matrix["crim", ])
+```
++ The correlation matrix provides valuable insight into the relationships between different predictors, particularly in relation to the per capita crime rate (crim). For example:
+  + Positive correlation: crim appears to be positively correlated with variables like indus (the proportion of non-retail business acres per town), suggesting that areas with more industrial zones tend to have higher crime rates.
+  + Negative correlation: Conversely, crim may show a negative correlation with dis (the weighted mean of distances to five Boston employment centers), indicating that suburbs farther from employment centers generally have lower crime rates.
+
++ Correlation values close to 1 or -1 signify strong relationships, while values near 0 indicate weak or no significant relationships. A detailed understanding of these correlations is crucial for identifying factors that influence crime rates in the Boston suburbs.
+
+<hr>
+
+### **Question 5**
+**Make some pairwise scatterplots of the predictors, crim, rad, tax, indus, and lstat in this data set. Describe your findings.**
+
+Pairwise scatter plots for selected predictors  
+```{r fig.width = 12, fig.height = 8}
+pairs(Boston[, c("crim", "rad", "tax", "indus", "lstat")], 
+      main = "Pairwise Scatterplots of Selected Predictors")
+```
+
+From the pairwise scatterplot matrix, we can examine the relationships between the predictors: crim, rad, tax, indus, and lstat. Below is a description of each pairwise relationship along with key observations:
+
++ **crim vs. rad:**  
+  A concentration of points at lower levels of both variables suggests that many areas have low crime rates and limited access to radial highways (rad). However, some higher-crime areas show a correlation with higher rad values, potentially indicating a relationship between highway accessibility and crime rates.
+
++ **crim vs. tax:**  
+  The scatterplot reveals a slight spread of points as tax values increase, suggesting that higher crime rates may coincide with higher tax rates. Still, many observations are clustered around lower tax and crime values, indicating exceptions to this trend.
+
++ **crim vs. indus:**  
+  A positive trend is visible, implying that areas with a higher proportion of industrial activities (non-retail business) tend to experience higher crime rates. Notably, there are several significant outliers in the high-crime and high-industry range, which warrant further investigation.
+
++ **crim vs. lstat:**  
+  There appears to be a moderate positive correlation between crime rates (crim) and the percentage of the population with lower socioeconomic status (lstat). This suggests that areas with a higher proportion of low-income residents tend to experience higher crime rates, potentially reflecting a socioeconomic influence on crime.
+
++ **rad vs. tax:**  
+  A strong positive relationship is evident between radial highway accessibility (rad) and tax rates, suggesting that areas with better highway access tend to have higher tax rates. This could be reflective of urban infrastructure and property value dynamics.
+
++ **rad vs. indus:**  
+  There is some clustering where areas with higher rad values are associated with higher industrial activity (indus), suggesting that areas with better access to radial highways are more industrialized.
+
++ **rad vs. lstat:**  
+The relationship between rad and lstat is not immediately clear, though a few cases show higher lstat values paired with mid-range rad values.
+
++ **tax vs. indus:**  
+A positive trend between tax rates and industrial activity suggests that areas with a higher proportion of industrial activities tend to have higher tax rates. This relationship appears relatively strong compared to other pairs.
+
++ **tax vs. lstat:**  
+While no clear linear trend emerges between tax rates and lstat, there seems to be a mild positive association, indicating a weak correlation between higher taxes and a higher proportion of low-income residents.
+
++ **indus vs. lstat:**  
+A moderate positive correlation is apparent between industrial activity and lower socioeconomic status, suggesting that areas with a higher concentration of industry tend to have higher proportions of low-income residents.  
+
+**Key Takeaways:**
+
++ Strong relationships exist between some pairs of variables, such as rad vs. tax and indus vs. lstat, suggesting potential co-dependencies or shared influencing factors within the dataset.  
++ The correlations between crim and variables like lstat, indus, and rad suggest that socioeconomic factors and infrastructure may play a significant role in determining crime rates.  
++ Outliers are present in multiple scatterplots, indicating the presence of extreme values that could potentially skew linear models or require further analysis.
+
+<hr>
+
+
+### **Question 6**
+**Do any of the suburbs of Boston appear to have particularly high crime rates by looking at the histogram of crim? What is the range of crim by using range() function in R?**
+
+Histogram of the Crime Rate (crim)  
+```{r fig.width = 12, fig.height = 8}
+# Histogram of 'crim'
+hist(
+  Boston$crim,
+  main = "Histogram of Crime Rate (crim)",
+  xlab = "Crime Rate",
+  labels = TRUE,
+  col = "red",
+  border = "black"
+)
+```
+
+Based on the histogram, the distribution of the crime rate (crim) variable is heavily right skewed. Most suburbs have relatively low crime rates, with the highest frequency concentrated in the first bin, indicating that most suburbs in Boston experience very low crime rates.  
+
+However, there are bins beyond a crime rate of 20, particularly those exceeding 80, which suggest the presence of suburbs with unusually high crime rates. These are outliers compared to the rest of the data. Specifically, there are about five or six suburbs with notably higher crime rates, with at least one suburb surpassing the crime rate of 80.
+
+**Key Observations:**  
+
++ **Low crime rates dominate:**  
+Most of the data points are clustered in the first bin, indicating that approximately 452 suburbs have very low crime rates, close to zero.
+
++ **Outliers with high crime rates:**  
+The few higher bins, especially those beyond 20, highlight suburbs with significantly higher crime rates. These suburbs are clear outliers in the distribution.
+
+In summary, while most suburbs exhibit low crime rates, a small number of suburbs with much higher crime rates stand out as distinct outliers in this dataset.
+
+Range of Crime Rate (crim)  
+```{r}
+crime_range <- range(Boston$crim)
+cat("Range of crime:", crime_range)
+```
+
+<hr>
+
+### **Question 7**
+**How many of the suburbs in this dataset bound the Charles River?**
+
+Number of suburbs bordering the Charles River  
+```{r}
+charles_suburbs <- sum(Boston$chas == 1)
+cat("Number of suburbs bordering the Charles River:",
+    charles_suburbs, "\n")
+```
+
+<hr>
+
+### **Question 8**
+**What is the median pupil-teach ratio among the towns in this dataset? What’s the mean?**
+
+Calculate median and mean pupil-teacher ratio  
+```{r}
+median_ptratio <- median(Boston$ptratio)
+mean_ptratio <- mean(Boston$ptratio)
+cat("Median pupil-teacher ratio:", median_ptratio, "\n")
+cat("Mean pupil-teacher ratio:", mean_ptratio, "\n")
+```
+
+<hr>
+
+### **Question 9**
+**In this dataset, how many of the suburbs average more than seven rooms per dwelling? More than eight rooms per dwelling? Comment on the suburbs that average more than eight rooms per dwelling.**
+
+Calculate the number of suburbs averaging more than 7 and 8 rooms per dwelling  
+```{r}
+more_than_7_rooms <- sum(Boston$rm > 7)
+more_than_8_rooms <- sum(Boston$rm > 8)
+cat("Suburbs averaging more than 7 rooms:", more_than_7_rooms, "\n")
+cat("Suburbs averaging more than 8 rooms:", more_than_8_rooms, "\n")
+```
+
++ Suburbs averaging more than 7 rooms: 64  
++ Suburbs averaging more than 8 rooms: 13  
++ Suburbs with more than 8 rooms per home are typically associated with greater affluence, as larger homes often correlate with higher property values and wealthier populations. These areas may represent attractive investment opportunities due to their spacious housing and potential for long-term value appreciation.
+
+<hr>
+
+### **Question 10**
+**Convert chas to a factor. Boxplot the medv against chas. Are houses around the Charles River more expensive?**
+
+Convert 'chas' to a factor  
+```{r}
+Boston$chas <- as.factor(Boston$chas)
+str(Boston$chas)
+```
+
+Plot boxplot of 'medv' against 'chas'  
+```{r fig.width = 12, fig.height = 8}
+boxplot(
+  medv ~ chas,
+  data = Boston,
+  main = "Boxplot of Median Value (medv) vs Charles River (chas)",
+  xlab = "Charles River (chas)",
+  ylab = "Median Value (medv)",
+  col = c("blue", "green")
+)
+```
+The boxplot might show that homes near the Charles River **(where chas = 1)** have a higher median value compared to those farther away **(chas = 0)**. This makes sense, as being close to a major water body like the Charles River could be perceived as an amenity, leading to higher property values in those suburbs.
+
+<hr>

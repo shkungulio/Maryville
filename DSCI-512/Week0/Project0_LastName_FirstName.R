@@ -16,7 +16,7 @@ titanic <- read.csv("titanic2.csv", header=T)
 
 # 1.2 Make sure that you have the directory set 
 #     to the correct location for the data.
-setwd("R:/bdat640_19_SP01")
+#setwd("R:/bdat640_19_SP01")
 
 # 2.1 How many rows are in the data frame?
 #     Answer: 14
@@ -92,7 +92,7 @@ odds
 # Answer: First-class Male Child: 35.0000
 #         Third-class Male Child:  0.8539
 # 
- A #male child who is a first-class passenger has 35 to 1 odds
+# A #male child who is a first-class passenger has 35 to 1 odds
 # of surviging the Titanic. Your survival is almost guaranteed.
 # But a third-class male child, however, has 5 to 6 odds of
 # surviving.
