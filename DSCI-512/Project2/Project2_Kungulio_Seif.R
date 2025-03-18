@@ -57,11 +57,11 @@ summary(simple_model)
       #### indicating a strong relationship between the predictor and the 
       #### response variable. Additionally, the R^2 value suggests that 
       #### this variable alone explains 60% of the variation in the model. 
-      #### The F-test can also serve as a useful indicator.
 
 
 # 4. Is the relationship between mpg and hp positive or negative?
-      #### Negative, as hp goes up, mpg goes down.
+      #### Negative, as the hp estimate value is -0.064548. Therefore, as hp 
+      #### goes up, mpg goes down.
 
 
 # 5. What is the predicted mpg associated with a horsepower (hp) of 100?
