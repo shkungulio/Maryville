@@ -1,0 +1,216 @@
+# Copyright 2021, Chris Shannnon
+
+Bike <- read.csv("Bike.csv", head=T)
+
+# which vars are categorical?
+summary(Bike)
+
+# season, holiday, workingday and weather are categorical
+# So, we should make them into factors
+
+# Note that in using the levels option, you indicate explicitly which
+# numbers that you are converting from. This is especially useful
+# when you want to specify levels but the actual numbers are not
+# found in your data source.
+#
+# The labels option assigns human-readable labels to your levels.
+# The label is assigned according to the position also present in
+# labels. For example, if you specified
+#
+#    levels=c(3,1,4,2), then
+# 
+# you would have to specify your lables as
+#
+#    labels=c("fall","spring","winter","summer")
+#
+# Each label must correspond to the position of a level.
+
+# Also, be sure to use short, easily readable labels. Use abbreviations
+# if necessary (you will see why for the weather variable when assigning labels).
+Bike$season <- factor(Bike$season, levels=c(1,2,3,4), # labels from description
+                     labels=c("spring","summer","fall","winter"))
+Bike$holiday <- factor(Bike$holiday, levels=c(0,1), labels=c("no","yes"))
+
+# Now, let's create a model, using two categorical variables and one
+# continuous variable. (BTW, don't try to copy and paste this
+# into your project without suitable modification. This will be
+# a VERY WRONG answer.)
+fit <- lm(count ~ casual + season + holiday, data=Bike)
+summary(fit)
+
+# Let's look at the output from summary:
+
+# Call:
+#   lm(formula = count ~ casual + season + holiday, data = Bike)
+# 
+# Residuals:
+#   Min      1Q  Median      3Q     Max 
+# -361.36  -78.78  -37.44   31.66  644.95 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+#   (Intercept)   79.00967    2.54049  31.100  < 2e-16 ***
+#   casual         2.48044    0.02606  95.183  < 2e-16 ***
+#   seasonsummer  19.27523    3.62141   5.323 1.04e-07 ***
+#   seasonfall    27.32308    3.65050   7.485 7.72e-14 ***
+#   seasonwinter  50.52999    3.53946  14.276  < 2e-16 ***
+#   holidayyes   -41.13798    7.47530  -5.503 3.81e-08 ***
+#   ---
+#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+# 
+# Residual standard error: 129.7 on 10880 degrees of freedom
+# Multiple R-squared:  0.4878,	Adjusted R-squared:  0.4876 
+# F-statistic:  2073 on 5 and 10880 DF,  p-value: < 2.2e-16
+
+# Notice that although season has four levels, only three are 
+# listed. That is because the first level is implicit when
+# none of the three other levels are active.
+#
+# To see how this works, what is going on internally in the regression
+# equation is that before the algorithm can perform any
+# matrix algegra, it has to convert your factors into dummy variables.
+# So, the resultant design matrix for the predictors looks something like this:
+#
+# | Intercept | casual | seasonsummer | seasonfall | seasonwinter | holidayyes |
+# |     1     |    3   |       0      |      0     |       0      |     0      |
+# |     1     |    1   |       1      |      0     |       0      |     1      |
+# |     1     |  116   |       0      |      1     |       0      |     0      |
+# |     1     |   12   |       0      |      0     |       1      |     0      |
+# |     1     |    7   |       0      |      0     |       0      |     1      |
+# |     1     |   42   |       1      |      0     |       0      |     0      |
+
+# In the design matrix, for the intercept is always 1, no matter what the value
+# of the other variables. Now, note that the level "spring" is missing. This
+# is because to represent spring, all that is needed is all the other 
+# dummy variables for season (seasonsummer, seasonfall, seasonwinter) are all
+# zero. In other words, seasonspring (spring) is the default level because
+# no other level is explicitly selected.
+#
+# Therefore, to represent a factor with C levels (i.e. C = 4 in this example),
+# you only need three dummy variables in your design matrix. Hence, a factor
+# with 6 levels will have five dummy variables, a factor with 10 levels will
+# be represented by 9 dummy variables, etcl. So, a factor will always be
+# represented in a matrix by C - 1 dummy variables.
+#
+# Notice that holiday is represented by only one column. Because holiday
+# has two levels, only one column (C - 1 = 2 - 1 = 1). So, if holidayyes
+# is equal to 0, then it is automatically "no". That is why in some of
+# the previous homeworks, when a categorical variable was represented by
+# 0 or 1, it did not matter whether it was converted or not, because that
+# is what it would be converted to anyway in the design matrix.
+
+# Now, let's look and see what model.matrix does.
+#
+# Before going to the internet, in your command console, run this command:
+?model.matrix
+
+# And read the help file thoroughly (even if it seems boring, and it is boring).
+# And then run some of the examples at the end to see how it works.
+#
+# But here, we will walk through some code with this example:
+#
+
+# We are trying to create a data frame that will give the input
+# that the bestglm algorithm requires. As per the directions,
+# bestgom requires all of your predictors as the first columns
+# and then the response variable as the last variable. (If there is any 
+# doubt about this, then run ?bestglm after loading the bestglm library
+# and see what the function requires.)
+#
+# So, for the input, we put a tilde first, and then all of our predictors,
+# and then as our last variable our response variable.
+
+mm <- model.matrix(~ casual + season + holiday + count, data=Bike)
+
+# Now, look at the first few rows of mm:
+head(mm)
+
+#   (Intercept) casual seasonsummer seasonfall seasonwinter holidayyes count
+# 1           1      3            0          0            0          0    16
+# 2           1      8            0          0            0          0    40
+# 3           1      5            0          0            0          0    32
+# 4           1      3            0          0            0          0    13
+# 5           1      0            0          0            0          0     1
+# 6           1      0            0          0            0          0     1
+
+# The very first column is just the row label, and it is not a part of the data
+# set. All it tells you is that this is the data in the first row, second row,
+# etc.
+# 
+# Now, model.matrix has given us an intercept, which we don't need.  So, the
+# next step is to remove the first column.
+
+mm <- mm[,-1] # -1 in the second position, after the comma, removes the 1st column.
+
+# Now look at your design matrix.
+head(mm)
+
+#   casual seasonsummer seasonfall seasonwinter holidayyes count
+# 1      3            0          0            0          0    16
+# 2      8            0          0            0          0    40
+# 3      5            0          0            0          0    32
+# 4      3            0          0            0          0    13
+# 5      0            0          0            0          0     1
+# 6      0            0          0            0          0     1
+
+# Again, the very first column is just the row labels and is not
+# a part of the data. But now the intercept is no longer there. So, now
+# we have data in the form that we need it in. So, let's use it in
+# bestglm:
+
+library(bestglm)
+bestglm.cv <- bestglm(mm, IC="CV")
+
+# But we et this error:
+#
+#     Error in bestglm(mm, IC = "CV") : is.data.frame(Xy) is not TRUE
+#
+# What is the problem? The error helpfully tells us that
+# our input variable mm is not a data frame:
+
+is.data.frame(mm) # Gives us FALSE
+
+# So, what is it?
+
+class(mm) # Gives us "matrix" "array". It's not a "data.frame"
+
+# Now we have to convert it to a data.frame,
+# since this is what bestglm wants.
+mm.dataframe <- data.frame(mm)
+
+# Let's make sure it's really a data frame:
+class(mm.dataframe) # gives us "data.frame"
+
+# It is a data.frame. Now, let's run bestglm again with cross validation
+bestglm.cv <- bestglm(mm.dataframe, IC="CV")
+
+# And that gives us our best model now:
+bestglm.cv
+
+# For finer control of CV (cross-validation), see the bestglm
+# vignette by running ?bestglm in your console.
+
+# And if you want to get the actual MSE for the cross-validation
+# to compare it with other models, do this (and the model selected
+# has an asterisk next to it), and then look at the CV column:
+bestglm.cv$Subsets
+
+# As for problem 3 and 4, this same technique will work. However,
+# you may also use the "caret" library to do this, as it
+# is more straight-forward and is very widely used and can be used
+# for training and testing many more algorithms. So, I recommend
+# getting some initial experience with trainControl and train from
+# the caret package. Also, note that if you use the caret library
+# train and trainControl for cross-validation, you WILL NOT NEED
+# to use model.matrix to convert your data. There will be no
+# fatal error for problems 3 and 4 if you use the caret library's
+# train and trainControl functions.
+#
+# There is a video for this in this week's modules, but for 
+# more information, read the vignettes that come with R by
+# running this command in your console:
+library(caret)
+?trainControl
+
+# And in the vignette there is a link to the train function
+# that uses trainControl.
