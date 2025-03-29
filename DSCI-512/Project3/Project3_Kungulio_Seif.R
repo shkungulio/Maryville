@@ -11,6 +11,9 @@
 #########################################################
 
 
+# DEVELOPMENT ENVIRONMENT PREPARATION
+#===============================================================================
+
 # Set the working directory
 setwd("C:/PROJECTS/Maryville/DSCI-512/Project3")
 
@@ -34,14 +37,15 @@ library(caret)
 library(bestglm)
 library(MASS)
 
-##########
-# PART I #
-##########
 
+
+# PART I.
+#===============================================================================
 
 # 1.	Load the dataset mtcars.xlsx into memory and convert column am to a factor
 # using factor() function.
 mtcars.df <- read_excel("data/mtcars.xlsx")
+
 #mtcars.df$am <- factor(mtcars.df$am)
 mtcars.df$am <- factor(mtcars.df$am,
                        levels = c(0, 1),
@@ -50,6 +54,7 @@ mtcars.df$am <- factor(mtcars.df$am,
 
 # 2.	Split the data into training set and test set. The training set contains
 # the first 35 observations, the test set containing the remaining observations.
+
 train_dataset <- mtcars.df[1:35, ] # Select the first 35 rows of the dataset
 test_dataset <- mtcars.df[-(1:35), ] # Use the remaining rows of the dataset
 
@@ -74,52 +79,40 @@ test_predictions <- predict(model.fit,
                             newdata = test_dataset, 
                             type = "response")
 
-#test_pred_class <- ifelse(test_predictions > 0.5, 1, 0)
+
 test_pred_class <- ifelse(test_predictions > 0.5, "manual", "automatic")
 
 # Create the confusion matrix
 conf_matrix <- confusionMatrix(factor(test_pred_class), 
                                test_dataset$am)
+
 # Print the confusion matrix
 print(conf_matrix)
 
-# Print test error rate
-test_error_rate <- 1 - sum(diag(conf_matrix$table)) / sum(conf_matrix$table)
-print(paste("Test Error Rate:", round(test_error_rate, 3)))
-
-# Assess model quality based on test error rate
-if (test_error_rate < 0.2) {
-  print("The model is reasonably accurate.")
-} else {
-  print("The model has room for improvement.")
-}
 
 
-###########
-# Part II #
-###########
+# Part II.
+#===============================================================================
 
 # Load the dataset
-bike.df <- read.csv("Bike.csv")
+bike.df <- read.csv("data/Bike.csv")
 
-#
+# Display first few rows
 head(bike.df)
 
 # Display dimension of the dataframe
 dim(bike.df)
 
-#
+# Display column names
 colnames(bike.df)
 
 # Convert datetime to Date format if needed
 bike.df$datetime <- as.POSIXct(bike.df$datetime, format = "%Y-%m-%d %H:%M:%S")
 
+
 # 1.	Build a linear model to forecast number of total rentals (count) using
 # potential predictors, season, holiday, workingday, weather, atemp, and
-# registered. Note here the linear model is not ideal for predicting count. We
-# can work around this drawback by rounding up or rounding down the predictions.
-# Please read the attached paper for the classical regression models for count
-# data in R.
+# registered.
 
 # Convert categorical variables to factors
 bike.df$season = factor(bike.df$season,
@@ -152,9 +145,8 @@ summary(linear_model)
 predictions <- predict(linear_model, bike.df)
 rounded_predictions <- round(predictions)
 
-# Show first few rounded predictions
-head(rounded_predictions)
-
+# Show first 15 rounded predictions
+head(rounded_predictions, 15)
 
 
 # 2.	Perform best subset selection using bestglm() function based on BIC.
@@ -168,21 +160,12 @@ model_data <- model.matrix(~ season + holiday + workingday + weather +
 # Remove the first column from the model_data dataset
 model_data <- model_data[,-1]
 
-# Display the first few rows
-head(model_data)
-
 # Convert model_data to dataframe
 model_data.df <- data.frame(model_data)
-
-# Check to see if model_data.df is a dataframe
-class(model_data.df)
 
 # Find the best model based on the BIC.
 best_bic_model <- bestglm(model_data.df, IC = "BIC", 
                           family = gaussian)
-
-# Display the best model based on the BIC
-print(best_bic_model)
 
 # Display the statistical summary of the best model of the best_bic_model
 summary(best_bic_model$BestModel)
@@ -199,7 +182,7 @@ loocv_model <- train(
   trControl = loocv_control
 )
 
-#
+# Print the loocv_model results
 print(loocv_model)
 
 # Access the Root Mean Squared Error (RMSE) value from the
@@ -240,7 +223,7 @@ best_cv_model <- bestglm(
 )
 
 # Print the results of the best_cv_model
-print(best_cv_model)
+#print(best_cv_model)
 
 # Display the statistical summary of the best model of the best_cv_model
 summary(best_cv_model$BestModel)
@@ -249,10 +232,14 @@ summary(best_cv_model$BestModel)
 # 6.	Perform the backward stepwise selection using stepAIC() function. What's
 # the best model?
 
+# Full model for count prediction
+full_model <- lm(count ~ season + holiday + workingday +
+                     weather + atemp + registered,
+                   data = bike.df)
+
 # Backward stepwise selection using stepAIC
-stepwise_model <- stepAIC(linear_model, direction = "backward")
+stepwise_model <- stepAIC(full_model, direction = "backward")
 
-
-print(stepwise_model)
 # Display the statistical summary of the best model
 summary(stepwise_model)
+

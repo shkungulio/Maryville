@@ -9,7 +9,7 @@ output: html_document
 
 ```{r data-loading, echo=FALSE}
 # Set the working directory to the correct location for the dataset.
-setwd("C:/PROJECTS/Maryville/DSCI 502/Week7")
+setwd("C:/PROJECTS/Maryville/DSCI-502/Week7")
 
 # Load the data from kc_house_data.csv
 kc_house_data <- read.csv("kc_house_data.csv")
