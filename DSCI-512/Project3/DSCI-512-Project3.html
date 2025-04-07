@@ -12,7 +12,7 @@
 <meta name="author" content="by Seif Kungulio" />
 
 
-<title>DSCI-512: Project 3</title>
+<title>Logistic Regression</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1496,7 +1496,7 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">DSCI-512: Project 3</h1>
+<h1 class="title toc-ignore">Logistic Regression</h1>
 <h4 class="author">by Seif Kungulio</h4>
 
 </div>
@@ -2137,17 +2137,17 @@ cv_model &lt;- train(
 ## 
 ## No pre-processing
 ## Resampling: Cross-Validated (10 fold) 
-## Summary of sample sizes: 9798, 9799, 9797, 9796, 9796, 9798, ... 
+## Summary of sample sizes: 9797, 9797, 9796, 9798, 9798, 9798, ... 
 ## Resampling results:
 ## 
-##   RMSE      Rsquared  MAE     
-##   35.05511  0.962534  23.88217
+##   RMSE      Rsquared   MAE     
+##   35.05414  0.9625626  23.87767
 ## 
 ## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 <p>Access the Root Mean Squared Error (RMSE) value from the results of a
 Cross-Validation model</p>
 <pre class="r"><code>cv_model$results$RMSE</code></pre>
-<pre><code>## [1] 35.05511</code></pre>
+<pre><code>## [1] 35.05414</code></pre>
 <p><strong>Note Qn3 &amp; Qn4:</strong><br />
 An RMSE value of <strong>35</strong> indicates that, on average, the
 model’s predictions deviate from the actual values by 35 units. In
