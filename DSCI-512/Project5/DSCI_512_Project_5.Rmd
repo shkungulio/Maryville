@@ -29,6 +29,27 @@ You are working as a data scientist for the government in the city of Washington
 
 <br>
 
+### **Data Dictionary**
+This dataset contains the following columns:
+
+| **Variable** | **Description** | **Data Type** | **Rules/Constraints** |
+|:-------------|:----------------|:--------------|:----------------------|
+| **datetime** | Date and time of the observation | Timestamp | Must be unique and in ISO 8601 format (YYYY-MM-DD HH:MM:SS). |
+| **season** | Season (1: Winter, 2: Spring, 3: Summer, 4: Fall) | Categorical | Must be an integer between 1 and 4. |
+| **holiday** | Whether the day is a holiday (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **workingday** | Whether the day is a working day (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **weather** | Weather condition (1 to 4, where 1: Clear, 4: Extreme) | Categorical | Must be an integer between 1 and 4. |
+| **temp** | Normalized temperature in Celsius | Continuous | Must be between 0 and 41. |
+| **atemp** | Normalized "feels like" temperature in Celsius | Continuous | Must be between 0 and 45.455. |
+| **humidity** | Relative humidity (%) | Continuous | Must be between 0 and 100. |
+| **windspeed** | Wind speed in km/h | Continuous | Must be non-negative, and maximum value is approximately 56.9979. |
+| **casual** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
+| **registered** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
+| **count** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
+|  |  |  |  |
+
+<br>
+
 ### **Development Environment**
 
 Install necessary packages if not installed
@@ -47,25 +68,6 @@ library(tree)
 library(randomForest)
 ```
 
-<br>
-
-### **Data Dictionary**
-**Data Source:** from MASS library in R. This dataset contains the following columns:
-
-| Variable | Data Type | Description | Constraints/Rules |
-|:-----------|:-----------|:------------------------|:--------------------------|
-| `mpg` | Numeric | Miles per gallon | Positive values only (mpg > 0) |
-| `cyl` | Integer | Number of cylinders | Categorical: {4, 6, 8} |
-| `disp` | Numeric | Displacement (cubic inches) | Positive values only (disp > 0) |
-| `hp` | Integer | Gross horsepower | Positive values only (hp > 0) |
-| `drat` | Numeric | Rear axle ratio | Positive values only (drat > 0) |
-| `wt` | Numeric | Weight (1000 lbs) | Positive values only (wt > 0) |
-| `qsec` | Numeric | 1/4 mile time (seconds) | Positive values only (qsec > 0) |
-| `vs` | Integer | Engine type: 0 = V-shaped, 1 = straight | Binary: {0, 1} |
-| `am` | Integer | Transmission: 0 = automatic, 1 = manual | Binary: {0, 1} |
-| `gear` | Integer | Number of forward gears | Categorical: {3, 4, 5} |
-| `carb` | Integer | Number of carburetors | Positive integer values only |
-|  |  |  |  |
 
 <br>
 

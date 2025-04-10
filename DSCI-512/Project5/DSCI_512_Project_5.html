@@ -1515,6 +1515,111 @@ contained in the Excel workbook bike.csv. You are asked to forecast bike
 rental demand in the capital bike share program.</p>
 <p><strong>Data Source:</strong> from Kaggle at <a href="https://www.kaggle.com/c/bike-sharing-demand" class="uri">https://www.kaggle.com/c/bike-sharing-demand</a></p>
 <p><br></p>
+<div id="data-dictionary" class="section level3">
+<h3><strong>Data Dictionary</strong></h3>
+<p>This dataset contains the following columns:</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="24%" />
+<col width="21%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"><strong>Variable</strong></th>
+<th align="left"><strong>Description</strong></th>
+<th align="left"><strong>Data Type</strong></th>
+<th align="left"><strong>Rules/Constraints</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>datetime</strong></td>
+<td align="left">Date and time of the observation</td>
+<td align="left">Timestamp</td>
+<td align="left">Must be unique and in ISO 8601 format (YYYY-MM-DD
+HH:MM:SS).</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>season</strong></td>
+<td align="left">Season (1: Winter, 2: Spring, 3: Summer, 4: Fall)</td>
+<td align="left">Categorical</td>
+<td align="left">Must be an integer between 1 and 4.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>holiday</strong></td>
+<td align="left">Whether the day is a holiday (0: No, 1: Yes)</td>
+<td align="left">Binary</td>
+<td align="left">Must be 0 or 1.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>workingday</strong></td>
+<td align="left">Whether the day is a working day (0: No, 1: Yes)</td>
+<td align="left">Binary</td>
+<td align="left">Must be 0 or 1.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>weather</strong></td>
+<td align="left">Weather condition (1 to 4, where 1: Clear, 4:
+Extreme)</td>
+<td align="left">Categorical</td>
+<td align="left">Must be an integer between 1 and 4.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>temp</strong></td>
+<td align="left">Normalized temperature in Celsius</td>
+<td align="left">Continuous</td>
+<td align="left">Must be between 0 and 41.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>atemp</strong></td>
+<td align="left">Normalized “feels like” temperature in Celsius</td>
+<td align="left">Continuous</td>
+<td align="left">Must be between 0 and 45.455.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>humidity</strong></td>
+<td align="left">Relative humidity (%)</td>
+<td align="left">Continuous</td>
+<td align="left">Must be between 0 and 100.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>windspeed</strong></td>
+<td align="left">Wind speed in km/h</td>
+<td align="left">Continuous</td>
+<td align="left">Must be non-negative, and maximum value is
+approximately 56.9979.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>casual</strong></td>
+<td align="left">Number of casual (non-registered) users</td>
+<td align="left">Integer</td>
+<td align="left">Must be non-negative, with a maximum of 367.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>registered</strong></td>
+<td align="left">Number of registered users</td>
+<td align="left">Integer</td>
+<td align="left">Must be non-negative, with a maximum of 886.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>count</strong></td>
+<td align="left">Total number of bike rentals</td>
+<td align="left">Integer</td>
+<td align="left">Must equal casual + registered, and be
+non-negative.</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
 <div id="development-environment" class="section level3">
 <h3><strong>Development Environment</strong></h3>
 <p>Install necessary packages if not installed</p>
@@ -1527,102 +1632,6 @@ if (!requireNamespace(&quot;randomForest&quot;, quietly = TRUE)) {
 <p>Load the required libraries</p>
 <pre class="r"><code>library(tree)
 library(randomForest)</code></pre>
-<p><br></p>
-</div>
-<div id="data-dictionary" class="section level3">
-<h3><strong>Data Dictionary</strong></h3>
-<p><strong>Data Source:</strong> from MASS library in R. This dataset
-contains the following columns:</p>
-<table>
-<colgroup>
-<col width="15%" />
-<col width="15%" />
-<col width="32%" />
-<col width="35%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">Variable</th>
-<th align="left">Data Type</th>
-<th align="left">Description</th>
-<th align="left">Constraints/Rules</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>mpg</code></td>
-<td align="left">Numeric</td>
-<td align="left">Miles per gallon</td>
-<td align="left">Positive values only (mpg &gt; 0)</td>
-</tr>
-<tr class="even">
-<td align="left"><code>cyl</code></td>
-<td align="left">Integer</td>
-<td align="left">Number of cylinders</td>
-<td align="left">Categorical: {4, 6, 8}</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>disp</code></td>
-<td align="left">Numeric</td>
-<td align="left">Displacement (cubic inches)</td>
-<td align="left">Positive values only (disp &gt; 0)</td>
-</tr>
-<tr class="even">
-<td align="left"><code>hp</code></td>
-<td align="left">Integer</td>
-<td align="left">Gross horsepower</td>
-<td align="left">Positive values only (hp &gt; 0)</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>drat</code></td>
-<td align="left">Numeric</td>
-<td align="left">Rear axle ratio</td>
-<td align="left">Positive values only (drat &gt; 0)</td>
-</tr>
-<tr class="even">
-<td align="left"><code>wt</code></td>
-<td align="left">Numeric</td>
-<td align="left">Weight (1000 lbs)</td>
-<td align="left">Positive values only (wt &gt; 0)</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>qsec</code></td>
-<td align="left">Numeric</td>
-<td align="left">1/4 mile time (seconds)</td>
-<td align="left">Positive values only (qsec &gt; 0)</td>
-</tr>
-<tr class="even">
-<td align="left"><code>vs</code></td>
-<td align="left">Integer</td>
-<td align="left">Engine type: 0 = V-shaped, 1 = straight</td>
-<td align="left">Binary: {0, 1}</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>am</code></td>
-<td align="left">Integer</td>
-<td align="left">Transmission: 0 = automatic, 1 = manual</td>
-<td align="left">Binary: {0, 1}</td>
-</tr>
-<tr class="even">
-<td align="left"><code>gear</code></td>
-<td align="left">Integer</td>
-<td align="left">Number of forward gears</td>
-<td align="left">Categorical: {3, 4, 5}</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>carb</code></td>
-<td align="left">Integer</td>
-<td align="left">Number of carburetors</td>
-<td align="left">Positive integer values only</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-</tbody>
-</table>
 <p><br></p>
 </div>
 <div id="question-1" class="section level3">
