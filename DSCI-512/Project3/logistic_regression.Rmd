@@ -1,14 +1,9 @@
 ---
 title: "Logistic Regression"
-author: "by Seif Kungulio"
+author: "Seif Kungulio"
+date: "`r Sys.Date()`"
 output:
-  html_document:
-    theme: cosmo
-    toc: true
-    toc_title: "Table of Contents"
-    toc_float:
-      collapsed: true
-      smooth_scroll: false
+  rmdformats::readthedown
 ---
 
 ```{r setup, include=FALSE}
@@ -39,7 +34,7 @@ if (!requireNamespace("caret", quietly = TRUE)) {
 ```
 
 Load the required libraries
-```{r load-libraries}
+```{r load-libraries, message=FALSE}
 library(readxl)
 library(caret)
 library(bestglm)
@@ -48,7 +43,7 @@ library(MASS)
 
 <br>
 
-## **Car Dealership**
+# **Car Dealership**
 <hr style="height:2px; border:none; color:#333; background-color:#333;" />
 
 You are a data scientist in a top dealership group in USA. Your boss, Mr. Buffet, asked you to analyze the motor trend car data. You are given a dataset containing fuel consumption and 10 aspects of automobile design and performance for 32 automobiles the file mtcars.xlsx.
@@ -73,8 +68,9 @@ You are a data scientist in a top dealership group in USA. Your boss, Mr. Buffet
 
 <hr style="height:1px; border:none; color:#333; background-color:#333;" />
 
-### **Question 1:**
-Load the dataset mtcars.xlsx into memory and convert column **am** to a factor using factor() function.  
+## **Question 1:**
+
+**Load the dataset mtcars.xlsx into memory and convert column `am` to a factor using factor() function.**
 
 Load the dataset mtcars.xlsx into memory
 ```{r}
@@ -82,12 +78,12 @@ mtcars.df <- read_excel("data/mtcars.xlsx")
 ```
 
 Display the dimension of the data frame
-```{r dimension, echo=FALSE}
+```{r dimension}
 dim(mtcars.df)
 ```
 
 Display first six rows of the data frame
-```{r preview, echo=FALSE}
+```{r preview}
 head(mtcars.df)
 ```
 
@@ -99,24 +95,24 @@ mtcars.df$am <- factor(mtcars.df$am,
 ```
 
 Display the structure of the data frame
-```{r structure, echo=FALSE}
+```{r structure}
 str(mtcars.df)
 ```
 
 Display the statistical summary of the data frame
-```{r statistical-summary, echo=FALSE}
+```{r statistical-summary}
 summary(mtcars.df)
 ```
 
 
-### **Question 2:**
-Split the data into training set and test set. The training set contains the first 35 observations, the test set containing the remaining observations.  
+## **Question 2:**
+**Split the data into training set and test set. The training set contains the first 35 observations, the test set containing the remaining observations.**  
 
 Select the first 35 rows of the dataset to create training dataset and display the first 10 rows
 ```{r training-dataset}
 train_dataset <- mtcars.df[1:35, ]
 ```
-```{r, echo=FALSE}
+```{r}
 head(train_dataset, 10)
 ```
 
@@ -124,15 +120,15 @@ Use the remaining rows of the dataset to create testing dataset
 ```{r testing-dataset}
 test_dataset <- mtcars.df[-(1:35), ]
 ```
-```{r, echo=FALSE}
+```{r}
 head(test_dataset, 10)
 ```
 
 
-### **Question 3:**
-Build a logistic regression model with the response is am and the predictors are mpg, cyl, hp, and wt using glm() function
+## **Question 3:**
+**Build a logistic regression model with the response is am and the predictors are `mpg`, `cyl`, `hp`, and `wt` using `glm()` function**
 
-Build a logistic regression model using **glm()** function
+Build a logistic regression model using `glm()` function
 ```{r}
 model.fit <- glm(am ~ mpg + cyl + hp + wt,
              data = train_dataset,
@@ -140,13 +136,13 @@ model.fit <- glm(am ~ mpg + cyl + hp + wt,
 ```
 
 Display the statistical summary of the model
-```{r, echo=FALSE}
+```{r}
 summary(model.fit)
 ```
 
 
-### **Question 4:**
-Compute the test error on the test data set using a confusion matrix. Is it a good model based on test error?
+## **Question 4:**
+**Compute the test error on the test data set using a `confusion matrix`. Is it a good model based on test error?**
 
 ```{r}
 test_predictions <- predict(model.fit, 
@@ -163,7 +159,7 @@ conf_matrix <- confusionMatrix(factor(test_pred_class),
 ```
 
 Print the confusion matrix
-```{r print-confusion-matrix, echo=FALSE}
+```{r print-confusion-matrix}
 print(conf_matrix)
 ```
 The model, despite its 83.33% accuracy, is **ineffective due to severe class imbalance**. It correctly identifies all “automatic” cases but completely fails to predict “manual” vehicles, resulting in a sensitivity of 1.00 and specificity of 0.00. The Kappa score of 0 indicates no meaningful classification ability beyond random guessing. Additionally, the Balanced Accuracy of 0.50 and McNemar’s Test p-value of 1.000 confirm that the model lacks discrimination between classes. Overall, it overfits to “automatic” and fails to generalize, making it unreliable for classification.
@@ -172,12 +168,12 @@ The model, despite its 83.33% accuracy, is **ineffective due to severe class imb
 <br>
 
 
-## **Washington D.C. Bike Sharing**
+# **Bike Sharing System**
 <hr style="height:2px; border:none; color:#333; background-color:#333;" />
 
 You are working as a data scientist for the city of Washington D.C. government. Currently, Washington D.C. has a bike sharing system. People can rent a bike from one location and return it to a different place. You are given a historical usage pattern with weather data contained in Excel workbook bike.csv. You are asked to forecast bike rental demand in the capital bike share program.
 
-### **Data Dictionary**
+## **Data Dictionary**
 **Data Source:** The data is from Kaggle at https://www.kaggle.com/c/bike-sharing-demand, and contains the following columns:
 
 | Variable   | Data Type  | Description  | Constraints/Rules  |
@@ -199,8 +195,8 @@ You are working as a data scientist for the city of Washington D.C. government. 
 <hr style="height:1px; border:none; color:#333; background-color:#333;" />
 
 
-### **Question 1:**
-Build a linear model to forecast number of total rentals (count) using potential predictors, season, holiday, workingday, weather, atemp, and registered.
+## **Question 1:**
+**Build a linear model to forecast number of total rentals (`count`) using potential predictors, `season`, `holiday`, `workingday`, `weather`, `atemp`, and `registered`.**
 
 Load the dataset
 ```{r}
@@ -208,17 +204,17 @@ bike.df <- read.csv("data/Bike.csv")
 ```
 
 Display first few rows
-```{r, echo=FALSE}
+```{r}
 head(bike.df)
 ```
 
 Display dimension of the dataframe
-```{r, echo=FALSE}
+```{r}
 dim(bike.df)
 ```
 
 Display column names
-```{r, echo=FALSE}
+```{r}
 colnames(bike.df)
 ```
 
@@ -268,7 +264,7 @@ linear_model <- lm(count ~ season + holiday + workingday +
 ```
 
 Display the statistical summary of the model
-```{r, echo=FALSE}
+```{r}
 summary(linear_model)
 ```
 
@@ -279,14 +275,14 @@ rounded_predictions <- round(predictions)
 ```
 
 Show first 15 rounded predictions
-```{r, echo=FALSE}
+```{r}
 head(rounded_predictions, 15)
 ```
 The model effectively explains bike rental patterns, showing that seasonality, holidays, and working days have substantial effects. Weather conditions, particularly misty/cloudy and snowy conditions, decrease rentals, while temperature has a positive impact. Surprisingly, heavy rain does not show a significant impact, which may warrant further investigation. Finally, the number of registered users is the strongest predictor, reinforcing the idea that bike-sharing systems heavily rely on frequent users rather than occasional riders.
 
 
-### **Question 2:**
-Perform best subset selection using bestglm() function based on BIC. What’s the best model based on BIC?
+## **Question 2:**
+**Perform best subset selection using `bestglm()` function based on BIC. What’s the best model based on BIC?**
 
 Prepare data for bestglm (needs to be a dataframe with only predictors and response)
 ```{r}
@@ -310,14 +306,14 @@ best_bic_model <- bestglm(model_data.df, IC = "BIC", family = gaussian)
 ```
 
 Display the statistical summary of the best model of the best_bic_model
-```{r, echo=FALSE}
+```{r}
 summary(best_bic_model$BestModel)
 ```
 This model suggests strong predictive performance, with seasonal, weather, holiday, and temperature-related factors all significantly influencing the outcome variable. The model’s high R – squared and significance levels indicate it is likely capturing the key drivers in the data effectively.
 
 
-### **Question 3:**
-Compute the test error of the best model based on BIC using LOOCV.
+## **Question 3:**
+**Compute the test error of the best model based on BIC using LOOCV.**
 
 Test error using LOOCV
 ```{r}
@@ -331,7 +327,7 @@ loocv_model <- train(
 ```
 
 Print the loocv_model results
-```{r, echo=FALSE}
+```{r}
 print(loocv_model)
 ```
 
@@ -341,8 +337,8 @@ loocv_model$results$RMSE
 ```
 
 
-### **Question 4:**
-Calculate the test error of the best model based on BIC using 10-fold CV.
+## **Question 4:**
+**Calculate the test error of the best model based on BIC using 10-fold CV.**
 
 Test error using 10-fold CV
 ```{r}
@@ -358,7 +354,7 @@ cv_model <- train(
 ```
 
 Print the results of the cv_model
-```{r, echo=FALSE}
+```{r}
 print(cv_model)
 ```
 
@@ -370,8 +366,8 @@ cv_model$results$RMSE
 An RMSE value of **35** indicates that, on average, the model's predictions deviate from the actual values by 35 units. In general, lower RMSE values signify better model performance, as they indicate smaller discrepancies between predicted and actual values.
 
 
-### **Question 5:**
-Perform best subset selection using bestglm() function based on CV. What’s the best model based on CV?
+## **Question 5:**
+**Perform best subset selection using `bestglm()` function based on CV. What’s the best model based on CV?**
 
 Best subset selection based on CV
 ```{r}
@@ -384,19 +380,19 @@ best_cv_model <- bestglm(
 ```
 
 Print the results of the best_cv_model
-```{r, echo=FALSE}
+```{r}
 print(best_cv_model)
 ```
 
 Display the statistical summary of the best model of the best_cv_model
-```{r, echo=FALSE}
+```{r}
 summary(best_cv_model$BestModel)
 ```
 The model's high R-squared value and significant predictors indicate a good fit, with meaningful relationships between the predictors and the outcome. However, certain predictors, such as ***workingdayYes*** and ***seasonFall***, show large effects that warrant careful interpretation to ensure they align with domain expectations and aren't driven by multicollinearity. Furthermore, the broad range of residuals suggests that while the model is generally accurate, there may be outliers or variations not fully captured by the current predictors.
 
 
-### **Question 6:**
-Perform the backward stepwise selection using stepAIC() function. What’s the best model?
+## **Question 6:**
+**Perform the backward stepwise selection using `stepAIC()` function. What’s the best model?**
 
 Full model for count prediction
 ```{r}
@@ -410,7 +406,7 @@ stepwise_model <- stepAIC(full_model, direction = "backward")
 ```
 
 Display the statistical summary of the best model
-```{r, echo=FALSE}
+```{r}
 summary(stepwise_model)
 ```
 The analysis used backward stepwise selection to identify the best predictive model for bike rentals, retaining all variables as their removal increased the Akaike Information Criterion (AIC).

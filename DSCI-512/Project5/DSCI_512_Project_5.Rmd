@@ -149,6 +149,13 @@ tr.model = tree(
 # Display the statistical summary of the tree
 summary(tr.model)
 ```
+
+Plot the tree
+```{r, fig.width = 12, fig.height = 6}
+plot(tr.model)
+text(tr.model, pretty = 0)
+```
+
 * The decision tree mainly depends on the registered and casual variables, which seem to be the most direct predictors of bike rental counts. 
 * With 8 terminal nodes, the model reflects a moderate level of complexity while still managing to avoid overfitting.
 * The Residual Mean Deviance (1875) and the distribution of residuals give insight into how well the model performs. Although there are some notable outliers (like -158 and +259.7), the residuals generally cluster around zero.

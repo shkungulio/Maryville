@@ -1,16 +1,28 @@
 ---
-title: "DSCI-512: Project 1"
+title: "Introduction to Statistical Learning"
 author: "by Seif Kungulio"
-output: html_document
+date: "03/16/2025"
+output:
+  rmdformats::readthedown
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<hr>
+<hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
 
-### **Question 1**
+
+# **Boston Housing Analysis**
+
+<hr style="height:2px; border:none; color:#333; background-color:#333;" />
+
+You are a data scientist in Awesome Business Analytics (ABA). ABA is a public company traded in Stock exchange. The CEO of ABA wants to invest in the real estate properties in the Boston area. You are given a dataset containing housing values in the suburbs of Boston in the file Boston.csv.
+
+
+
+
+## **Question 1**
 **Read the dataset in Boston.csv into R. Call the loaded data Boston. Make sure that you have the directory set to the correct location for the data.**
 
 Read the data set into R memory  
@@ -40,7 +52,7 @@ summary(Boston)
 
 <hr>
 
-### **Question 2**
+## **Question 2**
 **How many rows are in the data frame? How many columns? What do the rows and columns represent?**
 
 + There are **`r nrow(Boston)`** number of rows in the data frame.  
@@ -49,7 +61,7 @@ summary(Boston)
 
 <hr>
 
-### **Question 3**
+## **Question 3**
 **Select the 1st, 100th, and 500th rows with columns tax and medv.**  
 
 Extract 1st, 100th, and 500th rows with columns 'tax' and 'medv'  
@@ -60,7 +72,7 @@ print(selected_rows)
 
 <hr>
 
-### **Question 4**
+## **Question 4**
 **Look at the data using cor function. Are any of the predictors associated with per capita crime rate? If so, explain the relationship based on correlation coefficents.**
 
 Correlation analysis to identify associations with crime rate.  
@@ -80,7 +92,7 @@ print(cor_matrix["crim", ])
 
 <hr>
 
-### **Question 5**
+## **Question 5**
 **Make some pairwise scatterplots of the predictors, crim, rad, tax, indus, and lstat in this data set. Describe your findings.**
 
 Pairwise scatter plots for selected predictors  
@@ -130,7 +142,7 @@ A moderate positive correlation is apparent between industrial activity and lowe
 <hr>
 
 
-### **Question 6**
+## **Question 6**
 **Do any of the suburbs of Boston appear to have particularly high crime rates by looking at the histogram of crim? What is the range of crim by using range() function in R?**
 
 Histogram of the Crime Rate (crim)  
@@ -160,7 +172,7 @@ The few higher bins, especially those beyond 20, highlight suburbs with signific
 
 In summary, while most suburbs exhibit low crime rates, a small number of suburbs with much higher crime rates stand out as distinct outliers in this dataset.
 
-Range of Crime Rate (crim)  
+Range of Crime Rate `crim`  
 ```{r}
 crime_range <- range(Boston$crim)
 cat("Range of crime:", crime_range)
@@ -168,7 +180,7 @@ cat("Range of crime:", crime_range)
 
 <hr>
 
-### **Question 7**
+## **Question 7**
 **How many of the suburbs in this dataset bound the Charles River?**
 
 Number of suburbs bordering the Charles River  
@@ -180,7 +192,7 @@ cat("Number of suburbs bordering the Charles River:",
 
 <hr>
 
-### **Question 8**
+## **Question 8**
 **What is the median pupil-teach ratio among the towns in this dataset? What’s the mean?**
 
 Calculate median and mean pupil-teacher ratio  
@@ -193,7 +205,7 @@ cat("Mean pupil-teacher ratio:", mean_ptratio, "\n")
 
 <hr>
 
-### **Question 9**
+## **Question 9**
 **In this dataset, how many of the suburbs average more than seven rooms per dwelling? More than eight rooms per dwelling? Comment on the suburbs that average more than eight rooms per dwelling.**
 
 Calculate the number of suburbs averaging more than 7 and 8 rooms per dwelling  
@@ -204,22 +216,22 @@ cat("Suburbs averaging more than 7 rooms:", more_than_7_rooms, "\n")
 cat("Suburbs averaging more than 8 rooms:", more_than_8_rooms, "\n")
 ```
 
-+ Suburbs averaging more than 7 rooms: 64  
-+ Suburbs averaging more than 8 rooms: 13  
++ Suburbs averaging more than 7 rooms: **`r more_than_7_rooms`**  
++ Suburbs averaging more than 8 rooms: **`r more_than_8_rooms`**  
 + Suburbs with more than 8 rooms per home are typically associated with greater affluence, as larger homes often correlate with higher property values and wealthier populations. These areas may represent attractive investment opportunities due to their spacious housing and potential for long-term value appreciation.
 
 <hr>
 
-### **Question 10**
-**Convert chas to a factor. Boxplot the medv against chas. Are houses around the Charles River more expensive?**
+## **Question 10**
+**Convert `chas` to a factor. Boxplot the `medv` against `chas`. Are houses around the Charles River more expensive?**
 
-Convert 'chas' to a factor  
+Convert `chas` to a factor  
 ```{r}
 Boston$chas <- as.factor(Boston$chas)
 str(Boston$chas)
 ```
 
-Plot boxplot of 'medv' against 'chas'  
+Plot boxplot of `medv` against `chas`  
 ```{r fig.width = 12, fig.height = 8}
 boxplot(
   medv ~ chas,
@@ -230,6 +242,6 @@ boxplot(
   col = c("blue", "green")
 )
 ```
-The boxplot might show that homes near the Charles River **(where chas = 1)** have a higher median value compared to those farther away **(chas = 0)**. This makes sense, as being close to a major water body like the Charles River could be perceived as an amenity, leading to higher property values in those suburbs.
+The boxplot might show that homes near the Charles River **(where `chas` = 1)** have a higher median value compared to those farther away **(`chas` = 0)**. This makes sense, as being close to a major water body like the Charles River could be perceived as an amenity, leading to higher property values in those suburbs.
 
 <hr>

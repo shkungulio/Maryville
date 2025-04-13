@@ -1,7 +1,8 @@
 ---
 title: "Tree Based Methods"
 author: "by Seif Kungulio"
-output: github_document
+output:
+  rmdformats::readthedown
 ---
 
 ```{r setup, include=FALSE}
