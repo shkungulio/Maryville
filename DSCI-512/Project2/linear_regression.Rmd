@@ -7,16 +7,6 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-<hr style="height:5px; border:none; color:#006000; background-color:#006000" />
-
-<br>
-
-## **Dataset Loading**
-
-```{r, echo = FALSE}
 # Install necessary packages if not installed
 if (!requireNamespace("readxl", quietly = TRUE)) {
   install.packages("readxl")
@@ -25,30 +15,60 @@ if (!requireNamespace("readxl", quietly = TRUE)) {
 #load the data set into memory
 library(readxl)
 
-# Set the working directory
-setwd("C:/PROJECTS/Maryville/DSCI-512/Project2")
+knitr::opts_chunk$set(echo = TRUE)
+```
 
+<hr style="height:5px; border:none; color:#006000; background-color:#006000" />
+
+# **Analyze Motor Car Data Trends**
+<hr style="height:2px; border:none; color:#333; background-color:#333" />
+
+You are a data scientist in a top dealership group in USA. Your boss, Mr. Buffet, asked you to analyze the motor trend car data. You are given a dataset containing fuel consumption and 10 aspects of automobile design and performance for 32 automobiles the file mtcars.xlsx.
+
+**Data Source:** from MASS library in R. 
+
+## **Data Dictionary**
+This dataset contains the following columns:
+
+| **Variable** | **Data Type** | **Description** | **Constraints/Rules** |
+|:-------------|:--------------|:----------------|:----------------------|
+| `mpg` | Numeric | Miles per gallon | Positive values only (mpg > 0) |
+| `cyl` | Integer | Number of cylinders | Categorical: {4, 6, 8} |
+| `disp` | Numeric | Displacement (cubic inches) | Positive values only (disp > 0) |
+| `hp` | Integer | Gross horsepower | Positive values only (hp > 0) |
+| `drat` | Numeric | Rear axle ratio | Positive values only (drat > 0) |
+| `wt` | Numeric | Weight (1000 lbs) | Positive values only (wt > 0) |
+| `qsec` | Numeric | 1/4 mile time (seconds) | Positive values only (qsec > 0) |
+| `vs` | Integer | Engine type: 0 = V-shaped, 1 = straight | Binary: {0, 1} |
+| `am` | Integer | Transmission: 0 = automatic, 1 = manual | Binary: {0, 1} |
+| `gear` | Integer | Number of forward gears | Categorical: {3, 4, 5} |
+| `carb` | Integer | Number of carburetors | Positive integer values only |
+
+
+## **Dataset Loading**
+
+```{r}
 # Load the Boston dataset
 mtcars <- read_excel("data/mtcars.xlsx", sheet = "mtcars")
 ```
 
 Check the dimension of the data frame
-```{r, echo=FALSE}
+```{r}
 dim(mtcars)
 ```
 
 Display data frame column names
-```{r, echo=FALSE}
+```{r}
 colnames(mtcars)
 ```
 
 Display data frame structures
-```{r, echo=FALSE}
+```{r}
 str(mtcars)
 ```
 
 Display data frame statistical summary
-```{r, echo=FALSE}
+```{r}
 summary(mtcars)
 ```
 <hr>
@@ -57,7 +77,7 @@ summary(mtcars)
 **Use the lm() function to perform a simple linear regression with the response mpg and the predictor hp.**
 
 Visualize the data pairwise  
-```{r fig.width=12, fig.height=8, echo=FALSE}
+```{r fig.width=12, fig.height=8}
 pairs(mtcars[,c("mpg","hp")])
 ```
 
@@ -67,7 +87,7 @@ simple_model = lm(mpg ~ hp, data = mtcars)
 ```
 
 Print out the model results  
-```{r, echo=FALSE}
+```{r}
 summary(simple_model)
 ```
 
@@ -110,7 +130,7 @@ predicted_mpg <- predict(simple_model, data.frame(hp = 100),
 ```
 
 Print the predicted mpg  
-```{r, echo=FALSE}
+```{r}
 predicted_mpg
 ```
 
@@ -120,7 +140,7 @@ predicted_mpg
 **Plot the response and the predictor and add the regression line using abline().**
 
 Plot the response and predictor with the regression line  
-```{r fig.width=12, fig.height=8, echo=FALSE}
+```{r fig.width=12, fig.height=8}
 plot(mtcars$hp, mtcars$mpg, main = "MPG vs Horsepower",
      xlab = "Horsepower (hp)", ylab = "Miles per Gallon (mpg)")
 abline(simple_model, lwd = 2, col = "blue")
@@ -137,7 +157,7 @@ multiple_model <- lm(mpg ~ cyl + disp + hp + wt + vs + gear, data = mtcars)
 ```
 
 Print the summary of the model  
-```{r, echo=FALSE}
+```{r}
 summary(multiple_model)
 ```
 
@@ -166,7 +186,7 @@ interaction_model <- lm(mpg ~ hp * wt, data = mtcars)
 ```
 
 Print the summary of the interaction model  
-```{r, echo=FALSE}
+```{r}
 summary(interaction_model)
 ```
 

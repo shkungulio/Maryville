@@ -7,7 +7,7 @@
 
         <meta name="author" content="Seif Kungulio" />
     
-        <meta name="date" content="2025-04-12" />
+        <meta name="date" content="2025-04-13" />
     
     <title>Logistic Regression</title>
 
@@ -1272,11 +1272,10 @@ margin-left: 0 !important;
     <h2><a href="#content">Logistic Regression</a></h2>
     <div id="toc">
       <ul>
-      <li><a href="#development-environment" id="toc-development-environment"><strong>Development
-      Environment</strong></a></li>
-      <li><a href="#car-dealership" id="toc-car-dealership"><strong>Car
-      Dealership</strong></a>
+      <li><a href="#analyze-motor-car-data-trends" id="toc-analyze-motor-car-data-trends"><strong>Analyze Motor Car
+      Data Trends</strong></a>
       <ul>
+      <li><a href="#data-dictionary" id="toc-data-dictionary"><strong>Data Dictionary</strong></a></li>
       <li><a href="#question-1" id="toc-question-1"><strong>Question
       1:</strong></a></li>
       <li><a href="#question-2" id="toc-question-2"><strong>Question
@@ -1309,7 +1308,7 @@ margin-left: 0 !important;
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> Seif
 Kungulio</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2025-04-12</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2025-04-13</p>
           </div>
    </div>
      
@@ -1319,55 +1318,31 @@ Kungulio</p>
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="main">
-<hr style="height:5px; border:none; color:red; background-color:red;" />
-<p><br></p>
-<div id="development-environment" class="section level2">
-<h2><strong>Development Environment</strong></h2>
-<hr style="height:2px; border:none; color:#333; background-color:#333;" />
-<p>Install necessary packages if not installed</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;readxl&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;readxl&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>}</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;bestglm&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;bestglm&quot;</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>}</span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;MASS&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;MASS&quot;</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>}</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;caret&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;caret&quot;</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>}</span></code></pre></div>
-<p>Load the required libraries</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">library</span>(bestglm)</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div>
-<p><br></p>
-</div>
-<div id="car-dealership" class="section level1">
-<h1><strong>Car Dealership</strong></h1>
-<hr style="height:2px; border:none; color:#333; background-color:#333;" />
+<hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
+<div id="analyze-motor-car-data-trends" class="section level1">
+<h1><strong>Analyze Motor Car Data Trends</strong></h1>
+<hr style="height:2px; border:none; color:#333; background-color:#333" />
 <p>You are a data scientist in a top dealership group in USA. Your boss,
 Mr. Buffet, asked you to analyze the motor trend car data. You are given
 a dataset containing fuel consumption and 10 aspects of automobile
 design and performance for 32 automobiles the file mtcars.xlsx.</p>
-<div id="data-dictionary" class="section level3">
-<h3><strong>Data Dictionary</strong></h3>
-<p><strong>Data Source:</strong> from MASS library in R. This dataset
-contains the following columns:</p>
+<p><strong>Data Source:</strong> from MASS library in R.</p>
+<div id="data-dictionary" class="section level2">
+<h2><strong>Data Dictionary</strong></h2>
+<p>This dataset contains the following columns:</p>
 <table>
 <colgroup>
-<col width="15%" />
-<col width="15%" />
-<col width="32%" />
-<col width="35%" />
+<col width="20%" />
+<col width="21%" />
+<col width="24%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">Variable</th>
-<th align="left">Data Type</th>
-<th align="left">Description</th>
-<th align="left">Constraints/Rules</th>
+<th align="left"><strong>Variable</strong></th>
+<th align="left"><strong>Data Type</strong></th>
+<th align="left"><strong>Description</strong></th>
+<th align="left"><strong>Constraints/Rules</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1437,27 +1412,21 @@ contains the following columns:</p>
 <td align="left">Number of carburetors</td>
 <td align="left">Positive integer values only</td>
 </tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
 </tbody>
 </table>
-<hr style="height:1px; border:none; color:#333; background-color:#333;" />
+<hr>
 </div>
 <div id="question-1" class="section level2">
 <h2><strong>Question 1:</strong></h2>
 <p><strong>Load the dataset mtcars.xlsx into memory and convert column
 <code>am</code> to a factor using factor() function.</strong></p>
 <p>Load the dataset mtcars.xlsx into memory</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>mtcars.df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/mtcars.xlsx&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>mtcars.df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/mtcars.xlsx&quot;</span>)</span></code></pre></div>
 <p>Display the dimension of the data frame</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">dim</span>(mtcars.df)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">dim</span>(mtcars.df)</span></code></pre></div>
 <pre><code>## [1] 41 12</code></pre>
 <p>Display first six rows of the data frame</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">head</span>(mtcars.df)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">head</span>(mtcars.df)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 12
 ##   name           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1469,11 +1438,11 @@ contains the following columns:</p>
 ## 6 Valiant       18.1     6   225   105  2.76  3.46  20.2     1     0     3     1</code></pre>
 <p>Convert column <strong>am</strong> to a factor using
 <strong>factor()</strong> function.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>mtcars.df<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">factor</span>(mtcars.df<span class="sc">$</span>am,</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;automatic&quot;</span>, <span class="st">&quot;manual&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>mtcars.df<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">factor</span>(mtcars.df<span class="sc">$</span>am,</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;automatic&quot;</span>, <span class="st">&quot;manual&quot;</span>))</span></code></pre></div>
 <p>Display the structure of the data frame</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">str</span>(mtcars.df)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">str</span>(mtcars.df)</span></code></pre></div>
 <pre><code>## tibble [41 × 12] (S3: tbl_df/tbl/data.frame)
 ##  $ name: chr [1:41] &quot;Mazda RX4&quot; &quot;Mazda RX4 Wag&quot; &quot;Datsun 710&quot; &quot;Hornet 4 Drive&quot; ...
 ##  $ mpg : num [1:41] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
@@ -1488,7 +1457,7 @@ contains the following columns:</p>
 ##  $ gear: num [1:41] 4 4 4 3 3 3 3 4 4 4 ...
 ##  $ carb: num [1:41] 4 4 1 1 2 1 4 2 2 4 ...</code></pre>
 <p>Display the statistical summary of the data frame</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">summary</span>(mtcars.df)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">summary</span>(mtcars.df)</span></code></pre></div>
 <pre><code>##      name                mpg             cyl             disp      
 ##  Length:41          Min.   :10.40   Min.   :4.000   Min.   : 71.1  
 ##  Class :character   1st Qu.:15.80   1st Qu.:4.000   1st Qu.:121.0  
@@ -1510,6 +1479,7 @@ contains the following columns:</p>
 ##  Mean   :0.4634                  Mean   :3.659   Mean   :2.707  
 ##  3rd Qu.:1.0000                  3rd Qu.:4.000   3rd Qu.:4.000  
 ##  Max.   :1.0000                  Max.   :5.000   Max.   :8.000</code></pre>
+<hr>
 </div>
 <div id="question-2" class="section level2">
 <h2><strong>Question 2:</strong></h2>
@@ -1518,8 +1488,8 @@ set contains the first 35 observations, the test set containing the
 remaining observations.</strong></p>
 <p>Select the first 35 rows of the dataset to create training dataset
 and display the first 10 rows</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>train_dataset <span class="ot">&lt;-</span> mtcars.df[<span class="dv">1</span><span class="sc">:</span><span class="dv">35</span>, ]</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">head</span>(train_dataset, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>train_dataset <span class="ot">&lt;-</span> mtcars.df[<span class="dv">1</span><span class="sc">:</span><span class="dv">35</span>, ]</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">head</span>(train_dataset, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 10 × 12
 ##    name          mpg   cyl  disp    hp  drat    wt  qsec    vs am     gear  carb
 ##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1534,8 +1504,8 @@ and display the first 10 rows</p>
 ##  9 Merc 230     22.8     4  141.    95  3.92  3.15  22.9     1 auto…     4     2
 ## 10 Merc 280     19.2     6  168.   123  3.92  3.44  18.3     1 auto…     4     4</code></pre>
 <p>Use the remaining rows of the dataset to create testing dataset</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>test_dataset <span class="ot">&lt;-</span> mtcars.df[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">35</span>), ]</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">head</span>(test_dataset, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>test_dataset <span class="ot">&lt;-</span> mtcars.df[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">35</span>), ]</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">head</span>(test_dataset, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 12
 ##   name           mpg   cyl  disp    hp  drat    wt  qsec    vs am     gear  carb
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1545,6 +1515,7 @@ and display the first 10 rows</p>
 ## 4 Duster 360    14.3     8  360    245  3.21  3.57  15.8     0 auto…     3     4
 ## 5 Merc 240D     24.4     4  147.    62  3.69  3.19  20       1 auto…     4     2
 ## 6 Volvo 142E    21.4     4  121    109  4.11  2.78  18.6     1 manu…     4     2</code></pre>
+<hr>
 </div>
 <div id="question-3" class="section level2">
 <h2><strong>Question 3:</strong></h2>
@@ -1553,12 +1524,12 @@ the predictors are <code>mpg</code>, <code>cyl</code>, <code>hp</code>,
 and <code>wt</code> using <code>glm()</code> function</strong></p>
 <p>Build a logistic regression model using <code>glm()</code>
 function</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>model.fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> mpg <span class="sc">+</span> cyl <span class="sc">+</span> hp <span class="sc">+</span> wt,</span>
-<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>             <span class="at">data =</span> train_dataset,</span>
-<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>             <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>model.fit <span class="ot">&lt;-</span> <span class="fu">glm</span>(am <span class="sc">~</span> mpg <span class="sc">+</span> cyl <span class="sc">+</span> hp <span class="sc">+</span> wt,</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>             <span class="at">data =</span> train_dataset,</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>             <span class="at">family =</span> binomial)</span></code></pre></div>
 <pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <p>Display the statistical summary of the model</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">summary</span>(model.fit)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">summary</span>(model.fit)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = am ~ mpg + cyl + hp + wt, family = binomial, data = train_dataset)
@@ -1580,25 +1551,26 @@ function</p>
 ## AIC: 18.922
 ## 
 ## Number of Fisher Scoring iterations: 11</code></pre>
+<hr>
 </div>
 <div id="question-4" class="section level2">
 <h2><strong>Question 4:</strong></h2>
 <p><strong>Compute the test error on the test data set using a
 <code>confusion matrix</code>. Is it a good model based on test
 error?</strong></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>test_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model.fit, </span>
-<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>                            <span class="at">newdata =</span> test_dataset, </span>
-<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>                            <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>test_pred_class <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(test_predictions <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="st">&quot;manual&quot;</span>, <span class="st">&quot;automatic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>test_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model.fit, </span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>                            <span class="at">newdata =</span> test_dataset, </span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>                            <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>test_pred_class <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(test_predictions <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="st">&quot;manual&quot;</span>, <span class="st">&quot;automatic&quot;</span>)</span></code></pre></div>
 <p>Create the confusion matrix</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>conf_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(test_pred_class), </span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>                               test_dataset<span class="sc">$</span>am)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>conf_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(test_pred_class), </span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>                               test_dataset<span class="sc">$</span>am)</span></code></pre></div>
 <pre><code>## Warning in confusionMatrix.default(factor(test_pred_class), test_dataset$am):
 ## Levels are not in the same order for reference and data. Refactoring data to
 ## match.</code></pre>
 <p>Print the confusion matrix</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">print</span>(conf_matrix)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">print</span>(conf_matrix)</span></code></pre></div>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##            Reference
@@ -1753,7 +1725,7 @@ weekend/holiday)</td>
 </tr>
 </tbody>
 </table>
-<hr style="height:1px; border:none; color:#333; background-color:#333;" />
+<hr>
 </div>
 <div id="question-1-1" class="section level2">
 <h2><strong>Question 1:</strong></h2>
@@ -1762,9 +1734,9 @@ weekend/holiday)</td>
 <code>holiday</code>, <code>workingday</code>, <code>weather</code>,
 <code>atemp</code>, and <code>registered</code>.</strong></p>
 <p>Load the dataset</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>bike.df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/Bike.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>bike.df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/Bike.csv&quot;</span>)</span></code></pre></div>
 <p>Display first few rows</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">head</span>(bike.df)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">head</span>(bike.df)</span></code></pre></div>
 <pre><code>##              datetime season holiday workingday weather temp  atemp humidity
 ## 1 2011-01-01 00:00:00      1       0          0       1 9.84 14.395       81
 ## 2 2011-01-01 01:00:00      1       0          0       1 9.02 13.635       80
@@ -1780,42 +1752,42 @@ weekend/holiday)</td>
 ## 5    0.0000      0          1     1
 ## 6    6.0032      0          1     1</code></pre>
 <p>Display dimension of the dataframe</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">dim</span>(bike.df)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">dim</span>(bike.df)</span></code></pre></div>
 <pre><code>## [1] 10886    12</code></pre>
 <p>Display column names</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">colnames</span>(bike.df)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">colnames</span>(bike.df)</span></code></pre></div>
 <pre><code>##  [1] &quot;datetime&quot;   &quot;season&quot;     &quot;holiday&quot;    &quot;workingday&quot; &quot;weather&quot;   
 ##  [6] &quot;temp&quot;       &quot;atemp&quot;      &quot;humidity&quot;   &quot;windspeed&quot;  &quot;casual&quot;    
 ## [11] &quot;registered&quot; &quot;count&quot;</code></pre>
 <p>Convert datetime to Date format if needed</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>bike.df<span class="sc">$</span>datetime <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(bike.df<span class="sc">$</span>datetime, <span class="at">format =</span> <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>bike.df<span class="sc">$</span>datetime <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(bike.df<span class="sc">$</span>datetime, <span class="at">format =</span> <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span></code></pre></div>
 <p>Convert season categorical variables to factors</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>bike.df<span class="sc">$</span>season <span class="ot">=</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>season,</span>
-<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
-<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Spring&quot;</span>, <span class="st">&quot;Summer&quot;</span>, <span class="st">&quot;Fall&quot;</span>, <span class="st">&quot;Winter&quot;</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>bike.df<span class="sc">$</span>season <span class="ot">=</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>season,</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Spring&quot;</span>, <span class="st">&quot;Summer&quot;</span>, <span class="st">&quot;Fall&quot;</span>, <span class="st">&quot;Winter&quot;</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>)</span></code></pre></div>
 <p>Convert holiday categorical variables to factors</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a>bike.df<span class="sc">$</span>holiday <span class="ot">&lt;-</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>holiday, </span>
-<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
-<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>bike.df<span class="sc">$</span>holiday <span class="ot">&lt;-</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>holiday, </span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>)</span></code></pre></div>
 <p>Convert workingday categorical variables to factors</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>bike.df<span class="sc">$</span>workingday <span class="ot">&lt;-</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>workingday,</span>
-<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
-<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a>                             <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>bike.df<span class="sc">$</span>workingday <span class="ot">&lt;-</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>workingday,</span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), </span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>                             <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>)</span></code></pre></div>
 <p>Convert weather categorical variables to factors</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a>bike.df<span class="sc">$</span>weather <span class="ot">&lt;-</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>weather,</span>
-<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
-<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Clear&quot;</span>, <span class="st">&quot;Misty_cloudy&quot;</span>,</span>
-<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a>                                     <span class="st">&quot;Light_snow&quot;</span>, <span class="st">&quot;Heavy_rain&quot;</span>)</span>
-<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a>bike.df<span class="sc">$</span>weather <span class="ot">&lt;-</span> <span class="fu">factor</span>(bike.df<span class="sc">$</span>weather,</span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Clear&quot;</span>, <span class="st">&quot;Misty_cloudy&quot;</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a>                                     <span class="st">&quot;Light_snow&quot;</span>, <span class="st">&quot;Heavy_rain&quot;</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>Build linear model for count prediction</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span></span>
-<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>                     weather <span class="sc">+</span> atemp <span class="sc">+</span> registered,</span>
-<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>                   <span class="at">data =</span> bike.df)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>                     weather <span class="sc">+</span> atemp <span class="sc">+</span> registered,</span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a>                   <span class="at">data =</span> bike.df)</span></code></pre></div>
 <p>Display the statistical summary of the model</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">summary</span>(linear_model)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">summary</span>(linear_model)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = count ~ season + holiday + workingday + weather + 
@@ -1845,10 +1817,10 @@ weekend/holiday)</td>
 ## Multiple R-squared:  0.9625, Adjusted R-squared:  0.9625 
 ## F-statistic: 2.795e+04 on 10 and 10875 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Generate predictions using the model and round the predictions</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(linear_model, bike.df)</span>
-<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>rounded_predictions <span class="ot">&lt;-</span> <span class="fu">round</span>(predictions)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(linear_model, bike.df)</span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>rounded_predictions <span class="ot">&lt;-</span> <span class="fu">round</span>(predictions)</span></code></pre></div>
 <p>Show first 15 rounded predictions</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="fu">head</span>(rounded_predictions, <span class="dv">15</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">head</span>(rounded_predictions, <span class="dv">15</span>)</span></code></pre></div>
 <pre><code>##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 
 ##  45  65  59  41  31  22  28  28  38  44  70  70 110  99 127</code></pre>
 <p>The model effectively explains bike rental patterns, showing that
@@ -1859,6 +1831,7 @@ heavy rain does not show a significant impact, which may warrant further
 investigation. Finally, the number of registered users is the strongest
 predictor, reinforcing the idea that bike-sharing systems heavily rely
 on frequent users rather than occasional riders.</p>
+<hr>
 </div>
 <div id="question-2-1" class="section level2">
 <h2><strong>Question 2:</strong></h2>
@@ -1866,17 +1839,17 @@ on frequent users rather than occasional riders.</p>
 function based on BIC. What’s the best model based on BIC?</strong></p>
 <p>Prepare data for bestglm (needs to be a dataframe with only
 predictors and response)</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span> weather <span class="sc">+</span> </span>
-<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>                             atemp <span class="sc">+</span> registered <span class="sc">+</span> count, <span class="at">data =</span> bike.df)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span> weather <span class="sc">+</span> </span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>                             atemp <span class="sc">+</span> registered <span class="sc">+</span> count, <span class="at">data =</span> bike.df)</span></code></pre></div>
 <p>Remove the first column from the model_data dataset</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> model_data[,<span class="sc">-</span><span class="dv">1</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> model_data[,<span class="sc">-</span><span class="dv">1</span>]</span></code></pre></div>
 <p>Convert model_data to dataframe</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>model_data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(model_data)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>model_data.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(model_data)</span></code></pre></div>
 <p>Find the best model based on the BIC.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a>best_bic_model <span class="ot">&lt;-</span> <span class="fu">bestglm</span>(model_data.df, <span class="at">IC =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">family =</span> gaussian)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>best_bic_model <span class="ot">&lt;-</span> <span class="fu">bestglm</span>(model_data.df, <span class="at">IC =</span> <span class="st">&quot;BIC&quot;</span>, <span class="at">family =</span> gaussian)</span></code></pre></div>
 <p>Display the statistical summary of the best model of the
 best_bic_model</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">summary</span>(best_bic_model<span class="sc">$</span>BestModel)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">summary</span>(best_bic_model<span class="sc">$</span>BestModel)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = y ~ ., data = data.frame(Xy[, c(bestset[-1], FALSE), 
@@ -1909,23 +1882,24 @@ weather, holiday, and temperature-related factors all significantly
 influencing the outcome variable. The model’s high R – squared and
 significance levels indicate it is likely capturing the key drivers in
 the data effectively.</p>
+<hr>
 </div>
 <div id="question-3-1" class="section level2">
 <h2><strong>Question 3:</strong></h2>
 <p><strong>Compute the test error of the best model based on BIC using
 LOOCV.</strong></p>
 <p>Test error using LOOCV</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a>loocv_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;LOOCV&quot;</span>)</span>
-<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a>loocv_model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a>  count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span> weather <span class="sc">+</span> atemp <span class="sc">+</span> registered,</span>
-<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a>  <span class="at">data =</span> bike.df,</span>
-<span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
-<span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a>  <span class="at">trControl =</span> loocv_control</span>
-<span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a>loocv_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;LOOCV&quot;</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>loocv_model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>  count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span> weather <span class="sc">+</span> atemp <span class="sc">+</span> registered,</span>
+<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>  <span class="at">data =</span> bike.df,</span>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
+<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>  <span class="at">trControl =</span> loocv_control</span>
+<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Warning in predict.lm(modelFit, newdata): prediction from rank-deficient fit;
 ## attr(*, &quot;non-estim&quot;) has doubtful cases</code></pre>
 <p>Print the loocv_model results</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="fu">print</span>(loocv_model)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">print</span>(loocv_model)</span></code></pre></div>
 <pre><code>## Linear Regression 
 ## 
 ## 10886 samples
@@ -1942,27 +1916,28 @@ LOOCV.</strong></p>
 ## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 <p>Access the Root Mean Squared Error (RMSE) value from the results of a
 Leave-One-Out Cross-Validation (LOOCV) model</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a>loocv_model<span class="sc">$</span>results<span class="sc">$</span>RMSE</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>loocv_model<span class="sc">$</span>results<span class="sc">$</span>RMSE</span></code></pre></div>
 <pre><code>## [1] 35.09127</code></pre>
+<hr>
 </div>
 <div id="question-4-1" class="section level2">
 <h2><strong>Question 4:</strong></h2>
 <p><strong>Calculate the test error of the best model based on BIC using
 10-fold CV.</strong></p>
 <p>Test error using 10-fold CV</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a>cv_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>)</span>
-<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a></span>
-<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>cv_model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
-<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>  count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span></span>
-<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a>    weather <span class="sc">+</span> atemp <span class="sc">+</span> registered,</span>
-<span id="cb58-6"><a href="#cb58-6" tabindex="-1"></a>  <span class="at">data =</span> bike.df,</span>
-<span id="cb58-7"><a href="#cb58-7" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
-<span id="cb58-8"><a href="#cb58-8" tabindex="-1"></a>  <span class="at">trControl =</span> cv_control</span>
-<span id="cb58-9"><a href="#cb58-9" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a>cv_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" tabindex="-1"></a>cv_model <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" tabindex="-1"></a>  count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span></span>
+<span id="cb56-5"><a href="#cb56-5" tabindex="-1"></a>    weather <span class="sc">+</span> atemp <span class="sc">+</span> registered,</span>
+<span id="cb56-6"><a href="#cb56-6" tabindex="-1"></a>  <span class="at">data =</span> bike.df,</span>
+<span id="cb56-7"><a href="#cb56-7" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,</span>
+<span id="cb56-8"><a href="#cb56-8" tabindex="-1"></a>  <span class="at">trControl =</span> cv_control</span>
+<span id="cb56-9"><a href="#cb56-9" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Warning in predict.lm(modelFit, newdata): prediction from rank-deficient fit;
 ## attr(*, &quot;non-estim&quot;) has doubtful cases</code></pre>
 <p>Print the results of the cv_model</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="fu">print</span>(cv_model)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="fu">print</span>(cv_model)</span></code></pre></div>
 <pre><code>## Linear Regression 
 ## 
 ## 10886 samples
@@ -1970,38 +1945,39 @@ Leave-One-Out Cross-Validation (LOOCV) model</p>
 ## 
 ## No pre-processing
 ## Resampling: Cross-Validated (10 fold) 
-## Summary of sample sizes: 9797, 9797, 9798, 9796, 9797, 9796, ... 
+## Summary of sample sizes: 9797, 9796, 9796, 9798, 9798, 9798, ... 
 ## Resampling results:
 ## 
 ##   RMSE      Rsquared   MAE     
-##   35.07667  0.9625252  23.88672
+##   35.06708  0.9625144  23.88112
 ## 
 ## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 <p>Access the Root Mean Squared Error (RMSE) value from the results of a
 Cross-Validation model</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>cv_model<span class="sc">$</span>results<span class="sc">$</span>RMSE</span></code></pre></div>
-<pre><code>## [1] 35.07667</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a>cv_model<span class="sc">$</span>results<span class="sc">$</span>RMSE</span></code></pre></div>
+<pre><code>## [1] 35.06708</code></pre>
 <p><strong>Note Qn3 &amp; Qn4:</strong><br />
 An RMSE value of <strong>35</strong> indicates that, on average, the
 model’s predictions deviate from the actual values by 35 units. In
 general, lower RMSE values signify better model performance, as they
 indicate smaller discrepancies between predicted and actual values.</p>
+<hr>
 </div>
 <div id="question-5" class="section level2">
 <h2><strong>Question 5:</strong></h2>
 <p><strong>Perform best subset selection using <code>bestglm()</code>
 function based on CV. What’s the best model based on CV?</strong></p>
 <p>Best subset selection based on CV</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>best_cv_model <span class="ot">&lt;-</span> <span class="fu">bestglm</span>(</span>
-<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a>  <span class="at">Xy =</span> model_data.df,</span>
-<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
-<span id="cb64-4"><a href="#cb64-4" tabindex="-1"></a>  <span class="at">IC =</span> <span class="st">&quot;CV&quot;</span>,</span>
-<span id="cb64-5"><a href="#cb64-5" tabindex="-1"></a>  <span class="at">CVArgs =</span> <span class="fu">list</span>(<span class="at">Method =</span> <span class="st">&quot;HTF&quot;</span>, <span class="at">K =</span> <span class="dv">10</span>, <span class="at">REP =</span> <span class="dv">1</span>)</span>
-<span id="cb64-6"><a href="#cb64-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>best_cv_model <span class="ot">&lt;-</span> <span class="fu">bestglm</span>(</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>  <span class="at">Xy =</span> model_data.df,</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a>  <span class="at">IC =</span> <span class="st">&quot;CV&quot;</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>  <span class="at">CVArgs =</span> <span class="fu">list</span>(<span class="at">Method =</span> <span class="st">&quot;HTF&quot;</span>, <span class="at">K =</span> <span class="dv">10</span>, <span class="at">REP =</span> <span class="dv">1</span>)</span>
+<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 ## prediction from rank-deficient fit; attr(*, &quot;non-estim&quot;) has doubtful cases</code></pre>
 <p>Print the results of the best_cv_model</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="fu">print</span>(best_cv_model)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="fu">print</span>(best_cv_model)</span></code></pre></div>
 <pre><code>## CV(K = 10, REP = 1)
 ## No BICq equivalent
 ## Best Model:
@@ -2012,7 +1988,7 @@ function based on CV. What’s the best model based on CV?</strong></p>
 ## registered      1.144745 0.002395396 477.894018 0.000000e+00</code></pre>
 <p>Display the statistical summary of the best model of the
 best_cv_model</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a><span class="fu">summary</span>(best_cv_model<span class="sc">$</span>BestModel)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a><span class="fu">summary</span>(best_cv_model<span class="sc">$</span>BestModel)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = y ~ ., data = data.frame(Xy[, c(bestset[-1], FALSE), 
@@ -2044,16 +2020,17 @@ aren’t driven by multicollinearity. Furthermore, the broad range of
 residuals suggests that while the model is generally accurate, there may
 be outliers or variations not fully captured by the current
 predictors.</p>
+<hr>
 </div>
 <div id="question-6" class="section level2">
 <h2><strong>Question 6:</strong></h2>
 <p><strong>Perform the backward stepwise selection using
 <code>stepAIC()</code> function. What’s the best model?</strong></p>
 <p>Full model for count prediction</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a>full_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span> </span>
-<span id="cb70-2"><a href="#cb70-2" tabindex="-1"></a>                   weather <span class="sc">+</span> atemp <span class="sc">+</span> registered, <span class="at">data =</span> bike.df)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a>full_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(count <span class="sc">~</span> season <span class="sc">+</span> holiday <span class="sc">+</span> workingday <span class="sc">+</span> </span>
+<span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a>                   weather <span class="sc">+</span> atemp <span class="sc">+</span> registered, <span class="at">data =</span> bike.df)</span></code></pre></div>
 <p>Backward stepwise selection using stepAIC</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a>stepwise_model <span class="ot">&lt;-</span> <span class="fu">stepAIC</span>(full_model, <span class="at">direction =</span> <span class="st">&quot;backward&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a>stepwise_model <span class="ot">&lt;-</span> <span class="fu">stepAIC</span>(full_model, <span class="at">direction =</span> <span class="st">&quot;backward&quot;</span>)</span></code></pre></div>
 <pre><code>## Start:  AIC=77462.43
 ## count ~ season + holiday + workingday + weather + atemp + registered
 ## 
@@ -2066,7 +2043,7 @@ predictors.</p>
 ## - workingday  1   3797752  17174074  80181
 ## - registered  1 274906725 288283047 110885</code></pre>
 <p>Display the statistical summary of the best model</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a><span class="fu">summary</span>(stepwise_model)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="fu">summary</span>(stepwise_model)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = count ~ season + holiday + workingday + weather + 
@@ -2098,6 +2075,7 @@ predictors.</p>
 <p>The analysis used backward stepwise selection to identify the best
 predictive model for bike rentals, retaining all variables as their
 removal increased the Akaike Information Criterion (AIC).</p>
+<hr>
 </div>
 </div>
 </div>

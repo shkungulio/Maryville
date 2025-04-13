@@ -7,18 +7,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-<hr style="height:5px; border:none; color:red; background-color:red;" />
-
-<br>
-
-## **Development Environment**
-<hr style="height:2px; border:none; color:#333; background-color:#333;" />
-
-Install necessary packages if not installed
-```{r install-libraries}
+# Install necessary packages if not installed
 if (!requireNamespace("readxl", quietly = TRUE)) {
   install.packages("readxl")
 }
@@ -31,28 +20,30 @@ if (!requireNamespace("MASS", quietly = TRUE)) {
 if (!requireNamespace("caret", quietly = TRUE)) {
   install.packages("caret")
 }
-```
 
-Load the required libraries
-```{r load-libraries, message=FALSE}
+# Load the required libraries
 library(readxl)
 library(caret)
 library(bestglm)
 library(MASS)
+
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<br>
+<hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
 
-# **Car Dealership**
-<hr style="height:2px; border:none; color:#333; background-color:#333;" />
+# **Analyze Motor Car Data Trends**
+<hr style="height:2px; border:none; color:#333; background-color:#333" />
 
 You are a data scientist in a top dealership group in USA. Your boss, Mr. Buffet, asked you to analyze the motor trend car data. You are given a dataset containing fuel consumption and 10 aspects of automobile design and performance for 32 automobiles the file mtcars.xlsx.
 
-### **Data Dictionary**
-**Data Source:** from MASS library in R. This dataset contains the following columns:
+**Data Source:** from MASS library in R. 
 
-| Variable | Data Type | Description | Constraints/Rules |
-|:-----------|:-----------|:------------------------|:--------------------------|
+## **Data Dictionary**
+This dataset contains the following columns:
+
+| **Variable** | **Data Type** | **Description** | **Constraints/Rules** |
+|:-------------|:--------------|:----------------|:----------------------|
 | `mpg` | Numeric | Miles per gallon | Positive values only (mpg > 0) |
 | `cyl` | Integer | Number of cylinders | Categorical: {4, 6, 8} |
 | `disp` | Numeric | Displacement (cubic inches) | Positive values only (disp > 0) |
@@ -64,12 +55,10 @@ You are a data scientist in a top dealership group in USA. Your boss, Mr. Buffet
 | `am` | Integer | Transmission: 0 = automatic, 1 = manual | Binary: {0, 1} |
 | `gear` | Integer | Number of forward gears | Categorical: {3, 4, 5} |
 | `carb` | Integer | Number of carburetors | Positive integer values only |
-|  |  |  |  |
 
-<hr style="height:1px; border:none; color:#333; background-color:#333;" />
+<hr>
 
 ## **Question 1:**
-
 **Load the dataset mtcars.xlsx into memory and convert column `am` to a factor using factor() function.**
 
 Load the dataset mtcars.xlsx into memory
@@ -104,6 +93,7 @@ Display the statistical summary of the data frame
 summary(mtcars.df)
 ```
 
+<hr>
 
 ## **Question 2:**
 **Split the data into training set and test set. The training set contains the first 35 observations, the test set containing the remaining observations.**  
@@ -124,6 +114,7 @@ test_dataset <- mtcars.df[-(1:35), ]
 head(test_dataset, 10)
 ```
 
+<hr>
 
 ## **Question 3:**
 **Build a logistic regression model with the response is am and the predictors are `mpg`, `cyl`, `hp`, and `wt` using `glm()` function**
@@ -140,6 +131,7 @@ Display the statistical summary of the model
 summary(model.fit)
 ```
 
+<hr>
 
 ## **Question 4:**
 **Compute the test error on the test data set using a `confusion matrix`. Is it a good model based on test error?**
@@ -192,8 +184,7 @@ You are working as a data scientist for the city of Washington D.C. government. 
 | `count`  | Integer  | Total number of rentals (casual + registered)  | Non-negative integer (count = casual + registered) |
 |   |   |   |   |
 
-<hr style="height:1px; border:none; color:#333; background-color:#333;" />
-
+<hr>
 
 ## **Question 1:**
 **Build a linear model to forecast number of total rentals (`count`) using potential predictors, `season`, `holiday`, `workingday`, `weather`, `atemp`, and `registered`.**
@@ -280,6 +271,7 @@ head(rounded_predictions, 15)
 ```
 The model effectively explains bike rental patterns, showing that seasonality, holidays, and working days have substantial effects. Weather conditions, particularly misty/cloudy and snowy conditions, decrease rentals, while temperature has a positive impact. Surprisingly, heavy rain does not show a significant impact, which may warrant further investigation. Finally, the number of registered users is the strongest predictor, reinforcing the idea that bike-sharing systems heavily rely on frequent users rather than occasional riders.
 
+<hr>
 
 ## **Question 2:**
 **Perform best subset selection using `bestglm()` function based on BIC. What’s the best model based on BIC?**
@@ -311,6 +303,7 @@ summary(best_bic_model$BestModel)
 ```
 This model suggests strong predictive performance, with seasonal, weather, holiday, and temperature-related factors all significantly influencing the outcome variable. The model’s high R – squared and significance levels indicate it is likely capturing the key drivers in the data effectively.
 
+<hr>
 
 ## **Question 3:**
 **Compute the test error of the best model based on BIC using LOOCV.**
@@ -336,6 +329,7 @@ Access the Root Mean Squared Error (RMSE) value from the results of a Leave-One-
 loocv_model$results$RMSE
 ```
 
+<hr>
 
 ## **Question 4:**
 **Calculate the test error of the best model based on BIC using 10-fold CV.**
@@ -365,6 +359,7 @@ cv_model$results$RMSE
 **Note Qn3 & Qn4:**  
 An RMSE value of **35** indicates that, on average, the model's predictions deviate from the actual values by 35 units. In general, lower RMSE values signify better model performance, as they indicate smaller discrepancies between predicted and actual values.
 
+<hr>
 
 ## **Question 5:**
 **Perform best subset selection using `bestglm()` function based on CV. What’s the best model based on CV?**
@@ -390,6 +385,7 @@ summary(best_cv_model$BestModel)
 ```
 The model's high R-squared value and significant predictors indicate a good fit, with meaningful relationships between the predictors and the outcome. However, certain predictors, such as ***workingdayYes*** and ***seasonFall***, show large effects that warrant careful interpretation to ensure they align with domain expectations and aren't driven by multicollinearity. Furthermore, the broad range of residuals suggests that while the model is generally accurate, there may be outliers or variations not fully captured by the current predictors.
 
+<hr>
 
 ## **Question 6:**
 **Perform the backward stepwise selection using `stepAIC()` function. What’s the best model?**
@@ -410,3 +406,5 @@ Display the statistical summary of the best model
 summary(stepwise_model)
 ```
 The analysis used backward stepwise selection to identify the best predictive model for bike rentals, retaining all variables as their removal increased the Akaike Information Criterion (AIC).
+
+<hr>

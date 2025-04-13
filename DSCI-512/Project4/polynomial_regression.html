@@ -1275,6 +1275,7 @@ margin-left: 0 !important;
       <li><a href="#boston-housing-analysis" id="toc-boston-housing-analysis"><strong>Boston Housing
       Analysis</strong></a>
       <ul>
+      <li><a href="#data-dictionary" id="toc-data-dictionary"><strong>Data Dictionary</strong></a></li>
       <li><a href="#environment-preparation" id="toc-environment-preparation"><strong>Environment
       Preparation</strong></a></li>
       <li><a href="#question-1" id="toc-question-1"><strong>Question
@@ -1305,6 +1306,122 @@ Kungulio</p>
 <div id="boston-housing-analysis" class="section level1">
 <h1><strong>Boston Housing Analysis</strong></h1>
 <hr style="height:2px; border:none; color:#333; background-color:#333;" />
+<p>You are a data scientist in Awesome Business Analytics (ABA). ABA is
+a public company traded in Stock exchange. The CEO of ABA wants to
+invest in the real estate properties in the Boston area. You are given a
+dataset containing housing values in the suburbs of Boston in the file
+Boston.csv.</p>
+<p><strong>Data Source:</strong></p>
+<ul>
+<li>Harrison, D. and Rubinfeld, D.L. (1978) Hedonic prices and the
+demand for clean air. J. Environ. Economics and Management 5,
+81–102.<br />
+</li>
+<li>Belsley D.A., Kuh, E. and Welsch, R.E. (1980) Regression
+Diagnostics. Identifying Influential Data and Sources of Collinearity.
+New York: Wiley.</li>
+</ul>
+<div id="data-dictionary" class="section level2">
+<h2><strong>Data Dictionary</strong></h2>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="23%" />
+<col width="20%" />
+<col width="34%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Attributes</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Data Type</strong></th>
+<th><strong>Constraints / Rules</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>crim</code></td>
+<td>Per capita crime rate by town</td>
+<td><code>float64</code></td>
+<td>Must be ≥ 0</td>
+</tr>
+<tr class="even">
+<td><code>zn</code></td>
+<td>Proportion of residential land zoned for lots over 25,000 sq.ft</td>
+<td><code>float64</code></td>
+<td>Range: 0–100</td>
+</tr>
+<tr class="odd">
+<td><code>indus</code></td>
+<td>Proportion of non-retail business acres per town</td>
+<td><code>float64</code></td>
+<td>Must be ≥ 0</td>
+</tr>
+<tr class="even">
+<td><code>chas</code></td>
+<td>Charles River dummy variable (= 1 if tract bounds river; 0
+otherwise)</td>
+<td><code>int64</code></td>
+<td>Binary: 0 or 1</td>
+</tr>
+<tr class="odd">
+<td><code>nox</code></td>
+<td>Nitric oxides concentration (parts per 10 million)</td>
+<td><code>float64</code></td>
+<td>Range: Typically 0.3–1.0</td>
+</tr>
+<tr class="even">
+<td><code>rm</code></td>
+<td>Average number of rooms per dwelling</td>
+<td><code>float64</code></td>
+<td>Typically between 3 and 9</td>
+</tr>
+<tr class="odd">
+<td><code>age</code></td>
+<td>Proportion of owner-occupied units built before 1940</td>
+<td><code>float64</code></td>
+<td>Range: 0–100</td>
+</tr>
+<tr class="even">
+<td><code>dis</code></td>
+<td>Weighted distances to five Boston employment centers</td>
+<td><code>float64</code></td>
+<td>Must be &gt; 0</td>
+</tr>
+<tr class="odd">
+<td><code>rad</code></td>
+<td>Accessibility index to radial highways</td>
+<td><code>int64</code></td>
+<td>Discrete integer; values typically range from 1 to 24</td>
+</tr>
+<tr class="even">
+<td><code>tax</code></td>
+<td>Property-tax rate per $10,000</td>
+<td><code>int64</code></td>
+<td>Must be &gt; 0</td>
+</tr>
+<tr class="odd">
+<td><code>ptratio</code></td>
+<td>Pupil-teacher ratio by town</td>
+<td><code>float64</code></td>
+<td>Typical range: 12–22</td>
+</tr>
+<tr class="even">
+<td><code>lstat</code></td>
+<td>% of lower status population</td>
+<td><code>float64</code></td>
+<td>Range: 0–100</td>
+</tr>
+<tr class="odd">
+<td><code>medv</code></td>
+<td>Median home value (in $1000s)</td>
+<td><code>float64</code></td>
+<td>Typical range: 5–50 (capped at 50)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
 <div id="environment-preparation" class="section level2">
 <h2><strong>Environment Preparation</strong></h2>
 <p>Install necessary packages if not installed</p>
