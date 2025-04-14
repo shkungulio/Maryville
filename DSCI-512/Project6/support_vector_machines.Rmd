@@ -21,8 +21,35 @@ if (!requireNamespace("caret", quietly = TRUE)) {
 library(e1071)
 library(caret)
 ```
+<hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
 
-## R Markdown
+# **Forecast Bike Rental Demand**
+<hr style="height:2px; border:none; color:#333; background-color:#333;" />
+
+You are working as a data scientist for the government in the city of Washington, D.C. Currently, Washington, D.C has a bike sharing system. People could rent a bike from one location and return it to a different place. You are given a historical usage pattern with weather data contained in the Excel workbook bike.csv. You are asked to forecast bike rental demand in the capital bike share program.
+
+**Data Source:** from Kaggle at https://www.kaggle.com/c/bike-sharing-demand
+
+
+## **Data Dictionary**
+This dataset contains the following columns:
+
+| **Variable** | **Description** | **Data Type** | **Rules/Constraints** |
+|:-------------|:----------------|:--------------|:----------------------|
+| **datetime** | Date and time of the observation | Timestamp | Must be unique and in ISO 8601 format (YYYY-MM-DD HH:MM:SS). |
+| **season** | Season (1: Winter, 2: Spring, 3: Summer, 4: Fall) | Categorical | Must be an integer between 1 and 4. |
+| **holiday** | Whether the day is a holiday (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **workingday** | Whether the day is a working day (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **weather** | Weather condition (1 to 4, where 1: Clear, 4: Extreme) | Categorical | Must be an integer between 1 and 4. |
+| **temp** | Normalized temperature in Celsius | Continuous | Must be between 0 and 41. |
+| **atemp** | Normalized "feels like" temperature in Celsius | Continuous | Must be between 0 and 45.455. |
+| **humidity** | Relative humidity (%) | Continuous | Must be between 0 and 100. |
+| **windspeed** | Wind speed in km/h | Continuous | Must be non-negative, and maximum value is approximately 56.9979. |
+| **casual** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
+| **registered** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
+| **count** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
+
+<br>
 
 ## **Question 1**
 Load the dataset bike.csv into memory. Convert holiday to a factor using factor() function. Then split the data into training set containing 2/3 of the original data (test set containing remaining 1/3 of the original data).
@@ -87,7 +114,7 @@ trainData = Bike.df[trainIdx, ]
 testData  <- Bike.df[-trainIdx, ]
 ```
 
-# Check the dimension of training dataset and testing dataset
+Check the dimension of training dataset and testing dataset
 ```{r}
 # Check the dimension of training dataset
 dim(trainData)

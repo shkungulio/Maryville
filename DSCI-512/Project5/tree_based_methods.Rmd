@@ -6,8 +6,20 @@ output:
   rmdformats::readthedown
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Install necessary packages if not installed
+if (!requireNamespace("tree", quietly = TRUE)) {
+  install.packages("tree")
+}
+if (!requireNamespace("randomForest", quietly = TRUE)) {
+  install.packages("randomForest")
+}
+
+# Load the required libraries
+library(tree)
+library(randomForest)
 ```
 
 <hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
@@ -18,7 +30,6 @@ knitr::opts_chunk$set(echo = TRUE)
 You are working as a data scientist for the government in the city of Washington, D.C. Currently, Washington, D.C has a bike sharing system. People could rent a bike from one location and return it to a different place. You are given a historical usage pattern with weather data contained in the Excel workbook bike.csv. You are asked to forecast bike rental demand in the capital bike share program.
 
 **Data Source:** from Kaggle at https://www.kaggle.com/c/bike-sharing-demand
-
 
 ## **Data Dictionary**
 This dataset contains the following columns:
@@ -37,28 +48,6 @@ This dataset contains the following columns:
 | **casual** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
 | **registered** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
 | **count** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
-|  |  |  |  |
-
-<br>
-
-## **Development Environment**
-
-Install necessary packages if not installed
-```{r install-libraries}
-if (!requireNamespace("tree", quietly = TRUE)) {
-  install.packages("tree")
-}
-if (!requireNamespace("randomForest", quietly = TRUE)) {
-  install.packages("randomForest")
-}
-```
-
-Load the required libraries
-```{r load-libraries, message=FALSE}
-library(tree)
-library(randomForest)
-```
-
 
 <br>
 
