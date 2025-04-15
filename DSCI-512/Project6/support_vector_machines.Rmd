@@ -36,18 +36,18 @@ This dataset contains the following columns:
 
 | **Variable** | **Description** | **Data Type** | **Rules/Constraints** |
 |:-------------|:----------------|:--------------|:----------------------|
-| **datetime** | Date and time of the observation | Timestamp | Must be unique and in ISO 8601 format (YYYY-MM-DD HH:MM:SS). |
-| **season** | Season (1: Winter, 2: Spring, 3: Summer, 4: Fall) | Categorical | Must be an integer between 1 and 4. |
-| **holiday** | Whether the day is a holiday (0: No, 1: Yes) | Binary | Must be 0 or 1. |
-| **workingday** | Whether the day is a working day (0: No, 1: Yes) | Binary | Must be 0 or 1. |
-| **weather** | Weather condition (1 to 4, where 1: Clear, 4: Extreme) | Categorical | Must be an integer between 1 and 4. |
-| **temp** | Normalized temperature in Celsius | Continuous | Must be between 0 and 41. |
-| **atemp** | Normalized "feels like" temperature in Celsius | Continuous | Must be between 0 and 45.455. |
-| **humidity** | Relative humidity (%) | Continuous | Must be between 0 and 100. |
-| **windspeed** | Wind speed in km/h | Continuous | Must be non-negative, and maximum value is approximately 56.9979. |
-| **casual** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
-| **registered** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
-| **count** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
+| **`datetime`** | Date and time of the observation | Timestamp | Must be unique and in ISO 8601 format (YYYY-MM-DD HH:MM:SS). |
+| **`season`** | Season (1: Winter, 2: Spring, 3: Summer, 4: Fall) | Categorical | Must be an integer between 1 and 4. |
+| **`holiday`** | Whether the day is a holiday (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **`workingday`** | Whether the day is a working day (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **`weather`** | Weather condition (1 to 4, where 1: Clear, 4: Extreme) | Categorical | Must be an integer between 1 and 4. |
+| **`temp`** | Normalized temperature in Celsius | Continuous | Must be between 0 and 41. |
+| **`atemp`** | Normalized "feels like" temperature in Celsius | Continuous | Must be between 0 and 45.455. |
+| **`humidity`** | Relative humidity (%) | Continuous | Must be between 0 and 100. |
+| **`windspeed`** | Wind speed in km/h | Continuous | Must be non-negative, and maximum value is approximately 56.9979. |
+| **`casual`** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
+| **`registered`** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
+| **`count`** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
 
 <br>
 
@@ -129,7 +129,7 @@ dim(testData)
 **Build a support vector machine model.**
 
 ### **Section A**
-The response is holiday and the predictors are: season, workingday, casual, and registered. Please use svm() function with radial kernel and gamma=10 and cost = 100.
+The response is `holiday` and the predictors are: `season`, `workingday`, `casual`, and `registered`. Please use `svm()` function with radial kernel and gamma = 10 and cost = 100.
 ```{r}
 svm.model <- svm(holiday ~ season + workingday + casual + registered,
                  data = trainData,
@@ -158,14 +158,14 @@ summary(best_tuned.model)
 ```
 
 ### **Section D**
-Forecast holiday using the test dataset and the best model found in c).
+Forecast `holiday` using the test dataset and the best model found in c).
 ```{r}
 predictions <- predict(best_tuned.model, newdata = testData)
 summary(predictions)
 ```
 
 ### **Section E**
-Get the true observations of holiday in the test dataset.
+Get the true observations of `holiday` in the test dataset.
 ```{r}
 #observations <- testData$holiday
 actuals <- Bike.df[-trainIdx, "holiday"]
@@ -175,7 +175,6 @@ summary(actuals)
 ### **Section F**
 Compute the test error by constructing the confusion matrix. Is it a good model?
 ```{r}
-table(actuals, predictions)
 conf.matrix <- confusionMatrix(predictions, actuals)
 print(conf.matrix)
 ```

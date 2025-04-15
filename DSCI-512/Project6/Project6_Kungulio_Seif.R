@@ -91,7 +91,6 @@ dim(testData)
 #### a) The response is holiday and the predictors are: season, workingday, 
 ####    casual, and registered. Please use svm() function with radial kernel 
 ####    and gamma=10 and cost = 100.
-
 svm.model <- svm(holiday ~ season + workingday + casual + registered,
                  data = trainData,
                  kernel = "radial",
@@ -103,7 +102,6 @@ summary(svm.model)
 #### b) Perform a grid search to find the best model with potential 
 ####    cost: 1, 10, 50, 100 and potential gamma: 1, 3, and 5 and using 
 ####    radial kernel and training dataset.
-
 tuned.results <- tune(svm, holiday ~ season + workingday + casual + registered, 
                      data = trainData, kernel = "radial", 
                      ranges = list(cost = c(1, 10, 50, 100), 
@@ -113,29 +111,23 @@ summary(tuned.results)
 
 
 #### c) Print out the model results. What’s the best model parameters?
-
 best_tuned.model <- tuned.results$best.model
 summary(best_tuned.model)
 
 
 #### d) Forecast holiday using the test dataset and the best model found in c).
-
 predictions <- predict(best_tuned.model, newdata = testData)
 summary(predictions)
 
 
 #### e) Get the true observations of holiday in the test dataset.
-
-#observations <- testData$holiday
-actuals <- Bike.df[-trainIdx, "holiday"]
+#actuals <- Bike.df[-trainIdx, "holiday"]
+actuals <- testData$holiday
 summary(actuals)
 
 
 #### f) Compute the test error by constructing the confusion matrix.
 ####    Is it a good model?
-
-table(actuals, predictions)
-#conf.matrix <- confusionMatrix(observations, predictions)
 conf.matrix <- confusionMatrix(predictions, actuals)
 print(conf.matrix)
 

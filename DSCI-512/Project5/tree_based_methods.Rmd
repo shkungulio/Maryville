@@ -36,18 +36,18 @@ This dataset contains the following columns:
 
 | **Variable** | **Description** | **Data Type** | **Rules/Constraints** |
 |:-------------|:----------------|:--------------|:----------------------|
-| **datetime** | Date and time of the observation | Timestamp | Must be unique and in ISO 8601 format (YYYY-MM-DD HH:MM:SS). |
-| **season** | Season (1: Winter, 2: Spring, 3: Summer, 4: Fall) | Categorical | Must be an integer between 1 and 4. |
-| **holiday** | Whether the day is a holiday (0: No, 1: Yes) | Binary | Must be 0 or 1. |
-| **workingday** | Whether the day is a working day (0: No, 1: Yes) | Binary | Must be 0 or 1. |
-| **weather** | Weather condition (1 to 4, where 1: Clear, 4: Extreme) | Categorical | Must be an integer between 1 and 4. |
-| **temp** | Normalized temperature in Celsius | Continuous | Must be between 0 and 41. |
-| **atemp** | Normalized "feels like" temperature in Celsius | Continuous | Must be between 0 and 45.455. |
-| **humidity** | Relative humidity (%) | Continuous | Must be between 0 and 100. |
-| **windspeed** | Wind speed in km/h | Continuous | Must be non-negative, and maximum value is approximately 56.9979. |
-| **casual** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
-| **registered** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
-| **count** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
+| **`datetime`** | Date and time of the observation | Timestamp | Must be unique and in ISO 8601 format (YYYY-MM-DD HH:MM:SS). |
+| **`season`** | Season (1: Winter, 2: Spring, 3: Summer, 4: Fall) | Categorical | Must be an integer between 1 and 4. |
+| **`holiday`** | Whether the day is a holiday (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **`workingday`** | Whether the day is a working day (0: No, 1: Yes) | Binary | Must be 0 or 1. |
+| **`weather`** | Weather condition (1 to 4, where 1: Clear, 4: Extreme) | Categorical | Must be an integer between 1 and 4. |
+| **`temp`** | Normalized temperature in Celsius | Continuous | Must be between 0 and 41. |
+| **`atemp`** | Normalized "feels like" temperature in Celsius | Continuous | Must be between 0 and 45.455. |
+| **`humidity`** | Relative humidity (%) | Continuous | Must be between 0 and 100. |
+| **`windspeed`** | Wind speed in km/h | Continuous | Must be non-negative, and maximum value is approximately 56.9979. |
+| **`casual`** | Number of casual (non-registered) users | Integer | Must be non-negative, with a maximum of 367. |
+| **`registered`** | Number of registered users | Integer | Must be non-negative, with a maximum of 886. |
+| **`count`** | Total number of bike rentals | Integer | Must equal casual + registered, and be non-negative. |
 
 <br>
 
@@ -117,7 +117,7 @@ testData  <- Bike.df[-trainIdx, ]
 Build a tree model using function tree().
 
 ### **Section A** 
-The response is count and the predictors are season, holiday, workingday, temp, atemp, humidity, windspeed, casual, and registered.
+The response is `count` and the predictors are `season`, `holiday`, `workingday`, `temp`, `atemp`, `humidity`, `windspeed`, `casual`, and `registered`.
 ```{r}
 # Build a tree model using function tree()
 tr.model = tree(
@@ -129,7 +129,7 @@ tr.model = tree(
 # Display the statistical summary of the tree
 summary(tr.model)
 ```
-* The decision tree mainly depends on the registered and casual variables, which seem to be the most direct predictors of bike rental counts. 
+* The decision tree mainly depends on the `registered` and `casual` variables, which seem to be the most direct predictors of bike rental counts. 
 * With 8 terminal nodes, the model reflects a moderate level of complexity while still managing to avoid overfitting.
 * The Residual Mean Deviance (1875) and the distribution of residuals give insight into how well the model performs. Although there are some notable outliers (like -158 and +259.7), the residuals generally cluster around zero.
 * Overall, the tree offers a simplified yet understandable view of the data relationships. However, its predictive accuracy could potentially be enhanced through hyperparameter tuning or by exploring more advanced models such as random forests or gradient boosting.  
@@ -137,7 +137,7 @@ summary(tr.model)
 <br>
 
 ### **Section B**
-Perform cross-validation to choose the best tree by calling cv.tree().
+Perform cross-validation to choose the best tree by calling `cv.tree()`.
 ```{r}
 CV_Bike = cv.tree(tr.model)
 ```
@@ -154,12 +154,12 @@ plot(CV_Bike$size, CV_Bike$dev, type = "b",
 ```
 
 * The plot indicates that the ideal tree size is 4.
-* At this point, the deviance reaches its lowest value before leveling off or slightly rising with larger trees. This suggests the model achieves a good balance—complex enough to capture key patterns without being overly complicated or prone to overfitting.
+* At this point, the deviance reaches its lowest value before leveling off with larger trees. This suggests the model achieves a good balance—complex enough to capture key patterns without being overly complicated or prone to overfitting.
 
 <br>
 
 ### **Section D**
-Prune the tree by calling prune.tree() function with the best size found in c).
+Prune the tree by calling `prune.tree()` function with the best size found in c).
 ```{r, fig.width = 12, fig.height = 6}
 prunedTree = prune.tree(tr.model, best = 4)
 ```
@@ -200,10 +200,10 @@ tr.mse
 ```
 
 ## **Question 3:**
-Build a random forest model using function randomForest().
+Build a random forest model using function `randomForest()`.
 
 ### **Section A** 
-The response is **`count`** and the predictors are **`season`**, **`holiday`**, **`workingday`**, **`temp`**, **`atemp`**, **`humidity`**, **`windspeed`**, **`casual`**, and **`registered`**.
+The response is `count` and the predictors are `season`, `holiday`, `workingday`, `temp`, `atemp`, `humidity`, `windspeed`, `casual`, and `registered`.
 ```{r}
 set.seed(123)  # Set seed for reproducibility
 rf.model = randomForest(count ~ season + holiday + workingday + temp + 
@@ -216,7 +216,7 @@ print(rf.model)
 
 * The Random Forest model performs exceptionally well on the training data, accounting for 99.6% of the variance and showing a low residual error of 130.3723. However, this strong performance might suggest overfitting, so it's important to validate the model on unseen test data.
 * Using 500 trees and 3 variables at each split, the model strikes a good balance between precision and computational efficiency.
-* To determine which features, have the greatest impact on predictions, tools like **`importance()`** or **`varImpPlot()`** can be used to assess variable importance.
+* To determine which features, have the greatest impact on predictions, tools like `importance()` or `varImpPlot()` can be used to assess variable importance.
 
 <br>
 
@@ -236,22 +236,22 @@ rf.mse
 <br>
 
 ### **Section C**
-Extract variable importance measure using **`importance()`** function.
+Extract variable importance measure using `importance()` function.
 ```{r}
 importance(rf.model)
 ```
 
-* The variable **`registered`** plays the most significant role in predicting the target variable **`count`**, with **`casual`** and **`workingday`** also contributing notably.
-* In contrast, features such as **`holiday`** and **`windspeed`** have little influence on the model’s predictive capability.
+* The variable `registered` plays the most significant role in predicting the target variable `count`, with `casual` and `workingday` also contributing notably.
+* In contrast, features such as `holiday` and `windspeed` have little influence on the model’s predictive capability.
 * These findings can guide model simplification by removing less impact variables and highlight the main drivers behind the predictions.
 
 <br>
 
 ### **Section D**
-Plot the variable importance using function **`varImpPlot()`**. Which are the top 2 important predictors in this model?
+Plot the variable importance using function `varImpPlot()`. Which are the top 2 important predictors in this model?
 ```{r, fig.width = 12, fig.height = 6}
 varImpPlot(rf.model)
 ```
 
-* **`Registered`** and **`casual`** are the top predictors, playing a major role in improving the model's accuracy and reducing variance.
-* The model relies heavily on these two variables, indicating they are the primary factors affecting the target variable, **`count`**.
+* `Registered` and `casual` are the top predictors, playing a major role in improving the model's accuracy and reducing variance.
+* The model relies heavily on these two variables, indicating they are the primary factors affecting the target variable, `count`.
