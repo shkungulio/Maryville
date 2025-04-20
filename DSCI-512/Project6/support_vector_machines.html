@@ -1518,6 +1518,13 @@ radial kernel and gamma = 10 and cost = 100.</p>
 ## 
 ## Levels: 
 ##  Non-Holiday Holiday</code></pre>
+<p>The SVM model uses a radial kernel for a binary classification task
+(Holiday vs. Non-Holiday), with a gamma of 10 and cost of 100. These
+parameters increase model complexity, potentially improving fit but also
+raising the risk of overfitting.</p>
+<p>The model relies on 633 support vectors (428 from one class, 205 from
+the other), indicating that the data may not be easily separable. This
+could also reflect some class imbalance.</p>
 </div>
 <div id="section-b" class="section level3">
 <h3><strong>Section B</strong></h3>
@@ -1555,6 +1562,16 @@ training dataset.</p>
 ## 10   10     5 0.03045293 0.004517214
 ## 11   50     5 0.03059048 0.002954565
 ## 12  100     5 0.03169260 0.002893269</code></pre>
+<p>Models with gamma = 1 consistently outperformed those with higher
+gamma values, regardless of the cost setting. Increasing the cost from 1
+to 100 led to steadily lower error rates, with the best performance
+achieved at cost = 100 and gamma = 1. In contrast, higher gamma values
+caused the model to overfit, resulting in poorer generalization.</p>
+<p>Despite a slightly higher error variance, the best model remains
+stable and reliable. It strikes a solid balance between accuracy and
+generalization, making it the ideal configuration. It’s recommended to
+train the final SVM using these parameters and validate it on a test set
+to ensure robust performance.</p>
 </div>
 <div id="section-c" class="section level3">
 <h3><strong>Section C</strong></h3>
@@ -1582,6 +1599,16 @@ training dataset.</p>
 ## 
 ## Levels: 
 ##  Non-Holiday Holiday</code></pre>
+<p>The SVM model was designed to predict holidays using features like
+season, workingday, casual, and registered, employing a radial basis
+function (RBF) kernel to handle non-linear patterns. Through grid search
+tuning over various cost and gamma values, the optimal parameters were
+found to be cost = 100 and gamma = 1, resulting in the lowest
+cross-validation error.</p>
+<p>The final model uses 645 support vectors (440 for Non-Holiday, 205
+for Holiday), indicating a complex decision boundary and slight class
+imbalance. This imbalance may affect model predictions, favoring the
+majority class.</p>
 </div>
 <div id="section-d" class="section level3">
 <h3><strong>Section D</strong></h3>
@@ -1591,6 +1618,8 @@ model found in c).</p>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">summary</span>(predictions)</span></code></pre></div>
 <pre><code>## Non-Holiday     Holiday 
 ##        3620           9</code></pre>
+<p>This summary suggests a strong imbalance in predicted outcomes, with
+most predictions being “Non-Holiday”.</p>
 </div>
 <div id="section-e" class="section level3">
 <h3><strong>Section E</strong></h3>
@@ -1601,6 +1630,10 @@ dataset.</p>
 <span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="fu">summary</span>(actuals)</span></code></pre></div>
 <pre><code>## Non-Holiday     Holiday 
 ##        3532          97</code></pre>
+<p>The summary suggests that most records (3532 out of 3629) are from
+“Non-Holiday” periods, while only a small subset of records (97)
+correspond to Holidays. This imbalance in the data might influence
+modeling results.</p>
 </div>
 <div id="section-f" class="section level3">
 <h3><strong>Section F</strong></h3>
@@ -1635,6 +1668,15 @@ good model?</p>
 ##                                          
 ##        &#39;Positive&#39; Class : Non-Holiday    
 ## </code></pre>
+<p><strong>Test Error = 1 – Accuracy = 1 – 0.9746 = 0.0254</strong></p>
+<p>The model demonstrates high overall accuracy (97.46%) and excellent
+sensitivity for identifying Non-Holidays, but it performs poorly in
+detecting Holidays due to significant class imbalance. With low
+specificity (7.2%), a poor Kappa score (0.1281), and low balanced
+accuracy (53.58%), the model is heavily biased toward the majority
+class. Despite appearing effective at first glance, it fails to reliably
+identify the minority class (Holidays), making it unsuitable if accurate
+Holiday prediction is important.</p>
 </div>
 </div>
 </div>
