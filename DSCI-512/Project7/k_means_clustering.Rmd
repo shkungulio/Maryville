@@ -1,0 +1,176 @@
+---
+title: "K-Means Clustering"
+author: "Seif Kungulio"
+date: "04/22/2025"
+output:
+  rmdformats::readthedown
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Install necessary packages if not installed
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  install.packages("ggplot2")
+}
+if (!requireNamespace("cluster", quietly = TRUE)) {
+  install.packages("cluster")
+}
+if (!requireNamespace("factoextra", quietly = TRUE)) {
+  install.packages("factoextra")
+}
+
+# Load necessary libraries
+library(ggplot2)
+library(cluster)
+library(factoextra)
+```
+<hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
+
+# **Credit Cards Customer Segmentantion**
+<hr style="height:2px; border:none; color:#333; background-color:#333;" />
+
+You were just hired as a data scientist for one of the largest retailer companies: MarketCo. MarketCo offers its customers store credit cards. MarketCo has collected transactions of these credit cards. You are asked by your boss, Mr. Johnson, to develop a customer segmentation to define marketing strategy. You are given a historical dataset summarizing the usage behavior of about 9,000 active credit card holders during the last 6 months. You are asked to perform cluster analysis of this dataset.
+
+**Data Source:** from Kaggle at https://www.kaggle.com/arjunbhasin2013/ccdata/home
+
+## **Data Dictionary**
+This dataset contains the following columns:
+
+| **Variable** | **Description** | **Data Type** | **Rules/Constraints** |
+|:-------------|:----------------|:--------------|:----------------------|
+
+
+<br>
+
+## **Question 1**
+**Load the dataset CreditCards.csv into memory.**
+
+Read the dataset into memory
+```{r}
+CreditCards.df <- read.csv("data/CreditCards.csv")
+```
+
+Display the dimensions of the data frame (number of rows and columns)
+```{r}
+dim(CreditCards.df)
+```
+
+Display the column names of the data frame
+```{r}
+colnames(CreditCards.df)
+```
+
+<br>
+
+## **Question 2**
+**Perform the k-means cluster analysis**
+
+### **Section A**
+**Remove the first column: CUST_ID since it doesn’t provide any info for cluster.**
+
+Remove the first column
+```{r}
+CreditCards.df <- CreditCards.df[,-1]
+```
+
+Display the dimensions of the data frame (number of rows and columns)
+```{r}
+dim(CreditCards.df)
+```
+
+Display the column names of the data frame
+```{r}
+colnames(CreditCards.df)
+```
+
+### **Section B**
+**Determine the optimal number of clusters. Justify your answer. It may take longer running time since it uses a large dataset.**
+
+For reproducibility
+```{r}
+set.seed(123)
+```
+
+Scale the data for clustering
+```{r}
+scaled_data <- scale(CreditCards.df)
+```
+
+Determine the optimal number of clusters using "gap_stat" Method
+```{r, warning=FALSE, message=FALSE}
+fviz_nbclust(scaled_data, kmeans, method = "gap_stat") +
+  ggtitle("Optimal Number of Clusters - Gap Statistic Method") +
+  theme_test() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text = element_text(size = 10)
+  )
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+# Determine the optimal number of clusters using the Elbow Method
+fviz_nbclust(scaled_data, kmeans, method = "wss") +
+  ggtitle("Optimal Number of Clusters - Elbow Method") +
+  theme_test() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text = element_text(size = 10)
+  )
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+# Determine the optimal number of clusters using the Silhouette Method
+fviz_nbclust(scaled_data, kmeans, method = "silhouette") +
+  ggtitle("Optimal Number of Clusters - Silhouette Method") +
+  theme_test() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text = element_text(size = 10)
+  )
+```
+
+Set observed optimal number
+```{r}
+optimal_k <- 7
+```
+
+
+### **Section C**
+**Perform k-means clustering using the optimal number of clusters.**
+
+Perform k-means clustering
+```{r, warning=FALSE, message=FALSE}
+kmeans_result <- kmeans(scaled_data, centers = optimal_k, nstart = 25)
+```
+
+Display the statistical summary of the kmeans
+```{r}
+summary(kmeans_result)
+```
+
+
+### **Section D**
+**Visualize the clusters in different colors.**
+
+Add the cluster assignment to the original data
+```{r}
+CreditCards.df$Cluster <- as.factor(kmeans_result$cluster)
+```
+
+Visualize the clusters
+```{r, warning=FALSE, message=FALSE}
+fviz_cluster(
+  kmeans_result,
+  data = scaled_data,
+  geom = "point",
+  ellipse.type = "norm",
+  ggtheme = theme_test(),
+  main = "Cluster Visualization"
+)
+```
+
+
+
