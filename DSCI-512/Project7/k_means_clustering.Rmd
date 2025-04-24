@@ -47,17 +47,17 @@ This dataset contains the following columns:
 **Load the dataset CreditCards.csv into memory.**
 
 Read the dataset into memory
-```{r}
+```{r read_file}
 CreditCards.df <- read.csv("data/CreditCards.csv")
 ```
 
 Display the dimensions of the data frame (number of rows and columns)
-```{r}
+```{r check_dimensions}
 dim(CreditCards.df)
 ```
 
 Display the column names of the data frame
-```{r}
+```{r display_column_names}
 colnames(CreditCards.df)
 ```
 
@@ -70,35 +70,35 @@ colnames(CreditCards.df)
 **Remove the first column: CUST_ID since it doesn’t provide any info for cluster.**
 
 Remove the first column
-```{r}
+```{r remove_first_column}
 CreditCards.df <- CreditCards.df[,-1]
 ```
 
 Display the dimensions of the data frame (number of rows and columns)
-```{r}
+```{r recheck_dimensions}
 dim(CreditCards.df)
 ```
 
 Display the column names of the data frame
-```{r}
+```{r recheck_coulmn_names}
 colnames(CreditCards.df)
 ```
 
 ### **Section B**
 **Determine the optimal number of clusters. Justify your answer. It may take longer running time since it uses a large dataset.**
 
-For reproducibility
-```{r}
+Set seed for reproducibility
+```{r set_seed}
 set.seed(123)
 ```
 
 Scale the data for clustering
-```{r}
+```{r scale_data}
 scaled_data <- scale(CreditCards.df)
 ```
 
 Determine the optimal number of clusters using "gap_stat" Method
-```{r, warning=FALSE, message=FALSE}
+```{r optimal_number_gap, warning=FALSE, message=FALSE}
 fviz_nbclust(scaled_data, kmeans, method = "gap_stat") +
   ggtitle("Optimal Number of Clusters - Gap Statistic Method") +
   theme_test() +
@@ -108,9 +108,8 @@ fviz_nbclust(scaled_data, kmeans, method = "gap_stat") +
   )
 ```
 
-
-```{r, warning=FALSE, message=FALSE}
-# Determine the optimal number of clusters using the Elbow Method
+Determine the optimal number of clusters using "Elbow" Method
+```{r optimal_number_wss, warning=FALSE, message=FALSE}
 fviz_nbclust(scaled_data, kmeans, method = "wss") +
   ggtitle("Optimal Number of Clusters - Elbow Method") +
   theme_test() +
@@ -120,9 +119,8 @@ fviz_nbclust(scaled_data, kmeans, method = "wss") +
   )
 ```
 
-
-```{r, warning=FALSE, message=FALSE}
-# Determine the optimal number of clusters using the Silhouette Method
+Determine the optimal number of clusters using "Silhouette" Method
+```{r optimal_number_silhouette, warning=FALSE, message=FALSE}
 fviz_nbclust(scaled_data, kmeans, method = "silhouette") +
   ggtitle("Optimal Number of Clusters - Silhouette Method") +
   theme_test() +
@@ -133,7 +131,7 @@ fviz_nbclust(scaled_data, kmeans, method = "silhouette") +
 ```
 
 Set observed optimal number
-```{r}
+```{r set_optimal_number}
 optimal_k <- 7
 ```
 
@@ -142,12 +140,12 @@ optimal_k <- 7
 **Perform k-means clustering using the optimal number of clusters.**
 
 Perform k-means clustering
-```{r, warning=FALSE, message=FALSE}
+```{r clustering, warning=FALSE, message=FALSE}
 kmeans_result <- kmeans(scaled_data, centers = optimal_k, nstart = 25)
 ```
 
 Display the statistical summary of the kmeans
-```{r}
+```{r cluster_summary}
 summary(kmeans_result)
 ```
 
@@ -156,12 +154,12 @@ summary(kmeans_result)
 **Visualize the clusters in different colors.**
 
 Add the cluster assignment to the original data
-```{r}
+```{r add_cluster_back_to_dataset}
 CreditCards.df$Cluster <- as.factor(kmeans_result$cluster)
 ```
 
 Visualize the clusters
-```{r, warning=FALSE, message=FALSE}
+```{r visualization, warning=FALSE, message=FALSE}
 fviz_cluster(
   kmeans_result,
   data = scaled_data,
@@ -171,6 +169,4 @@ fviz_cluster(
   main = "Cluster Visualization"
 )
 ```
-
-
 
