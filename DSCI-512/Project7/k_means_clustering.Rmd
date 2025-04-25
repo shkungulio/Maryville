@@ -27,18 +27,36 @@ library(factoextra)
 ```
 <hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
 
-# **Credit Cards Customer Segmentantion**
+# **Customer Segmentantion**
 <hr style="height:2px; border:none; color:#333; background-color:#333;" />
 
 You were just hired as a data scientist for one of the largest retailer companies: MarketCo. MarketCo offers its customers store credit cards. MarketCo has collected transactions of these credit cards. You are asked by your boss, Mr. Johnson, to develop a customer segmentation to define marketing strategy. You are given a historical dataset summarizing the usage behavior of about 9,000 active credit card holders during the last 6 months. You are asked to perform cluster analysis of this dataset.
 
-**Data Source:** from Kaggle at https://www.kaggle.com/arjunbhasin2013/ccdata/home
+**Data Source:** Kaggle at https://www.kaggle.com/arjunbhasin2013/ccdata/home
 
 ## **Data Dictionary**
 This dataset contains the following columns:
 
-| **Variable** | **Description** | **Data Type** | **Rules/Constraints** |
-|:-------------|:----------------|:--------------|:----------------------|
+| **Variable Name** | **Data Type** | **Description** | **Constraints/Rules** |
+|:------------------|:--------------|:----------------|:----------------------|
+| `CUST_ID` | Integer | Row identifier or index | Unique, Non-null |
+| `BALANCE` | Float | Current balance on the card | ≥ 0, Non-null |
+| `BALANCE_FREQUENCY` | Float | How frequently the balance is updated | Range: [0.0, 1.0], Non-null |
+| `PURCHASES` | Float | Total amount of purchases made | ≥ 0, Non-null |
+| `ONEOFF_PURCHASES` | Float | Purchases made in a single transaction | ≥ 0, ≤ `PURCHASES`, Non-null |
+| `INSTALLMENTS_PURCHASES` | Float | Purchases made in installments | ≥ 0, ≤ `PURCHASES`, Non-null |
+| `CASH_ADVANCE` | Float | Cash advances taken | ≥ 0, Non-null | 
+| `PURCHASES_FREQUENCY` | Float | Frequency of making purchases | Range: [0.0, 1.0], Non-null |
+| `ONEOFF_PURCHASES_FREQUENCY` | Float | Frequency of one-off purchases | Range: [0.0, 1.0], Non-null |
+| `PURCHASES_INSTALLMENTS_FREQUENCY` | Float | Frequency of purchases in installments | Range: [0.0, 1.0], Non-null |
+| `CASH_ADVANCE_FREQUENCY` | Float | Frequency of cash advances | Range: [0.0, 1.0], Non-null |
+| `CASH_ADVANCE_TRX` | Integer | Number of cash advance transactions | ≥ 0, Non-null |
+| `PURCHASES_TRX` | Integer | Number of purchase transactions | ≥ 0, Non-null |
+| `CREDIT_LIMIT` | Integer | Credit limit assigned to the card | ≥ 0, Non-null |
+| `PAYMENTS` | Float | Total amount of payments made | ≥ 0, Non-null |
+| `MINIMUM_PAYMENTS` | Float | Minimum payments made | ≥ 0, Non-null |
+| `PRC_FULL_PAYMENT` | Float | Proportion of months with full payment of balance | Range: [0.0, 1.0], Non-null |
+| `TENURE` | Integer | Number of months the customer has been active (usually 12) | Integer ≥ 0, Non-null, typically constant (12) across records |
 
 
 <br>
@@ -108,16 +126,8 @@ fviz_nbclust(scaled_data, kmeans, method = "gap_stat") +
   )
 ```
 
-Determine the optimal number of clusters using "Elbow" Method
-```{r optimal_number_wss, warning=FALSE, message=FALSE}
-fviz_nbclust(scaled_data, kmeans, method = "wss") +
-  ggtitle("Optimal Number of Clusters - Elbow Method") +
-  theme_test() +
-  theme(
-    plot.title = element_text(size = 14, face = "bold"),
-    axis.text = element_text(size = 10)
-  )
-```
+The Gap Statistic Method identifies the optimal number of clusters (k) by maximizing the gap statistic, which evaluates clustering quality. In this analysis, the gap statistic increases steadily and reaches its maximum at k = 7, indicating the best balance between compactness and separation. Beyond k = 7, improvements are minimal, suggesting diminishing returns. Error bars confirm the reliability of k = 7 as the optimal choice, making it the most meaningful segmentation for this dataset. <br>
+
 
 Determine the optimal number of clusters using "Silhouette" Method
 ```{r optimal_number_silhouette, warning=FALSE, message=FALSE}
@@ -129,6 +139,8 @@ fviz_nbclust(scaled_data, kmeans, method = "silhouette") +
     axis.text = element_text(size = 10)
   )
 ```
+
+The Silhouette Method has recommended 7 clusters as the optimal number for K-means clustering on the scaled_data. This value ensures a good balance between cluster cohesion (how close points in the same cluster are) and separation (how distinct each cluster is from the others). <br>
 
 Set observed optimal number
 ```{r set_optimal_number}
@@ -148,6 +160,8 @@ Display the statistical summary of the kmeans
 ```{r cluster_summary}
 summary(kmeans_result)
 ```
+
+The k-means clustering analysis divided 8,950 data points into 7 clusters, each with a centroid. The solution is compact (low total within-cluster sum of squares) and well-separated (high between-cluster sum of squares), indicating good clustering quality. The algorithm converged efficiently in 1 iteration without errors, demonstrating that the data was well-suited for clustering.
 
 
 ### **Section D**
@@ -170,3 +184,4 @@ fviz_cluster(
 )
 ```
 
+The visualization shows 7 clusters derived from dimensionality reduction (Dim1 and Dim2) that explain 47.6% of data variability. Some clusters, like Cluster 5, are distinct and well-separated, while others, like Clusters 6 and 7, overlap slightly, indicating shared characteristics. Compact clusters (e.g., Cluster 2) suggest closely related points, while wider clusters (e.g., Cluster 6) show greater variability. Overall, the plot validates the clustering structure but highlights potential for refinement in overlapping areas.
