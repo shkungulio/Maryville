@@ -5,7 +5,7 @@
 # Subject:    Final Project                 #
 # Class:      DSCI 512                      #
 # Section:    01W                           #         
-# Instructor: Chris Shannon                 #
+# Instructor: Dr. Nengbing Tao              #
 # File Name:  FinalProject_Kungulio_Seif.R  #
 #                                           # 
 #############################################
@@ -17,11 +17,18 @@
 
 #     a.  Load the dataset insurance.csv into memory.
 
+insurance <- read.csv("data/insurance.csv")
+
+dim(insurance)
+
+head(insurance)
 
 
 #     b.  In the data frame, transform the variable charges by setting
 #         insurance$charges = log(insurance$charges). Do not transform
 #         it outside of the data frame.
+
+insurance$charges <- log(insurance$charges)
 
 
 
@@ -31,6 +38,19 @@
 #         ones (1) as values, and then discard the column only after
 #         verifying it has only ones as values.
 
+insurance_dummies <- model.matrix(charges ~ ., data = insurance)
+
+# View the first few rows of the first column
+head(insurance_dummies[,1])
+
+# Check if the first column contains only 1s
+all(insurance_dummies[,1] == 1)
+
+# Drop the first column after verification
+insurance_dummies <- insurance_dummies[,-1]
+
+head(insurance_dummies)
+
 
 
 #     d.  Use the sample() function with set.seed equal to 1 to generate
@@ -39,6 +59,11 @@
 #         not use any method other than the sample() function for
 #         splitting your data.
 
+set.seed(1)
+n <- nrow(insurance)
+train_idx <- sample(1:n, size = round(2/3 * n))
+test_idx <- setdiff(1:n, train_idx)
+
 
 
 #     e.  Create a training and test data set from the data set created in
@@ -46,10 +71,21 @@
 #         Unless otherwise stated, only use the training and test
 #         data sets created in this step.
 
+insurance_train <- insurance[train_idx, ]
+insurance_test <- insurance[test_idx, ]
+
+dim(insurance_train)
+dim(insurance_test)
 
 
 #     f.  Create a training and test data set from data set created in 1.c
 #         using the training and test row indexes created in 1.d
+
+insurance_dummies_train <- insurance_dummies[train_idx, ]
+insurance_dummies_test <- insurance_dummies[test_idx, ]
+
+dim(insurance_dummies_train)
+dim(insurance_dummies_test)
 
 
 

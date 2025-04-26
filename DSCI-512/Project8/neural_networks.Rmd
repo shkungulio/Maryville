@@ -1,0 +1,156 @@
+---
+title: "Neural Networks"
+author: "Seif Kungulio"
+date: "04/25/2025"
+output:
+  rmdformats::readthedown
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Install necessary packages if not installed
+if (!requireNamespace("neuralnet", quietly = TRUE)) {
+  install.packages("neuralnet")
+}
+
+# Load necessary libraries
+library(neuralnet)
+```
+
+<hr style="height:5px; border:none; color:#006000; background-color:#006000;" />
+
+
+# **Wine Quality Analysis**
+<hr style="height:2px; border:none; color:#333; background-color:#333;" />
+
+You are a data scientist in the Great North American Wine Company (GNAWC). GNAWC is a family owned business and sells red wines all over North America. The Director of Quality Product, Mrs. Johnson, wants to analyze wine quality based on physicochemical tests. You are given a dataset containing the file wine.csv.
+
+**Data Source:** https://archive.ics.uci.edu/dataset/186/wine+quality
+
+## **Data Dictionary**
+This dataset contains the following columns:
+
+| **Variable Name** | **Data Type** | **Description** | **Constraints/Rules** |
+|:------------------|:--------------|:----------------|:----------------------|
+
+
+
+<br>
+
+## **Question 1**
+**Load the dataset wine.csv into memory.**
+
+Read the dataset into memory
+```{r read_file}
+Wine.df <- read.csv("data/wine.csv")
+```
+
+Display the dimensions of the data frame (number of rows and columns)
+```{r check_dimensions}
+dim(Wine.df)
+```
+
+Display the column names of the data frame
+```{r display_column_names}
+colnames(Wine.df)
+```
+
+<br>
+
+## **Question 2**
+**Preprocess the inputs**
+
+### **Section A**
+**Standardize the inputs using the scale() function.**
+
+scale all columns except the "quality" column
+```{r}
+scaled.wine <- scale(Wine.df[, -ncol(Wine.df)])
+```
+
+Display column names of the standardized inputs
+```{r}
+colnames(scaled.wine)
+```
+
+### **Section B**
+**Convert the standardized inputs to a data frame using the as.data.frame() function.**
+```{r}
+standard_data <- as.data.frame(scaled.wine)
+```
+
+### **Section C**
+**Split the data into a training set containing 3/4 of the original data (test set containing the remaining 1/4 of the original data).**
+
+Add back the quality column
+```{r}
+standard_data$quality <- Wine.df$quality
+```
+
+Split the data into training set and testing set
+```{r}
+set.seed(1) # For reproducibility
+index <- sample(1:nrow(standard_data), 0.75 * nrow(standard_data))
+training_data <- standard_data[index, ]
+testing_data <- standard_data[-index, ]
+```
+
+Display the training dataset dimensions
+```{r}
+dim(training_data)
+```
+
+Display the testing dataset dimensions
+```{r}
+dim(testing_data)
+```
+
+
+<br>
+
+## **Question 3**
+**Build a neural networks model**
+
+### **Section A**
+**The response is quality and the inputs are: `volatile.acidity`, `density`, `pH`, and `alcohol`. Please use 1 hidden layer with 1 neuron.**
+
+Build the neural network model
+```{r}
+nn_model <- neuralnet(quality ~ volatile.acidity + density + pH + alcohol,
+                data = training_data, hidden = c(1))
+```
+
+### **Section B**
+**Plot the neural networks.**
+
+```{r}
+plot(nn_model)
+```
+<a href="https://rpubs.com/shkungulio/neural_plot" target="_blank">Neural Networks Plot</a>
+
+### **Section C**
+**Forecast the wine quality in the test dataset.**
+```{r}
+predicted <- predict(nn_model, newdata = testing_data)
+
+# Display the statistical summary of the the predicted values
+summary(predicted)
+```
+
+### **Section D**
+**Get the observed wine quality of the test dataset.**
+```{r}
+actual <- testing_data$quality
+
+# Display the statistical summary of the observed wine quality
+summary(actual)
+```
+
+### **Section E**
+**Compute test error (MSE).**
+```{r}
+mean_squared_error <- mean((actual - predicted)^2)
+mean_squared_error
+```
+
