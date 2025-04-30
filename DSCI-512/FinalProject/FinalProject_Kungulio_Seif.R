@@ -208,7 +208,8 @@ tenfold_mse <- model_10cv$results$RMSE^2
 
 #     g.  Calculate and report the test MSE using the best model from 
 #         2.d and the test data set from step 1.e.
-
+pred_test <- predict(step_model, newdata = test_data)
+test_mse <- mean((test_data$charges - pred_test)^2)
 
 
 #     h.  Compare the test MSE calculated in step 2.f using 10-fold
@@ -412,7 +413,12 @@ nn_mse <- mean((test_data$charges - nn_pred)^2)
 #         with the test MSEs as "Test.MSE" and round the data in this
 #         column to 4 decimal places. Present the formatted data to your
 #         supervisor and recommend which model is best and why.
-
+model_results <- data.frame(
+  Model.Type = c("Multiple Linear Regression", "Regression Tree", 
+                 "Random Forest", "Support Vector Machine", "Neural Network"),
+  Test.MSE = round(c(test_mse, tree_mse, rf_mse, svm_mse, nn_mse), 4)
+)
+print(model_results)
 
 
 #     b.  Another supervisor from the sales department has requested
@@ -438,7 +444,7 @@ nn_mse <- mean((test_data$charges - nn_pred)^2)
 #         Follow these steps:
 #
 #         i.   Copy your pruned tree model to a new variable.
-
+copy_tree <- pruned_tree
 
 
 #         ii.  In your new variable, find the data.frame named
@@ -448,12 +454,12 @@ nn_mse <- mean((test_data$charges - nn_pred)^2)
 #              copy_of_my_pruned_tree, then the data frame is
 #              accessed as copy_of_my_pruned_tree$frame, and it
 #              works just like a normal data frame.).
-
+copy_tree$frame$yval <- exp(copy_tree$frame$yval)
 
 
 #         iii. After you reverse the log transform on the yval
 #              column, then replot the tree with labels.
-
-
+plot(copy_tree)
+text(copy_tree, pretty = 0)
 
 
