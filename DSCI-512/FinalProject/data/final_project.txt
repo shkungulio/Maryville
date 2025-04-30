@@ -1,0 +1,225 @@
+Step 1: Data Preparation
+===================================================
+# Load necessary libraries
+library(MASS)
+library(caret)
+library(tree)
+library(randomForest)
+library(e1071)
+library(nnet)
+library(ggplot2)
+library(cluster)
+library(factoextra)
+
+# 1.a Load the dataset
+insurance <- read.csv("insurance.csv")
+
+# 1.b Log-transform the charges variable
+insurance$charges <- log(insurance$charges)
+
+# 1.c Create dummy variables using model.matrix
+insurance_dummy <- model.matrix(charges ~ ., data = insurance)
+# Verify first column has only 1s
+head(insurance_dummy[,1])
+# Remove the intercept column (first column)
+insurance_dummy <- insurance_dummy[, -1]
+
+# 1.d Set seed and create training/test index
+set.seed(1)
+sample_index <- sample(1:nrow(insurance), nrow(insurance) * 2/3)
+
+# 1.e Create training/test sets from log-transformed original data
+train <- insurance[sample_index, ]
+test <- insurance[-sample_index, ]
+
+# 1.f Create training/test sets from dummy-encoded data
+train_dummy <- insurance_dummy[sample_index, ]
+test_dummy <- insurance_dummy[-sample_index, ]
+
+
+Step 2: Multiple Linear Regression
+=======================================================
+# 2.a Fit multiple linear regression model
+lm_model <- lm(charges ~ age + sex + bmi + children + smoker + region, data = train)
+summary(lm_model)
+
+# 2.b Is there a relationship? Look at p-values in summary.
+# 2.c Is sex significant? Check p-value for sex
+
+# 2.d Best subset selection using stepAIC (backward)
+library(MASS)
+lm_best <- stepAIC(lm_model, direction = "backward")
+summary(lm_best)
+
+# 2.e LOOCV test error using caret
+library(caret)
+ctrl_loocv <- trainControl(method = "LOOCV")
+set.seed(1)
+lm_loocv <- train(charges ~ age + bmi + children + smoker + region, data = train, method = "lm", trControl = ctrl_loocv)
+mse_loocv <- lm_loocv$results$RMSE^2
+
+# 2.f 10-fold CV
+ctrl_cv10 <- trainControl(method = "cv", number = 10)
+set.seed(1)
+lm_cv10 <- train(charges ~ age + bmi + children + smoker + region, data = train, method = "lm", trControl = ctrl_cv10)
+mse_cv10 <- lm_cv10$results$RMSE^2
+
+# 2.g Test MSE using test data
+pred_lm <- predict(lm_best, newdata = test)
+mse_test_lm <- mean((test$charges - pred_lm)^2)
+
+# 2.h Compare
+print(c(LOOCV = mse_loocv, CV10 = mse_cv10, Test = mse_test_lm))
+
+
+Step 3: Regression Tree
+======================================================================
+# 3.a Fit tree model
+library(tree)
+tree_model <- tree(charges ~ age + sex + bmi + children + smoker + region, data = train)
+
+# 3.b Cross-validation to find optimal tree size
+cv_tree <- cv.tree(tree_model)
+plot(cv_tree$size, cv_tree$dev, type = "b", xlab = "Tree Size", ylab = "Deviance")
+best_size <- cv_tree$size[which.min(cv_tree$dev)]
+
+# 3.c Bias-variance justification is based on balance at min deviance
+
+# 3.d Prune the tree
+pruned_tree <- prune.tree(tree_model, best = best_size)
+
+# 3.e Plot the pruned tree
+plot(pruned_tree)
+text(pruned_tree, pretty = 0)
+
+# 3.f Test MSE for regression tree
+pred_tree <- predict(pruned_tree, newdata = test)
+mse_test_tree <- mean((test$charges - pred_tree)^2)
+
+
+Step 4: Random Forest
+======================================================
+# 4.a Fit random forest
+library(randomForest)
+set.seed(1)
+rf_model <- randomForest(charges ~ age + sex + bmi + children + smoker + region, data = train, importance = TRUE)
+
+# 4.b Test error
+pred_rf <- predict(rf_model, newdata = test)
+mse_test_rf <- mean((test$charges - pred_rf)^2)
+
+# 4.c Variable importance
+importance(rf_model)
+
+# 4.d Plot variable importance
+varImpPlot(rf_model)
+
+
+Step 5: Support Vector Machine
+=========================================================
+# 5.a Fit SVM model
+library(e1071)
+svm_model <- svm(charges ~ age + sex + bmi + children + smoker + region, data = train,
+                 kernel = "radial", gamma = 5, cost = 50)
+
+# 5.b Grid search
+set.seed(1)
+svm_tune <- tune(svm, charges ~ ., data = train,
+                 ranges = list(kernel = c("linear", "radial", "sigmoid"),
+                               cost = c(1, 10, 50, 100),
+                               gamma = c(1, 3, 5)))
+summary(svm_tune)
+best_svm <- svm_tune$best.model
+
+# 5.c Forecast with best model
+pred_svm <- predict(best_svm, newdata = test)
+
+# 5.d Test MSE
+mse_test_svm <- mean((test$charges - pred_svm)^2)
+
+
+Step 6: K-means Clustering
+===============================================================
+# 6.a Remove categorical vars
+insurance_numeric <- insurance[, c("age", "bmi", "children", "charges")]
+
+# 6.b Determine optimal clusters
+fviz_nbclust(insurance_numeric, kmeans, method = "wss")
+
+# 6.c Apply k-means with 3 clusters
+set.seed(1)
+kmeans_model <- kmeans(insurance_numeric, centers = 3, nstart = 25)
+
+# 6.d Visualize clusters
+fviz_cluster(kmeans_model, data = insurance_numeric)
+
+
+Step 7: Neural Network
+===================================================================
+# 7.a Remove categorical vars
+insurance_nn <- insurance[, c("age", "bmi", "children", "charges")]
+
+# 7.b Scale inputs
+insurance_scaled <- scale(insurance_nn)
+insurance_scaled <- as.data.frame(insurance_scaled)
+
+# 7.c Train/test split (80/20)
+set.seed(1)
+index_nn <- sample(1:nrow(insurance_scaled), nrow(insurance_scaled)*0.8)
+train_nn <- insurance_scaled[index_nn, ]
+test_nn <- insurance_scaled[-index_nn, ]
+
+# 7.d Fit neural network
+library(nnet)
+nn_model <- nnet(charges ~ age + bmi + children, data = train_nn, size = 1, linout = TRUE)
+
+# 7.e Plot (simplified)
+plot(nn_model)
+
+# 7.f Forecast
+pred_nn <- predict(nn_model, newdata = test_nn)
+
+# 7.g Get observed values
+obs_nn <- test_nn$charges
+
+# 7.h Test error
+mse_test_nn <- mean((obs_nn - pred_nn)^2)
+
+
+Step 8: Model Comparison
+=================================================================
+# Compare test MSEs
+model_compare <- data.frame(
+  Model.Type = c("Multiple Linear Regression", "Regression Tree", "Random Forest",
+                 "Support Vector Machine", "Neural Network"),
+  Test.MSE = round(c(mse_test_lm, mse_test_tree, mse_test_rf, mse_test_svm, mse_test_nn), 4)
+)
+print(model_compare)
+
+# Recommendation based on lowest MSE
+best_model <- model_compare[which.min(model_compare$Test.MSE), ]
+print(paste("Recommended model is", best_model$Model.Type, "with Test MSE =", best_model$Test.MSE))
+
+
+Step 9: Visual Predictive Model Recommendation
+==================================================================
+# Recommend Regression Tree
+# Advantages: Interpretable, visual, client-friendly
+# Disadvantages: Less accurate than Random Forest or SVM
+
+# Your explanation here:
+# "Given its transparency and intuitive layout, the regression tree is ideal for sales presentations. It shows how variables like age, BMI, and smoking affect charges, though it may sacrifice some accuracy compared to ensemble models."
+
+
+Step 10: Reverse Log Transformation on Tree
+==================================================================
+# Copy pruned tree
+tree_copy <- pruned_tree
+
+# Reverse log transform on yval
+tree_copy$frame$yval <- exp(tree_copy$frame$yval)
+
+# Replot tree with updated labels
+plot(tree_copy)
+text(tree_copy, pretty = 0)
+
