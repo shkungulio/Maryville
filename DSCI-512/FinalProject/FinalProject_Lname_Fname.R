@@ -5,11 +5,40 @@
 # Subject:    Final Project                 #
 # Class:      DSCI 512                      #
 # Section:    01W                           #         
-# Instructor: Chris Shannon                 #
+# Instructor: Dr. Nengbing Tao              #
 # File Name:  FinalProject_Kungulio_Seif.R  #
 #                                           # 
 #############################################
 
+
+# DEVELOPMENT ENVIRONMENT PREPARATION
+#===============================================================================
+
+# Install necessary packages if not installed
+if (!requireNamespace("MASS", quietly = TRUE)) {
+  install.packages("MASS")
+}
+if (!requireNamespace("tidyverse", quietly = TRUE)) {
+  install.packages("tidyverse")
+}
+if (!requireNamespace("caret", quietly = TRUE)) {
+  install.packages("caret")
+}
+if (!requireNamespace("randomForest", quietly = TRUE)) {
+  install.packages("randomForest")
+}
+if (!requireNamespace("e1071", quietly = TRUE)) {
+  install.packages("e1071")
+}
+if (!requireNamespace("cluster", quietly = TRUE)) {
+  install.packages("cluster")
+}
+if (!requireNamespace("factoextra", quietly = TRUE)) {
+  install.packages("factoextra")
+}
+if (!requireNamespace("neuralnet", quietly = TRUE)) {
+  install.packages("neuralnet")
+}
 
 # Load necessary libraries
 library(MASS)
@@ -17,8 +46,8 @@ library(caret)
 library(tree)
 library(randomForest)
 library(e1071)
-library(nnet)
-library(ggplot2)
+library(neuralnet)
+library(tidyverse)
 library(cluster)
 library(factoextra)
 
@@ -31,11 +60,20 @@ library(factoextra)
 #     a.  Load the dataset insurance.csv into memory.
 insurance <- read.csv("data/insurance.csv")
 
+# Display the data frame dimensions
+dim(insurance)
+
+# Print the first six rows of the data frame
+head(insurance)
+
 
 #     b.  In the data frame, transform the variable charges by setting
 #         insurance$charges = log(insurance$charges). Do not transform
 #         it outside of the data frame.
 insurance$charges <- log(insurance$charges)
+
+# Display the first 10 occurrences
+head(insurance$charges, 10)
 
 
 #     c.  Using the data set from 1.b, use the model.matrix() function
@@ -46,7 +84,10 @@ insurance$charges <- log(insurance$charges)
 insurance_dummy <- model.matrix(charges ~ ., data = insurance)
 
 # Verify first column has only 1s
-head(insurance_dummy[,1])
+all(insurance_dummy[, 1] == 1)
+
+# Display the first ten rows
+head(insurance_dummy[, 1], 10)
 
 # Remove the intercept column (first column)
 insurance_dummy <- insurance_dummy[, -1]
@@ -59,6 +100,7 @@ insurance_dummy <- insurance_dummy[, -1]
 #         splitting your data.
 set.seed(1)
 
+# Generate row indexes
 sample_index <- sample(1:nrow(insurance), nrow(insurance) * 2/3)
 
 
@@ -66,14 +108,16 @@ sample_index <- sample(1:nrow(insurance), nrow(insurance) * 2/3)
 #         1.b using the training and test row indexes created in 1.d.
 #         Unless otherwise stated, only use the training and test
 #         data sets created in this step.
-train <- insurance[sample_index, ]
-test <- insurance[-sample_index, ]
+train_data <- insurance[sample_index, ]
+test_data <- insurance[-sample_index, ]
 
 
 #     f.  Create a training and test data set from data set created in 1.c
 #         using the training and test row indexes created in 1.d
 train_dummy <- insurance_dummy[sample_index, ]
 test_dummy <- insurance_dummy[-sample_index, ]
+
+head(train_dummy)
 
 
 
@@ -87,18 +131,18 @@ test_dummy <- insurance_dummy[-sample_index, ]
 #         summary() function. Use the training data set created in
 #         step 1.e to train your model.
 lm_model <- lm(charges ~ age + sex + bmi + children + smoker + region, 
-               data = train)
+               data = train_data)
 
 summary(lm_model)
 
 
 #     b.  Is there a relationship between the predictors and the
 #         response?
-
+# Check word document for response
 
 #     c.  Does sex have a statistically significant relationship to the
 #         response?
-
+# Check word document for response
 
 #     d.  Perform best subset selection using the stepAIC() function
 #         from the MASS library, choose best model based on AIC. For
@@ -116,11 +160,13 @@ ctrl_loocv <- trainControl(method = "LOOCV")
 
 set.seed(1)
 lm_loocv <- train(charges ~ age + bmi + children + smoker + region, 
-                  data = train, 
+                  data = train_data, 
                   method = "lm", 
                   trControl = ctrl_loocv)
 
 mse_loocv <- lm_loocv$results$RMSE^2
+
+mse_loocv
 
 
 #     f.  Calculate the test error of the best model in #3d based on AIC
@@ -131,18 +177,22 @@ ctrl_cv10 <- trainControl(method = "cv", number = 10)
 
 set.seed(1)
 lm_cv10 <- train(charges ~ age + bmi + children + smoker + region, 
-                 data = train, 
+                 data = train_data, 
                  method = "lm", 
                  trControl = ctrl_cv10)
 
 mse_cv10 <- lm_cv10$results$RMSE^2
 
+mse_cv10
+
 
 #     g.  Calculate and report the test MSE using the best model from 
 #         2.d and the test data set from step 1.e.
-pred_lm <- predict(lm_best, newdata = test)
+pred_lm <- predict(lm_best, newdata = test_data)
 
-mse_test_lm <- mean((test$charges - pred_lm)^2)
+mse_test_lm <- mean((test_data$charges - pred_lm)^2)
+
+mse_test_lm
 
 
 #     h.  Compare the test MSE calculated in step 2.f using 10-fold
@@ -162,7 +212,7 @@ print(c(LOOCV = mse_loocv,
 #         charges is the response and the predictors are age, sex, bmi,
 #         children, smoker, and region.
 tree_model <- tree(charges ~ age + sex + bmi + children + smoker + region, 
-                   data = train)
+                   data = train_data)
 
 
 #     b.  Find the optimal tree by using cross-validation and display
@@ -172,7 +222,8 @@ cv_tree <- cv.tree(tree_model)
 plot(cv_tree$size, cv_tree$dev, 
      type = "b", xlab = "Tree Size", ylab = "Deviance")
 
-best_size <- cv_tree$size[which.min(cv_tree$dev)]
+# From the graph, the best size is 3
+best_size <- 3
 
 
 #     c.  Justify the number you picked for the optimal tree with
@@ -189,9 +240,11 @@ text(pruned_tree, pretty = 0)
 
 
 #     f.  Calculate the test MSE for the best model.
-pred_tree <- predict(pruned_tree, newdata = test)
+pred_tree <- predict(pruned_tree, newdata = test_data)
 
-mse_test_tree <- mean((test$charges - pred_tree)^2)
+mse_test_tree <- mean((test_data$charges - pred_tree)^2)
+
+mse_test_tree
 
 
 
@@ -204,14 +257,16 @@ mse_test_tree <- mean((test$charges - pred_tree)^2)
 #         bmi, children, smoker, and region.
 set.seed(1)
 rf_model <- randomForest(charges ~ age + sex + bmi + children + smoker + region, 
-                         data = train, 
+                         data = train_data, 
                          importance = TRUE)
 
 
 #     b.  Compute the test error using the test data set.
-pred_rf <- predict(rf_model, newdata = test)
+pred_rf <- predict(rf_model, newdata = test_data)
 
-mse_test_rf <- mean((test$charges - pred_rf)^2)
+mse_test_rf <- mean((test_data$charges - pred_rf)^2)
+
+mse_test_rf
 
 
 #     c.  Extract variable importance measure using the importance()
@@ -233,7 +288,7 @@ varImpPlot(rf_model)
 #         children, smoker, and region. Please use the svm() function
 #         with radial kernel and gamma=5 and cost = 50.
 svm_model <- svm(charges ~ age + sex + bmi + children + smoker + region, 
-                 data = train, kernel = "radial", gamma = 5, cost = 50)
+                 data = train_data, kernel = "radial", gamma = 5, cost = 50)
 
 
 #     b.  Perform a grid search to find the best model with potential
@@ -241,7 +296,7 @@ svm_model <- svm(charges ~ age + sex + bmi + children + smoker + region,
 #         potential kernel: "linear","polynomial","radial" and
 #         "sigmoid". And use the training set created in step 1.e.
 set.seed(1)
-svm_tune <- tune(svm, charges ~ ., data = train,
+svm_tune <- tune(svm, charges ~ ., data = train_data,
                  ranges = list(kernel = c("linear", "radial", "sigmoid"),
                                cost = c(1, 10, 50, 100),
                                gamma = c(1, 3, 5)))
@@ -253,14 +308,20 @@ summary(svm_tune)
 
 best_svm <- svm_tune$best.model
 
+best_svm
+
 
 #     d.  Forecast charges using the test dataset and the best model
 #         found in c).
-pred_svm <- predict(best_svm, newdata = test)
+pred_svm <- predict(best_svm, newdata = test_data)
+
+summary(pred_svm)
 
 
 #     e.  Compute the MSE (Mean Squared Error) on the test data.
-mse_test_svm <- mean((test$charges - pred_svm)^2)
+mse_test_svm <- mean((test_data$charges - pred_svm)^2)
+
+mse_test_svm
 
 
 
@@ -270,7 +331,11 @@ mse_test_svm <- mean((test$charges - pred_svm)^2)
 
 #     a.  Use the training data set created in step 1.f and standardize
 #         the inputs using the scale() function.
+
+set.seed(1)
+
 scaled_train_dummy <- scale(train_dummy)
+
 
 #     b.  Convert the standardized inputs to a data frame using the
 #         as.data.frame() function.
@@ -280,15 +345,31 @@ scaled_train_dummy <- as.data.frame(scaled_train_dummy)
 #     c.  Determine the optimal number of clusters, and use the
 #         gap_stat method and set iter.max=20. Justify your answer.
 #         It may take longer running time since it uses a large dataset.
-fviz_nbclust(scaled_train_dummy, kmeans, method = "gap_stat")
+fviz_nbclust(scaled_train_dummy, kmeans, method = "gap_stat",
+             nstart = 25, iter.max = 20, k.max = 10, verbose = FALSE) +
+  ggtitle("Optimal Number of Clusters - Gap Statistic Method") +
+  theme_test()
+
+# observed optimal number
+optimal_k <- 8
+
 
 #     d.  Perform k-means clustering using the optimal number of
 #         clusters found in step 6.c. Set parameter nstart = 25
+kmeans_model <- kmeans(scaled_train_dummy, centers = optimal_k, nstart = 25)
+
+summary(kmeans_model)
 
 
 #     e.  Visualize the clusters in different colors, setting parameter
 #         geom="point"
-fviz_cluster(kmeans_model, data = scaled_train_dummy, geom = "point")
+fviz_cluster(kmeans_model, 
+             data = scaled_train_dummy, 
+             geom = "point",
+             ellipse.type = "norm",
+             ggtheme = theme_test(),
+             main = "Cluster Visualization")
+
 
 
 ######################################
@@ -302,8 +383,14 @@ fviz_cluster(kmeans_model, data = scaled_train_dummy, geom = "point")
 #         Please use 1 hidden layer with 1 neuron. Do not scale
 #         the data.
 
+# Fit the neural network model
+nn_model <- neuralnet(insurance$charges ~ age + sexmale + bmi + children + smokeryes +
+                        regionnorthwest + regionsoutheast + regionsouthwest,
+                      data = train_dummy, hidden = c(1))
+
 
 #     b.  Plot the neural network.
+plot(nn_model)
 
 
 #     c.  Forecast the charges in the test dataset.
