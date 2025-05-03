@@ -71,3 +71,6 @@
 		8.c.i. Copy your pruned tree model to a new variable.
 		8.c.ii In your new variable, find the data.frame named "frame" and reverse the log transformation on the data.frame column yval using the exp() function. (If the copy of your pruned tree model is named copy_of_my_pruned_tree, then the data frame is accessed as copy_of_my_pruned_tree$frame, and it works just like a normal data frame.).
 		8.c.iii After you reverse the log transform on the yval column, then replot the tree with labels.
+		
+		
+		
