@@ -60,8 +60,10 @@ library(neuralnet)
 ##      a.  Load the dataset insurance.csv into memory.
 insurance <- read.csv("data/insurance.csv")
 
+# Display the dimension of the data frame
 dim(insurance)
 
+# Display the first six rows of the data frame
 head(insurance)
 
 
@@ -107,13 +109,19 @@ sample_index <- sample(1:nrow(insurance), nrow(insurance) * 2/3)
 ##          Unless otherwise stated, only use the training and test data sets 
 ##          created in this step.
 train_data <- insurance[sample_index, ]
+dim(train_data) # Display the dimensions of the "train_data"
+
 test_data <- insurance[-sample_index, ]
+dim(test_data) # Display the dimensions of the "test_data"
 
 
 ##      f.  Create a training and test data set from data set created in 
 ##          1.c using the training and test row indexes created in 1.d
 train_dummy <- insurance_dummy[sample_index, ]
+dim(train_dummy) # Display the dimensions of the "train_dummy"
+
 test_dummy <- insurance_dummy[-sample_index, ]
+dim(test_dummy) # Display the dimensions of the "test_dummy"
 
 
 
@@ -191,9 +199,7 @@ mse_test_lm
 ##      h.  Compare the test MSE calculated in step 2.f using 10-fold 
 ##          cross-validation with the test MSE calculated in step 2.g. 
 ##          How similar are they?
-print(c(LOOCV = mse_loocv, 
-        CV10 = mse_cv10, 
-        Test = mse_test_lm))
+print(c(CV10_MSE = mse_cv10, Test_MSE = mse_test_lm))
 
 
 
@@ -206,21 +212,24 @@ print(c(LOOCV = mse_loocv,
 tree_model <- tree(charges ~ age + sex + bmi + children + smoker + region, 
                    data = train_data)
 
+summary(tree_model)
+
 
 ##    3.b.  Find the optimal tree by using cross-validation and display the 
 ##          results in a graphic. Report the best size.
 cv_tree <- cv.tree(tree_model)
 plot(cv_tree$size, cv_tree$dev, type = "b", xlab = "Tree Size", ylab = "Deviance")
 
-best_size <- 3
-
 
 ##    3.c.  Justify  the number you picked for the optimal tree with regard to 
 ##          the principle of variance-bias trade-off.
+best_size <- 3
 
 
 ##    3.d.  Prune the tree using the optinal size found in 3.b.
 pruned_tree <- prune.tree(tree_model, best = best_size)
+
+summary(pruned_tree)
 
 
 ##    3.e.  Plot the best tree model and give labels.
@@ -246,6 +255,8 @@ mse_test_tree
 set.seed(1)
 rf_model <- randomForest(charges ~ age + sex + bmi + children + smoker + region, 
                          data = train_data, importance = TRUE)
+
+summary(rf_model)
 
 
 ##    4.b.  Compute the test error using the test data set.
@@ -276,19 +287,23 @@ set.seed(1)
 svm_model <- svm(charges ~ age + sex + bmi + children + smoker + region, 
                  data = train_data, kernel = "radial", gamma = 5, cost = 50)
 
+summary(svm_model)
+
+
 ##    5.b.  Perform a grid search to find the best model with potential 
 ##          cost: 1, 10, 50, 100 and potential gamma: 1,3 and 5 and potential 
 ##          kernel: "linear","radial" and "sigmoid". And use the training set 
 ##          created in step 1.e.
+set.seed(1)
 svm_tune <- tune(svm, charges ~ ., data = train_data,
                  ranges = list(kernel = c("linear", "radial", "sigmoid"),
                                cost = c(1, 10, 50, 100),
                                gamma = c(1, 3, 5)))
 
-
-##    5.c.  Print out the model results. What are the best model parameters?
 summary(svm_tune)
 
+
+##    5.c.  Print out the model results. What are the best model parameters?
 best_svm <- svm_tune$best.model
 
 best_svm
@@ -297,6 +312,9 @@ best_svm
 ##    5.d.  Forecast charges using the test dataset and the best model 
 ##          found in c).
 pred_svm <- predict(best_svm, newdata = test_data)
+
+summary(pred_svm)
+
 
 ##    5.e.  Compute the MSE (Mean Squared Error) on the test data.
 mse_test_svm <- mean((test_data$charges - pred_svm)^2)
@@ -312,6 +330,8 @@ mse_test_svm
 ##          values.
 insurance_numeric <- insurance[, c("age", "bmi", "children", "charges")]
 
+head(insurance_numeric)
+
 
 ##    6.b.  Determine the optimal number of clusters. Justify your answer. 
 ##          It may take longer running time since it uses a large dataset.
@@ -323,9 +343,13 @@ fviz_nbclust(insurance_numeric, kmeans, method = "gap_stat") +
 ##    6.c.  Perform k-means clustering using the 3 clusters.
 kmeans_model <- kmeans(insurance_numeric, centers = 3, nstart = 25)
 
+summary(kmeans_model)
 
 ##    6.d.  Visualize the clusters in different colors.
-fviz_cluster(kmeans_model, data = insurance_numeric, geom = "point")
+fviz_cluster(kmeans_model, data = insurance_numeric, geom = "point",
+             ellipse.type = "norm", ggtheme = theme_test(),
+             main = "Cluster Visualization"
+             )
 
 
 
@@ -336,27 +360,41 @@ fviz_cluster(kmeans_model, data = insurance_numeric, geom = "point")
 ##          values.
 insurance_nn <- insurance[, c("age", "bmi", "children", "charges")]
 
+head(insurance_nn)
+
 
 ##    7.b.  Standardize the inputs using the scale() function.
 insurance_scaled <- scale(insurance_nn)
+
+head(insurance_scaled)
 
 
 ##    7.c.  Convert the standardized inputs to a data frame using the 
 ##          as.data.frame() function.
 insurance_scaled <- as.data.frame(insurance_scaled)
 
+class(insurance_scaled)
+
 
 ##    7.d.  Split the dataset into a training set containing 80% of the 
 ##          original data and the test set containing the remaining 20%.
 set.seed(1)
 index_nn <- sample(1:nrow(insurance_scaled), nrow(insurance_scaled)*0.8)
+
 train_nn <- insurance_scaled[index_nn, ]
+dim(train_nn)
+
 test_nn <- insurance_scaled[-index_nn, ]
+dim(test_nn)
+
 
 ##    7.e.  The response is charges and the predictors are age, bmi, 
 ##          and children. Please use 1 hidden layer with 1 neuron.
+set.seed(1)
 nn_model <- neuralnet(charges ~ age + bmi + children, 
                       data = train_nn, hidden = c(1))
+
+summary(nn_model)
 
 
 ##    7.f.  Plot the neural networks.
@@ -366,9 +404,13 @@ plot(nn_model)
 ##    7.g.  Forecast the charges in the test dataset.
 pred_nn <- predict(nn_model, newdata = test_nn)
 
+summary(pred_nn)
+
 
 ##    7.h.  Get the observed charges of the test dataset.
 obs_nn <- test_nn$charges
+
+summary(obs_nn)
 
 
 ##    7.i.  Compute test error (MSE).
@@ -434,6 +476,8 @@ print(paste("Recommended model is", best_model$Model.Type,
 ##          i.    Copy your pruned tree model to a new variable.
 tree_copy <- pruned_tree
 
+summary(tree_copy)
+
 
 ##          ii.   In your new variable, find the data.frame named "frame" and 
 ##                reverse the log transformation on the data.frame column 
@@ -442,6 +486,8 @@ tree_copy <- pruned_tree
 ##                data frame is accessed as copy_of_my_pruned_tree$frame, 
 ##                and it works just like a normal data frame.).
 tree_copy$frame$yval <- exp(tree_copy$frame$yval)
+
+summary(tree_copy$frame$yval)
 
 
 ##          iii.  After you reverse the log transform on the yval column, 
