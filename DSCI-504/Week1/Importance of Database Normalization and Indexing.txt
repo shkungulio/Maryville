@@ -1,0 +1,40 @@
+Importance of Database Normalization
+
+Database normalization is essential for organizing data efficiently by eliminating redundancy and ensuring data integrity. By dividing larger tables into smaller, related ones and enforcing relationships through keys, normalization helps maintain consistency and reduces the risk of anomalies during data operations (insertion, update, deletion).
+
+Example: In a healthcare database, storing patient address details separately from visit records avoids the need to repeat address data every time a patient visits, which not only saves space but also prevents update anomalies if the patient moves.
+
+Additional Benefits:
+
+Improved data integrity: Changes to a data item only need to occur in one place.
+Easier maintenance and updates: A normalized schema is easier to understand and less prone to errors during schema evolution.
+
+Limitations:
+
+Performance trade-offs: Highly normalized databases may require multiple joins for queries, which can lead to slower performance, especially for read-heavy workloads.
+Complex query structure: Retrieving data across many normalized tables can make SQL queries more complex.
+
+Importance of Indexing
+
+Indexing improves data retrieval speeds by allowing the database engine to locate records without scanning the entire table. It’s especially valuable in large datasets where query performance is a major concern.
+
+Example: In a patient records system, indexing the "Patient_ID" column allows for fast lookups of individual patient data, which is critical for real-time applications in clinical settings.
+
+Additional Benefits:
+
+Faster searches and filtering: Particularly useful for "WHERE", "ORDER BY", and "JOIN" operations.
+Efficient use of resources: Reduces CPU and I/O usage for queries.
+
+Limitations:
+
+Slower writes: Indexes need to be updated on "INSERT", "UPDATE", and "DELETE" operations, which can slow down write-heavy applications.
+Storage overhead: Indexes consume additional disk space, which may be a concern in systems with limited storage capacity.
+
+Conclusion
+
+Normalization and indexing work together to balance data integrity and performance. While normalization ensures data accuracy and consistency, indexing compensates for performance overhead by speeding up access to the data. Understanding their trade-offs allows database designers to make informed decisions tailored to application needs.
+
+References:
+
+Silberschatz, A., Korth, H. F., & Sudarshan, S. (2019). Database System Concepts (7th ed.). McGraw-Hill Education.
+Elmasri, R., & Navathe, S. B. (2016). Fundamentals of Database Systems (7th ed.). Pearson.
