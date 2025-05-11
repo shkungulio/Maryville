@@ -1,0 +1,97 @@
+The Excel file contains a single sheet (`Sheet1`) with various student, course, and faculty-related data. It is currently in a denormalized (0NF) format with repeating groups and mixed entity information. We'll break it down and normalize it through 1NF, 2NF, and 3NF.
+
+Here's how I will structure your PowerPoint presentation (7 slides total):
+
+---
+
+### **Slide 1: Title Slide**
+
+* Course: \[Your Course Number]
+* Course Name: \[Course Title]
+* University Name: Maryville University
+* Semester: Spring 2025
+* Instructor: \[Instructor Name]
+* Your Name: Seif Kungulio
+* Date: May 9, 2025
+
+---
+
+### **Slide 2: Assignment Overview**
+
+* **Goal**: Normalize a denormalized university data set through 3NF.
+* **Outcome**: Identify key entities, remove redundancies, enforce primary and foreign keys, and define relationships to optimize the database for integrity and performance.
+
+---
+
+### **Slide 3: Proposed Normalization**
+
+Major proposed tables (entities):
+
+* `Students`
+* `Courses`
+* `Student_Enrollments`
+* `Faculty`
+* `Faculty_Assignments`
+* `Terms`
+
+---
+
+### **Slide 4: 1NF**
+
+Applied rules:
+
+* Removed repeating groups (e.g., multiple classes, grades).
+* Split composite columns (e.g., `StudentClasses`, `TermClassGrade`) into separate rows.
+* Ensured each cell has atomic values.
+
+Tables:
+
+* `Students`: Basic student data (Name, Address, Gender, etc.)
+* `Courses`: Each course offered (Course ID, Name)
+* `Student_Enrollments`: One row per student-course-term combo
+* `Terms`: Separate term details
+
+---
+
+### **Slide 5: 2NF**
+
+Applied rules:
+
+* Each table has a single-column primary key.
+* Removed partial dependencies.
+
+Updated Tables:
+
+* `Students(StudentID)`
+* `Courses(CourseID)`
+* `Terms(TermID)`
+* `Student_Enrollments(EnrollmentID)` referencing StudentID, CourseID, TermID
+
+---
+
+### **Slide 6: 3NF**
+
+Applied rules:
+
+* Removed transitive dependencies.
+* Separated out non-key attributes that depend on other non-key attributes.
+
+New or refined tables:
+
+* `Faculty(FacultyID, Name, Status)`
+* `Faculty_Assignments(FacultyID, CourseID, TermID)`
+* `Ethnicity`, `Race`, and `Gender` could be reference tables if needed.
+
+---
+
+### **Slide 7: Relationships**
+
+Created an Affiliations/ERD table linking:
+
+* `Students → Student_Enrollments → Courses`
+* `Courses ← Faculty_Assignments → Faculty`
+* `Terms` is connected to both `Student_Enrollments` and `Faculty_Assignments`
+
+---
+
+Would you like me to generate the PowerPoint slides for you now?
