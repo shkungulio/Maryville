@@ -1,0 +1,272 @@
+comp_id,comp_name,comp_cost,sup_id,comp_cat
+1,Giant Contact SLR,143.0,1.0,handlebar
+2,Rida Alpha R27,136.0,2.0,handlebar
+3,Niner Flat Top,118.0,3.0,handlebar
+4,Enve M7 Carb,69.0,4.0,handlebar
+5,e13 base,91.0,5.0,handlebar
+6,RaceFace NextR Carbon,129.0,6.0,handlebar
+7,OC1,51.0,61.0,handlebar
+8,Kona XC,76.0,8.0,handlebar
+11,Newman Evo,143.0,11.0,handlebar
+12,OC3 Carbon,82.0,61.0,handlebar
+13,TranzX Burtted 6061,85.0,13.0,handlebar
+14,E13 TRS Base,85.0,5.0,handlebar
+15,Rocky Mountain AM,115.0,14.0,handlebar
+16,Evil Boomstick Carbon,117.0,15.0,handlebar
+17,ProTaper Carb,117.0,16.0,handlebar
+18,Cannondale 3 Riser,128.0,17.0,handlebar
+20,Nukeproof Neutron V2,133.0,18.0,handlebar
+21,Whyte 6061 Alloy,140.0,10.0,handlebar
+22,Deity Ridgeline,74.0,9.0,handlebar
+23,Tenet Bodam AL,147.0,19.0,handlebar
+24,NS Bar,69.0,71.0,handlebar
+25,Intense Recon Carb Elite,117.0,20.0,handlebar
+26,Phoenix Team LowRise,63.0,21.0,handlebar
+28,Intense Recon Alloy,82.0,20.0,handlebar
+30,Nukeproof Horizon V2,103.0,18.0,handlebar
+31,ProTaper AL,114.0,16.0,handlebar
+32,Ibis Carbon,133.0,22.0,handlebar
+33,OnOff Sulpher 1.0,72.0,23.0,handlebar
+34,NS License Carb,69.0,71.0,handlebar
+35,GT Alloy,70.0,25.0,handlebar
+36,Yeti Carbon,113.0,6.0,handlebar
+37,RaceFace Aeffect R,94.0,6.0,handlebar
+38,Specialized Trail 7050 Alloy,103.0,26.0,handlebar
+39,Giant Connect R,114.0,1.0,handlebar
+40,Ibis Aluminum,76.0,22.0,handlebar
+41,Evil Boomstick 7075 Alloy,121.0,15.0,handlebar
+42,Cannondale 2 Flat,50.0,17.0,handlebar
+44,RaceFace Turbine R,96.0,6.0,handlebar
+45,Burgtec Alloy,106.0,27.0,handlebar
+46,Shimano Deore M6100 2,114.99,44.0,brake
+47,Sram Guide RE,138.0,45.0,brake
+49,Magura MT7,299.99,56.0,brake
+50,TRP Gspec Trail S,259.99,57.0,brake
+51,Sram Code R,158.0,45.0,brake
+52,Shimano M6120,140.9,44.0,brake
+53,Tektro HDM 735,119.95,72.0,brake
+54,Shimano MT500,47.99,44.0,brake
+55,Sram G2 ULT,286.0,45.0,brake
+56,Sram Code RSC,200.0,45.0,brake
+57,Sram G2 RSC,160.0,45.0,brake
+58,Shimano Deore M6120 4,189.0,44.0,brake
+59,Shimano SLX M7100,187.0,44.0,brake
+60,Sram Code RS,172.0,45.0,brake
+61,Shimano XT M8100,169.99,44.0,brake
+62,Sram Guide T,129.0,45.0,brake
+64,Sram Level,66.0,45.0,brake
+65,Sram Guide R,120.0,45.0,brake
+66,Shimano XTR Trail,275.0,44.0,brake
+67,Shimano XT M8120,181.0,44.0,brake
+68,Sram G2 R,138.0,45.0,brake
+69,Shimnano Deore M6100 4,178.0,44.0,brake
+70,Whyte 30mm Carbon,240.0,10.0,wheel
+71,Stand NoTubes MK3,299.0,47.0,wheel
+73,Octane One Solar,280.99,49.0,wheel
+74,Giant TRX-2,550.0,1.0,wheel
+76,Stans Flow MK3,200.0,47.0,wheel
+77,DT Swiss M1700,502.0,48.0,wheel
+78,DT Swiss XR-1650,1007.0,48.0,wheel
+79,DT Swiss EX1900,380.0,48.0,wheel
+80,Crankbrothers Synth EN,599.98,50.0,wheel
+81,WTB ST i29,185.0,51.0,wheel
+82,E13 LG1 EN Race,390.0,5.0,wheel
+83,E13 XCX XC,250.0,5.0,wheel
+84,i9 Hydra Enduro S,995.0,52.0,wheel
+85,i9 Enduro 305,765.0,52.0,wheel
+86,Ibis S35 AL,529.0,22.0,wheel
+87,NS Enigma Roll,333.99,71.0,wheel
+88,DT Swixx Custom EX1700,390.0,48.0,wheel
+89,Stans Floiw S1,375.0,47.0,wheel
+90,DT Swiss XMC1200,1721.9,48.0,wheel
+91,DT Swiss Custom EX-1700,1450.0,48.0,wheel
+92,DT Swiss M-1900,265.9,48.0,wheel
+93,Roval Traverse Alloy,1350.0,53.0,wheel
+94,E13 LG1 DH Base,420.0,5.0,wheel
+95,Niner Alloy,180.0,3.0,wheel
+96,WTB ST Light i30,195.0,51.0,wheel
+97,E13 LG1,203.15,5.0,wheel
+98,WTB KOM Trail i30,269.0,51.0,wheel
+99,i9 RW30,2199.0,52.0,wheel
+100,WTB ST i30,210.0,51.0,wheel
+101,WTB KOM Light i30,227.0,51.0,wheel
+102,WTM KOM i27,235.0,51.0,wheel
+103,RaceFace AR Offset 30,275.0,6.0,wheel
+104,Stand Arch MK3,425.0,47.0,wheel
+105,Giant AM,175.0,1.0,wheel
+106,DT Swiss XT1501,605.0,48.0,wheel
+107,DT Swiss XR1700,564.9,48.0,wheel
+108,WTB ST i25,175.0,51.0,wheel
+109,Stans Crest S1,370.0,47.0,wheel
+110,DT Swiss EX-511,457.99,48.0,wheel
+111,MDK DP1,379.0,54.0,wheel
+112,Sun Ringle Duroc 35,179.99,55.0,wheel
+113,Fox 34 Rhythm 120,429.0,28.0,fork
+114,Fox 38 Factory Grip 2 180 Air,1249.0,28.0,fork
+115,DVO Onyx D1 160,785.0,29.0,fork
+116,Fox 36 Rhythm Fit 3 150,849.0,28.0,fork
+117,RockShox Recon RL 120,274.0,30.0,fork
+27,RaceFace Ride,99.0,6.0,handlebar
+48,Sram G2 RS,158.0,45.0,brake
+118,Fox 36 Float Perf 160 Air,849.0,28.0,fork
+119,Fox 38 Grip 2 170 Air,989.0,28.0,fork
+120,RockShox Lyric Ult RC2 160 Air,968.0,30.0,fork
+121,Ohlins RXF36 M.2 170 Air,1149.97,31.0,fork
+122,RockShox Lyric Ult RC2 160,968.0,30.0,fork
+123,Fox 38 Factory Grip2 170 Air,1249.0,28.0,fork
+124,Fox 36 Float Perf 140 Air,949.0,28.0,fork
+125,Fox 36 Perf 170 Air,798.0,28.0,fork
+126,Marzocchi Bomber Z2 130 Air,610.0,32.0,fork
+127,RockShox Recon RL 130,275.0,30.0,fork
+128,Fox 34 Float Perf 120,429.0,28.0,fork
+129,RockShox Recon RL 130 Air,270.0,30.0,fork
+130,RockShox Lyric Ult 150 Air,968.0,30.0,fork
+131,RockShox Pike Sel RC 140,713.0,30.0,fork
+132,Fox 38 Float Perf 170 Air,1020.0,28.0,fork
+133,RockShox Recon RL 120 Air,255.0,30.0,fork
+134,Fox 36 Factory 160 Air,1069.0,28.0,fork
+135,Fox 36 Factory 150 Air,1069.0,28.0,fork
+136,Fox 32 Factory 100,489.0,28.0,fork
+137,Lefty Ocho 100 Air,999.0,33.0,fork
+138,DVO Onyx D2 170 Air,790.0,29.0,fork
+139,RockShox 35 Gold RL 140 Air,458.0,30.0,fork
+140,Fox 34 Float Factory Grip 2 140 Air,1039.0,28.0,fork
+141,Fox 34 Perf 130,429.0,28.0,fork
+142,Fox 32 Float Perf 100 Air,510.0,28.0,fork
+143,Fox 36 Perf 160 Air,840.0,28.0,fork
+144,Fox 36 Float Perf 150,880.0,28.0,fork
+145,RockShox Pike Ult RC 130 Air,917.0,30.0,fork
+146,Fox 36 Perf Elite 150 Air,899.0,28.0,fork
+147,Fox 34 Perf 130 Air,429.0,28.0,fork
+148,Fox 36 Perf Elite 180 Air,1024.0,28.0,fork
+149,RockShox Lyric Ult RC2 170,975.0,30.0,fork
+150,Fox 34 Float Factory Grip 2 140,789.0,28.0,fork
+151,RockShox 35 Gold RL 150 Air,458.0,30.0,fork
+152,RockShox Pike Sel+ 140 Air,713.0,30.0,fork
+153,Fox 34 Float Perf 140,410.0,28.0,fork
+154,RockShox YarRC 180 Air,509.0,30.0,fork
+155,Fox 36 Float Factory 160 Air,605.0,28.0,fork
+156,RockShox ZEB Ult 170 Air,915.0,30.0,fork
+157,RockShox Pike Ult 150 Air,917.0,30.0,fork
+158,Fox 36 Perf 1650 Air,893.0,28.0,fork
+159,Marzocchi Bomber Z2 Rail 120 Air,519.0,32.0,fork
+160,Fox 36 Rhythm 160 Air,556.0,28.0,fork
+161,RockShox 35 Gold RL 160 Air,458.0,30.0,fork
+162,Fox 34 Float Perf 140 Air,429.0,28.0,fork
+163,Fox 36 Float Factory 170 Air,999.0,28.0,fork
+164,Fox 34 Float Factory Grip 2 120,969.0,28.0,fork
+165,Fox 36 Perf Elite 140 Air,789.0,28.0,fork
+166,Fox 36 Perf Elite 160 Air,789.0,28.0,fork
+167,RockShox Lyric Sel 150 Air,765.0,30.0,fork
+168,RockShox YariRC 160,509.0,30.0,fork
+169,Fox Float DPX2 Factory,503.1,28.0,shock
+170,Fox Float DPX2 Perf Elite,470.0,28.0,shock
+171,DVO Topaz T3 Air,500.0,29.0,shock
+172, ,,,shock
+173,Fox DPS Perf,329.0,28.0,shock
+174,Fox Perf DPS,305.99,28.0,shock
+175,Fox Facgtory DHX2 Coil,649.99,28.0,shock
+176,RockShox Deluxe Sel Air,350.0,30.0,shock
+177,Fox Float DPS Evol Air,580.0,28.0,shock
+178,RockShox Deluxe Ult Air,509.0,30.0,shock
+179,Fox Float DPX2 Perf,470.0,28.0,shock
+180,RockShox Super Deluxe RCT Coil,509.0,30.0,shock
+181,Fox Float Factory DPS,310.0,28.0,shock
+182,RockShox Super Deluxe Ult Coil,509.0,30.0,shock
+183,Fox Float X2 Air,599.0,28.0,shock
+184,Fox Factory X2,699.0,28.0,shock
+185,Fox Float X2 Evol Air,699.0,28.0,shock
+186,Fox Float DHX2 Factory Air,669.99,28.0,shock
+187,DVO Jade X Coil,399.0,29.0,shock
+188,Fox X2 Factory,569.0,28.0,shock
+189,Fox Perf DPX2,503.1,28.0,shock
+191,RockShox Super Deluxe Sel+,299.0,30.0,shock
+192,Fox Factory Float X2 Air,599.0,28.0,shock
+193,Fox Float Perf DPS,580.0,28.0,shock
+194,RockShox Deluxe Sel+ Air,299.0,30.0,shock
+198,RockShox Deluxe RL Air,380.0,30.0,shock
+199,Ohlins TTX 22M Coil,765.0,31.0,shock
+200,RockShox Monarch+ Air,295.95,30.0,shock
+202,Fox i-Line DPS,479.99,28.0,shock
+205,RockShox SuperDeluxe Sel,189.0,30.0,shock
+206,Shimano XT0M8100,59.99,44.0,shifter
+207,Sram SX,33.0,45.0,shifter
+208,Sram NX ,43.0,45.0,shifter
+209,Sram XO1,91.0,45.0,shifter
+210,Shimano XT,64.99,44.0,shifter
+211,Sram GX,46.99,45.0,shifter
+213,Shimano Deore M6100,32.0,44.0,shifter
+214,Shimano XTR,137.0,44.0,shifter
+215,Sram AXS,204.0,45.0,shifter
+216,Shimano SLX,30.0,44.0,shifter
+217,Sram XG1299,458.0,45.0,cassette
+218,Sram PG1230,102.0,45.0,cassette
+219,Shimano CS-M8100,190.0,44.0,cassette
+220,Sram XG1275,219.0,45.0,cassette
+221,SramPG1211,120.0,45.0,cassette
+222,Sram PG1210,120.0,45.0,cassette
+223,Sram XG1295,120.0,45.0,cassette
+224,Shimano SLX CS-M7100,99.6,44.0,cassette
+225,Shimano XTR M9100,389.99,44.0,cassette
+226,Shimano Deore M6100,56.99,44.0,derailleur
+227,Shimano SLX,78.99,44.0,derailleur
+228,Shimano XT,114.99,44.0,derailleur
+229,Shimano XTR M9100,180.0,44.0,derailleur
+230,Sram GX,68.0,45.0,derailleur
+231,Sram NX,39.0,45.0,derailleur
+232,Sram SX,85.0,45.0,derailleur
+233,Sram XO1,203.0,45.0,derailleur
+234,FusionX Manic,189.0,34.0,dropper
+235,Recon Dropper,113.0,35.0,dropper
+236,DropWH18,78.0,36.0,dropper
+237,Bike Yoke Revive,315.0,37.0,dropper
+238,Cannondale 2,89.0,17.0,dropper
+239,Ride Alpha,110.0,2.0,dropper
+240,RockShox Reverb Steakth,349.0,30.0,dropper
+241,KS Lev,123.0,38.0,dropper
+242,OnOff Pija,100.0,23.0,dropper
+243,Giant Contact Switch,189.0,1.0,dropper
+244,OC2,78.0,61.0,dropper
+245,Cannondale DownLow,89.0,17.0,dropper
+246,OC2 Carbon,199.0,61.0,dropper
+247,Fox Transfer,180.0,28.0,dropper
+248,KS Lev Integra,156.0,38.0,dropper
+249,Niner RDO,114.0,3.0,dropper
+250,KS Rage-i,135.0,38.0,dropper
+251,X-Fusion Manix,199.96,73.0,dropper
+252,Ibis,90.0,22.0,dropper
+253,OneUp V2,78.0,39.0,dropper
+254,GT Dropkick,74.0,24.0,dropper
+255,Recon Elite Dropper,113.0,35.0,dropper
+256,KS Lev SI,134.0,38.0,dropper
+257,SDG Tellis,250.0,40.0,dropper
+258,BrandX Ascend,125.0,42.0,dropper
+259,Fox Transfer Factory,329.0,28.0,dropper
+260,Bike Yoke Devine Stealth,168.0,37.0,dropper
+261,TransX,126.9,13.0,dropper
+262,Cube Dropper,129.0,43.0,dropper
+263,Hollow Gram,70.0,46.0,chain_ring
+264,RaceFace Next-SL,25.0,6.0,chain_ring
+265,Truvativ Stylo,35.0,58.0,chain_ring
+266,RaceFace Turbine Cinch,38.0,6.0,chain_ring
+267,Praxis Girder Carbon,69.0,59.0,chain_ring
+268,RaceFace Aeffect Cinch,56.0,6.0,chain_ring
+269,Sram Descendent,45.0,45.0,chain_ring
+270,Praxis Cadet boost,38.0,59.0,chain_ring
+271,RaceFace,44.0,6.0,chain_ring
+272,Shimano SLX,34.0,44.0,chain_ring
+273,Shimano XT,45.0,44.0,chain_ring
+274,Shimano XTR,78.0,44.0,chain_ring
+275,Shimano Deore M6100,39.0,44.0,chain_ring
+276,Sram NX ,37.0,45.0,chain_ring
+277,Sram SX,50.0,45.0,chain_ring
+278,Sram GX,62.0,45.0,chain_ring
+279,Sram XO1,75.0,45.0,chain_ring
+9,Deity Ridgeline,100.0,9.0,handlebar
+10,Whyte 6061 Alloy,101.0,10.0,handlebar
+19,e13 base,52.0,5.0,handlebar
+29,RaceFace Ride,115.0,6.0,handlebar
+43,Nukeproof Horizon V2,140.0,18.0,handlebar
+63,Shimano Deore M6100 2,172.5,44.0,brake
+72,DT Swiss XM1700,599.99,48.0,wheel
+280,No Sku,0.0,74.0,Missing Sku
