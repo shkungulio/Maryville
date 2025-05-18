@@ -1,0 +1,44 @@
+-- 1) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 2) Select top 10 records from dsci_504.customers table
+SELECT * FROM dsci_504.customers LIMIT 10;
+
+-- 3) Select top 10 records from dsci_504.components table
+SELECT * FROM dsci_504.components LIMIT 10;
+
+-- 4) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 5) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 6) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 7) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 8) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 9) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 10) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 11) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 12) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 13) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 14) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
+
+-- 15) Select top 10 records from dsci_504.states table
+SELECT * FROM dsci_504.states LIMIT 10;
