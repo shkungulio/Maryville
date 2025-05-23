@@ -1,0 +1,195 @@
+
+R + PostgreSQL Cheat Sheet for RStudio
+======================================
+Structured | Secure | Reusable Template
+
+Required Packages
+--------------------
+# Install if not already installed
+install.packages("DBI")
+install.packages("RPostgres")
+install.packages("dplyr")
+install.packages("readr")     # Optional: for reading/writing CSVs
+install.packages("dotenv")    # Optional: for loading .env variables
+
+Secure Environment Setup (Optional but Recommended)
+------------------------------------------------------
+Use a `.env` file to store sensitive credentials:
+
+.env file:
+----------
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=mydatabase
+DB_USER=myuser
+DB_PASS=mypassword
+
+Load environment variables in R:
+--------------------------------
+library(dotenv)
+dotenv::load_dotenv(".env")
+
+Connect to PostgreSQL Database
+---------------------------------
+library(DBI)
+library(RPostgres)
+
+# Securely load credentials (if using dotenv)
+host <- Sys.getenv("DB_HOST")
+port <- Sys.getenv("DB_PORT")
+dbname <- Sys.getenv("DB_NAME")
+user <- Sys.getenv("DB_USER")
+password <- Sys.getenv("DB_PASS")
+
+# Establish connection
+con <- dbConnect(
+  RPostgres::Postgres(),
+  host = host,
+  port = port,
+  dbname = dbname,
+  user = user,
+  password = password
+)
+
+Query Data
+-------------
+# Read entire table
+df <- dbReadTable(con, "schema.table_name")
+
+# Run custom SQL query
+query <- "SELECT * FROM schema.table_name WHERE column_name = 'value'"
+df <- dbGetQuery(con, query)
+
+# Parameterized query (safe from SQL injection)
+sql <- "SELECT * FROM schema.table_name WHERE column_name = $1"
+df <- dbGetQuery(con, sql, params = list("value"))
+
+✍️ Write Data to PostgreSQL
+---------------------------
+# Write DataFrame to a new table
+dbWriteTable(con, "schema.new_table", df, overwrite = TRUE, row.names = FALSE)
+
+# Append to existing table
+dbWriteTable(con, "schema.existing_table", df, append = TRUE, row.names = FALSE)
+
+List & Manage Tables
+-----------------------
+# List all tables in the database
+dbListTables(con)
+
+# List fields/columns in a table
+dbListFields(con, "schema.table_name")
+
+# Check if a table exists
+"schema.table_name" %in% dbListTables(con)
+
+# Remove a table
+dbRemoveTable(con, "schema.table_to_delete")
+
+Export Query Results
+-----------------------
+# Save to CSV
+readr::write_csv(df, "output_file.csv")
+
+Error Handling and Safe Disconnect
+-------------------------------------
+tryCatch({
+  # Run query or write operation
+  result <- dbGetQuery(con, "SELECT * FROM schema.table")
+}, error = function(e) {
+  message("Error: ", e$message)
+})
+
+# Always close the connection
+dbDisconnect(con)
+
+Best Practices
+-----------------
+- Use parameterized queries for dynamic filtering to avoid SQL injection.
+- Don’t hardcode credentials — use `.env` or a secure config file.
+- Disconnect after operations to free resources.
+- Validate data before writing to avoid constraint violations.
+- Use dplyr::tbl() and dbplyr for lazy querying if working with large datasets.
+
+Reusable Snippet Template
+----------------------------
+# Template Function to Connect and Query
+run_query <- function(sql, params = list()) {
+  con <- dbConnect(Postgres(), host=Sys.getenv("DB_HOST"), port=Sys.getenv("DB_PORT"),
+                   dbname=Sys.getenv("DB_NAME"), user=Sys.getenv("DB_USER"), 
+                   password=Sys.getenv("DB_PASS"))
+  on.exit(dbDisconnect(con), add = TRUE)
+
+  dbGetQuery(con, sql, params = params)
+}
+
+
+
+To create a **database or schema** using the **`RPostgres`** package in R, you first need to:
+
+1. Establish a connection to the PostgreSQL server (not a specific database if you're creating a database).
+2. Run SQL statements using `dbExecute()` to create the database or schema.
+
+---
+
+### ✅ **Step-by-Step: Create Database or Schema**
+
+#### 1. **Install and Load `RPostgres`**
+
+```r
+install.packages("RPostgres")
+library(DBI)
+library(RPostgres)
+```
+
+---
+
+### 🏗️ **Option A: Create a New Database**
+
+To create a **database**, you must connect to an existing database (like `postgres`) as PostgreSQL doesn't allow database-less connections.
+
+```r
+# Connect to default 'postgres' database
+con <- dbConnect(RPostgres::Postgres(),
+                 dbname = "postgres",
+                 host = "localhost",  # or your host
+                 port = 5432,
+                 user = "your_username",
+                 password = "your_password")
+
+# Create a new database
+dbExecute(con, "CREATE DATABASE my_new_database;")
+
+# Disconnect
+dbDisconnect(con)
+```
+
+---
+
+### 📁 **Option B: Create a Schema inside a Database**
+
+To create a **schema**, you must connect to the **target database** where the schema will reside.
+
+```r
+# Connect to a specific database
+con <- dbConnect(RPostgres::Postgres(),
+                 dbname = "my_new_database",
+                 host = "localhost",
+                 port = 5432,
+                 user = "your_username",
+                 password = "your_password")
+
+# Create schema
+dbExecute(con, "CREATE SCHEMA my_schema;")
+
+# Disconnect
+dbDisconnect(con)
+```
+
+---
+
+### 🔐 **Security Tip**
+
+Use an `.ini` file or environment variables to store your credentials securely instead of hardcoding them.
+
+Would you like an example of how to store and use `.ini` files with RPostgres for secure connections?
