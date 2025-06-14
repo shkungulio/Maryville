@@ -1,0 +1,27 @@
+-- Queries to check if new data already exist in the database
+
+SELECT *
+FROM dsci_504.return_items
+WHERE rac_id BETWEEN 1025 AND 6524;
+
+SELECT *
+FROM dsci_504.returns
+WHERE rac_id BETWEEN 1025 AND 6524;
+
+SELECT *
+FROM dsci_504.orders
+WHERE ord_id BETWEEN 7376987 AND 7386986;
+
+SELECT *
+FROM dsci_504.order_items
+WHERE ord_id BETWEEN 7376987 AND 7386986;
+
+SELECT *
+FROM dsci_504.components
+ORDER BY comp_id;
+
+SELECT MIN(comp_id), MAX(comp_id)
+FROM dsci_504.components;
+
+Opened 
+=IF($C2="", RANDBETWEEN(1, 280), $C2)
