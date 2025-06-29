@@ -1,0 +1,169 @@
+The visuals from your HTML file have been successfully extracted and saved. Below are the charts generated:
+
+1. 📊 [Table 1 Visualization](sandbox:/mnt/data/visual_table_1.png)
+2. 📊 [Table 2 Visualization](sandbox:/mnt/data/visual_table_2.png)
+3. 📊 [Table 3 Visualization](sandbox:/mnt/data/visual_table_3.png)
+
+---
+
+## 🎯 PowerPoint Structure and Script for Narration
+
+Here's a suggested slide-by-slide structure with accompanying script:
+
+---
+
+### 🎞️ **Slide 1: Title Slide**
+
+**Title**: OPC Corporate Back Brief
+**Subtitle**: Data-Driven Insights for Strategic Acquisition
+**Presented by**: Seif Kungulio | DSCI 504
+
+🗣️ *"Hello everyone, I'm Seif Kungulio, and today I’ll be walking you through a data-backed business case on whether OPC should acquire Ord Cycles. This analysis leverages PostgreSQL, structured queries, and visual analytics to support decision-making."*
+
+---
+
+### 🎞️ **Slide 2: Overview**
+
+**Content**:
+
+* OPC: Performance-driven outdoor cycling retailer
+* Ord Cycles: Niche mountain bike manufacturer
+* Objective: Support acquisition decision with data
+
+🗣️ *"Our goal is to determine if Ord Cycles' inclusion in OPC's portfolio would lead to sustainable growth, improved customer satisfaction, and operational efficiency."*
+
+---
+
+### 🎞️ **Slide 3: Introduction to PostgreSQL**
+
+**Content**:
+
+* Open-source, relational DBMS
+* Ideal for structured, transactional data
+* Supports analytical queries via SQL
+
+🗣️ *"PostgreSQL’s robust capabilities for handling complex queries, window functions, and transformations made it a solid choice for data analysis in this project."*
+
+---
+
+### 🎞️ **Slides 4–5: OPC Data Overview**
+
+**Content**:
+
+* Tables: Orders, Customers, Products, Returns, Warehouses
+* Data Period: 2001–2020
+* Tools: Azure Data Studio, PostgreSQL
+
+🗣️ *"The dataset includes detailed sales, customer behavior, and product configurations. This allowed us to conduct deep exploratory analysis across operational dimensions."*
+
+---
+
+### 🎞️ **Slides 6–8: Methodologies**
+
+**Content**:
+
+* CTEs, joins, filters, aggregates
+* Window functions: RANK(), SUM() OVER()
+* Example queries visualized
+
+🗣️ *"We implemented techniques like joins and window functions to understand order trends, customer segments, and warehouse activity."*
+
+---
+
+### 🎞️ **Slides 9–11: Key Findings – Sales Growth**
+
+**Content**:
+
+* Consistent increase in mountain bike sales
+* Top categories identified
+* (Insert Chart from `visual_table_1.png`)
+
+🗣️ *"Mountain bike sales have steadily grown, reinforcing the viability of expanding this product line through Ord Cycles."*
+
+---
+
+### 🎞️ **Slides 12–13: Key Findings – Fraud Risks**
+
+**Content**:
+
+* High return customers identified
+* Need for fraud detection system
+* (Insert Chart from `visual_table_2.png`)
+
+🗣️ *"We found repeat returners with large refund amounts. Implementing return policy audits can mitigate future losses."*
+
+---
+
+### 🎞️ **Slides 14–15: Warehouse Analysis**
+
+**Content**:
+
+* Overload risks for key warehouses
+* Monthly shipping volumes
+* (Insert Chart from `visual_table_3.png`)
+
+🗣️ *"Certain warehouses are near capacity, and any acquisition should include logistics planning to scale fulfillment."*
+
+---
+
+### 🎞️ **Slides 16–17: Configurations & Customer Demand**
+
+**Content**:
+
+* Top 5 mountain bike builds
+* Demand-focused manufacturing alignment
+
+🗣️ *"Historical sales data shows preferences for specific bike configurations. Ord Cycles should align production accordingly."*
+
+---
+
+### 🎞️ **Slide 18: Growth Projections**
+
+**Content**:
+
+* Quarterly forecast models
+* Positive sales trend continuation
+
+🗣️ *"Using quarterly data trends, we project continued revenue growth—validating this acquisition as a timely opportunity."*
+
+---
+
+### 🎞️ **Slide 19: Lessons Learned**
+
+**Content**:
+
+* SQL mastery: joins, transformations
+* PostgreSQL efficiency and constraints
+* Importance of clean data models
+
+🗣️ *"This project taught the importance of scalable SQL logic, data modeling, and how to derive insight under real-world conditions."*
+
+---
+
+### 🎞️ **Slide 20: Recommendations**
+
+**Content**:
+
+* Acquire Ord Cycles with conditions:
+
+  * Add warehousing capacity
+  * Monitor high-return customers
+  * Align manufacturing with demand
+
+🗣️ *"I recommend acquiring Ord Cycles with strategic considerations in place—this will amplify OPC’s competitive edge in the mountain biking sector."*
+
+---
+
+### 🎞️ **Slide 21: Sources**
+
+**Content**:
+
+* PostgreSQL database: `dsci_504`
+* Tools: Azure Data Studio, matplotlib
+* SQL output: Markdown file
+
+🗣️ *"All visualizations and queries were generated in PostgreSQL and Azure Data Studio and documented for auditability."*
+
+---
+
+Would you like the full PowerPoint deck with these slides generated next?
