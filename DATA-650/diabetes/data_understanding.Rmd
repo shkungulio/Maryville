@@ -4,33 +4,48 @@ subtitle: "Data Understanding"
 author: "Seif Kungulio"
 date: "07/11/2025"
 output: 
-  #pdf_document: default 
-  rmdformats::readthedown
+  pdf_document: default 
+  #rmdformats::readthedown
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## **Data Loading**
-Load the dataset and name it diabetes.df and examine its dimension and first few rows
 
-```{r}
-Diabetes.df <- read.csv("diabetes_health_indicators_BRFSS2015.csv", 
-                        header = TRUE)
-dim(Diabetes.df)
-head(Diabetes.df)
-```
+
 
 
 ## **Evaluating Dataset**
 
 
+
 ## **Data Dictionary**
 
 
-## **Exploratory Data Analysis**
 
+## **Exploratory Data Analysis**
+### **Data Loading**
+Load the dataset and name it Diabetes.df
+```{r}
+Diabetes.df <- read.csv("diabetes_health_indicators_BRFSS2015.csv", header = TRUE)
+```
+Examine the dimension of the data frame
+```{r}
+dim(Diabetes.df)
+```
+Display the first six rows of the data frame
+```{r}
+head(Diabetes.df)
+```
+Display the last six rows of the data frame
+```{r}
+tail(Diabetes.df)
+```
+Display the structure of the data frame
+```{r}
+str(Diabetes.df)
+```
 
 ## **Data Cleaning**
 

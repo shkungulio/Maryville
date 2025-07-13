@@ -1,0 +1,26 @@
+
+
+| **Field**              | **Description**                                            | **Possible Values / Constraints**                              |
+| ---------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
+| `Diabetes_binary`      | Indicates if the person has diabetes                       | 0 = No, 1 = Yes                                                |
+| `HighBP`               | History of high blood pressure                             | 0 = No, 1 = Yes                                                |
+| `HighChol`             | High cholesterol diagnosis                                 | 0 = No, 1 = Yes                                                |
+| `CholCheck`            | Cholesterol check in the past 5 years                      | 0 = No, 1 = Yes                                                |
+| `BMI`                  | Body Mass Index                                            | Continuous numeric, typically between 12–80                    |
+| `Smoker`               | Has smoked at least 100 cigarettes in lifetime             | 0 = No, 1 = Yes                                                |
+| `Stroke`               | History of stroke                                          | 0 = No, 1 = Yes                                                |
+| `HeartDiseaseorAttack` | History of coronary heart disease or myocardial infarction | 0 = No, 1 = Yes                                                |
+| `PhysActivity`         | Physical activity in the past 30 days                      | 0 = No, 1 = Yes                                                |
+| `Fruits`               | Consumes fruits at least once per day                      | 0 = No, 1 = Yes                                                |
+| `Veggies`              | Consumes vegetables at least once per day                  | 0 = No, 1 = Yes                                                |
+| `HvyAlcoholConsump`    | Heavy alcohol consumption (men >14 drinks/week; women >7)  | 0 = No, 1 = Yes                                                |
+| `AnyHealthcare`        | Has any kind of healthcare coverage                        | 0 = No, 1 = Yes                                                |
+| `NoDocbcCost`          | Unable to see doctor due to cost in past year              | 0 = No, 1 = Yes                                                |
+| `GenHlth`              | Self-assessed general health                               | Ordinal: 1 = Excellent to 5 = Poor                             |
+| `MentHlth`             | Number of mentally unhealthy days in past 30 days          | Integer \[0–30]                                                |
+| `PhysHlth`             | Number of physically unhealthy days in past 30 days        | Integer \[0–30]                                                |
+| `DiffWalk`             | Has serious difficulty walking or climbing stairs          | 0 = No, 1 = Yes                                                |
+| `Sex`                  | Biological sex                                             | 0 = Female, 1 = Male                                           |
+| `Age`                  | Age group                                                  | Ordinal values (e.g., 1 = 18–24, ..., 13 = 80+)                |
+| `Education`            | Highest level of education                                 | Ordinal (1 = Never attended school, ..., 6 = College graduate) |
+| `Income`               | Annual income category                                     | Ordinal (1 = < \$10K, ..., 8 = ≥ \$75K)                        |
