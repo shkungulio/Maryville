@@ -10,6 +10,15 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Install if needed
+#install.packages(c("tidyverse", "skimr", "DataExplorer", "GGally"))
+
+# Load libraries
+library(tidyverse)
+library(skimr)
+library(DataExplorer)
+library(GGally)
 ```
 
 
@@ -34,6 +43,10 @@ Examine the dimension of the data frame
 ```{r}
 dim(Diabetes.df)
 ```
+Preview the data frame
+```{r}
+glimpse(Diabetes.df)
+```
 Display the first six rows of the data frame
 ```{r}
 head(Diabetes.df)
@@ -47,10 +60,40 @@ Display the structure of the data frame
 str(Diabetes.df)
 ```
 
-## **Data Cleaning**
+### Basic Summary and Structure
+Summarize the dataset
+```{r}
+summary(Diabetes.df)
+```
+Skim for extended summary
+```{r}
+#skim(Diabetes.df)
+```
 
+## **Data Cleaning**
+### Check for Class Imbalance (target Variable)
+Distribution of diabetes classes
+```{r}
+Diabetes.df %>%
+  count(Diabetes_binary) %>%
+  mutate(Percent = round(n / sum(n) * 100, 2))
+```
+Plot the distribution
+```{r}
+ggplot(Diabetes.df,  aes(factor(Diabetes_binary))) +
+  geom_bar(fill = "salmon") +
+  labs()
+```
+
+### Check for Missing Values and Data Quality
+Check for missing values
+```{r}
+colSums(is.na(Diabetes.df))
+```
 
 ## **EDA: Visualizing Data**
+### Univariate Analysis (Numeric Variables)
+
 
 
 ## **EDA: Determining Relationship**
