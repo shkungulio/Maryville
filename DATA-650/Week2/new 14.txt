@@ -1,0 +1,24 @@
+| Feature Name           | Data Type | Description                                                          |
+| ---------------------- | --------- | -------------------------------------------------------------------- |
+| `Diabetes_012`         | Integer   | Target variable (0 = No Diabetes, 1 = Prediabetes, 2 = Diabetes)     |
+| `HighBP`               | Integer   | High blood pressure (0 = No, 1 = Yes)                                |
+| `HighChol`             | Integer   | High cholesterol (0 = No, 1 = Yes)                                   |
+| `CholCheck`            | Integer   | Cholesterol check in the past 5 years (1 = Yes, 0 = No)              |
+| `BMI`                  | Float     | Body Mass Index                                                      |
+| `Smoker`               | Integer   | Ever smoked at least 100 cigarettes (1 = Yes, 0 = No)                |
+| `Stroke`               | Integer   | Ever had a stroke (1 = Yes, 0 = No)                                  |
+| `HeartDiseaseorAttack` | Integer   | Ever had coronary heart disease or a myocardial infarction (1 = Yes) |
+| `PhysActivity`         | Integer   | Physical activity in past 30 days (1 = Yes, 0 = No)                  |
+| `Fruits`               | Integer   | Consumes fruits 1+ times per day (1 = Yes, 0 = No)                   |
+| `Veggies`              | Integer   | Consumes vegetables 1+ times per day (1 = Yes, 0 = No)               |
+| `HvyAlcoholConsump`    | Integer   | Heavy alcohol consumption (men >14 drinks/week, women >7)            |
+| `AnyHealthcare`        | Integer   | Has any kind of health care coverage (1 = Yes, 0 = No)               |
+| `NoDocbcCost`          | Integer   | Couldn’t see doctor due to cost (1 = Yes, 0 = No)                    |
+| `GenHlth`              | Integer   | General health rating (1 = Excellent to 5 = Poor)                    |
+| `MentHlth`             | Integer   | Number of days mental health not good (past 30 days)                 |
+| `PhysHlth`             | Integer   | Number of days physical health not good (past 30 days)               |
+| `DiffWalk`             | Integer   | Serious difficulty walking or climbing stairs (1 = Yes, 0 = No)      |
+| `Sex`                  | Integer   | Biological sex (0 = Female, 1 = Male)                                |
+| `Age`                  | Integer   | Age category (coded 1 to 13, increasing in 5-year brackets)          |
+| `Education`            | Integer   | Education level (1 = Never attended to 6 = College graduate)         |
+| `Income`               | Integer   | Income bracket (1 = < \$10k to 8 = ≥ \$75k)                          |
