@@ -1,0 +1,23 @@
+Attribute,Data Type,Description,Constraints / Rules
+Diabetes_binary,float64,"Binary indicator of diabetes status (0 = No, 1 = Yes)",Values: 0 or 1
+HighBP,float64,"High blood pressure status (0 = No, 1 = Yes)",Values: 0 or 1
+HighChol,float64,"High cholesterol status (0 = No, 1 = Yes)",Values: 0 or 1
+CholCheck,float64,"Cholesterol check in past 5 years (0 = No, 1 = Yes)",Values: 0 or 1
+BMI,float64,Body Mass Index (BMI) value,Numeric: typically 12–100
+Smoker,float64,"Smoking status (0 = No, 1 = Yes)",Values: 0 or 1
+Stroke,float64,"History of stroke (0 = No, 1 = Yes)",Values: 0 or 1
+HeartDiseaseorAttack,float64,"History of heart disease or heart attack (0 = No, 1 = Yes)",Values: 0 or 1
+PhysActivity,float64,"Physical activity in past 30 days (0 = No, 1 = Yes)",Values: 0 or 1
+Fruits,float64,"Consumes fruit 1 or more times per day (0 = No, 1 = Yes)",Values: 0 or 1
+Veggies,float64,"Consumes vegetables 1 or more times per day (0 = No, 1 = Yes)",Values: 0 or 1
+HvyAlcoholConsump,float64,"Heavy alcohol consumption (Men >14 drinks/week, Women >7 drinks/week) (0 = No, 1 = Yes)",Values: 0 or 1
+AnyHealthcare,float64,"Has any form of healthcare coverage (0 = No, 1 = Yes)",Values: 0 or 1
+NoDocbcCost,float64,"Could not see doctor due to cost in past year (0 = No, 1 = Yes)",Values: 0 or 1
+GenHlth,float64,Self-rated general health status (1 = Excellent to 5 = Poor),Values: 1 to 5
+MentHlth,float64,Number of days mental health not good in past 30 days (0–30),Values: 0 to 30
+PhysHlth,float64,Number of days physical health not good in past 30 days (0–30),Values: 0 to 30
+DiffWalk,float64,"Difficulty walking or climbing stairs (0 = No, 1 = Yes)",Values: 0 or 1
+Sex,float64,"Biological sex (0 = Female, 1 = Male)","Values: 0 (Female), 1 (Male)"
+Age,float64,Age category (coded from 1 = 18–24 to 13 = 80+),Values: 1 to 13
+Education,float64,Education level (1 = Never attended to 6 = College 4 years or more),Values: 1 to 6
+Income,float64,"Income level (1 = Less than $10,000 to 8 = $75,000+)",Values: 1 to 8
