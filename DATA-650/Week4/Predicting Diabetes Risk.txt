@@ -1,0 +1,57 @@
+## **Project Title**
+
+Predicting Diabetes Risk to Inform Preventive Strategies Across Texas
+
+---
+
+## **Business Overview**
+
+Diabetes poses a significant challenge to public health in Texas, affecting over 2.8 million diagnosed adults and costing the state more than \$25 billion annually. The rising burden of undiagnosed diabetes and prediabetes—particularly among underserved populations—calls for more proactive, data-driven interventions. This project uses predictive modeling to support early identification of high-risk individuals, helping state agencies like the Texas Department of State Health Services target their limited resources more effectively. By leveraging behavioral, demographic, and clinical data, the model empowers public health leaders to allocate screenings, design targeted outreach, and ultimately reduce the incidence of diabetes and its long-term complications.
+
+---
+
+## **Problem Statement**
+
+Texas public health agencies aim to identify adults at a 30% or higher risk of developing diabetes within five years, using self-reported health and behavioral data from the BRFSS dataset. The goal is to build a predictive model by 2026 that incorporates clinical markers like BMI (>30) and HbA1c (>5.7%) to proactively reach vulnerable populations. By doing so, public health leaders such as Dr. Angela Torres, Director of Chronic Disease Prevention, can coordinate more effective programs and close care gaps in rural and underserved communities—improving health equity while reducing preventable healthcare costs.
+
+---
+
+## **EDA and Key Trends**
+
+Exploratory analysis of over 250,000 records from the BRFSS dataset revealed key associations between diabetes status and several lifestyle and health indicators. Individuals with high BMI, low physical activity, poor self-rated general health, and cardiovascular comorbidities such as high blood pressure and cholesterol were significantly more likely to report a diabetes diagnosis. Age trends were also apparent—older age categories were strongly associated with higher diabetes risk. Visualizations such as boxplots and histograms highlighted skewed distributions in variables like BMI and mental health days, while a correlation heatmap confirmed weak-to-moderate relationships across most numeric features, suggesting potential value in interaction terms and engineered composites.
+
+---
+
+## **Model Explored and Results**
+
+A logistic regression model was selected as the baseline due to its transparency and alignment with the needs of public health stakeholders. The model was trained on an 80/20 train-test split, using both domain-informed features (e.g., BMI, smoking, physical activity) and engineered features like a “Chronic Risk Load” (capturing comorbidities) and a “Healthcare Barrier Index” (measuring access issues). Performance on the test set showed:
+
+* **Accuracy:** 0.82
+* **Precision:** 0.69
+* **Recall:** 0.56
+* **F1 Score:** 0.62
+* **ROC AUC:** 0.79
+
+While accuracy was strong, recall—crucial for identifying high-risk individuals—indicated room for improvement. AI feedback recommended exploring Random Forest and resampling strategies (e.g., SMOTE) in future iterations to boost sensitivity while preserving interpretability.
+
+---
+
+## **Dashboard Preview**
+
+A predictive dashboard was prototyped in Tableau and is under development to enhance stakeholder usability. The proposed dashboard includes:
+
+* **Risk Stratification View**: Categorizes individuals into low, medium, and high-risk tiers based on model output
+* **Feature Impact View**: Visualizes top predictors (e.g., BMI, general health) with tooltips explaining relevance
+* **Public Health Planning Panel**: Maps high-risk population density by region to support outreach planning
+
+Color-coded filters, drop-down selectors, and interactive tooltips are being integrated to enable non-technical users—such as program directors and policy makers—to navigate insights effortlessly and prioritize resources where they are needed most.
+
+---
+
+## **Reflection and Lessons Learned**
+
+This project taught me the importance of aligning technical work with real-world public health goals. Defining a clear, measurable business objective sharpened the model's purpose, while AI-guided reviews enhanced the quality of data cleaning, feature engineering, and model evaluation. I also learned that achieving technical performance is only part of the challenge—translating those results into clear, actionable insights for public health decision-makers requires careful attention to interpretability, accessibility, and communication. Moving forward, I plan to incorporate ensemble models to improve recall and refine the dashboard for real-time deployment in public health settings.
+
+---
+
+Let me know if you'd like visuals or mockups added for the dashboard section or help building out the portfolio page in HTML or Markdown.

@@ -4,8 +4,8 @@ subtitle: "Data Understanding"
 author: "Seif Kungulio"
 date: "07/11/2025"
 output: 
-  pdf_document: default 
-  #rmdformats::readthedown
+  #pdf_document: default 
+  rmdformats::readthedown
 ---
 
 ```{r setup, include=FALSE}
