@@ -1,9 +1,14 @@
 ---
-title: "Diabetes Risk Prediction"
+title: "Diabetes Risks Predictions"
 author: "Seif Kungulio"
-date: "07/24/2025"
-output: 
-  rmdformats::readthedown
+output:
+  html_document:
+    theme: readable
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
 ---
 
 ```{r setup, include=FALSE}
@@ -12,13 +17,18 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ## Business Understanding
+<hr>
 ### Objective
 Build a predictive model to identify individuals in Texas at 30%+ risk of 
 developing diabetes using self-reported health and demographic data to support 
 early intervention.
 
-
 ## Data Understanding
+<hr>
+
+
+## Data Preparation
+<hr>
 ### Load Libraries
 ```{r}
 library(tidyverse)
@@ -61,7 +71,7 @@ ggplot(data, aes(x = BMI)) +
 ```
 The histogram reveals the distribution of Body Mass Index (BMI) across the dataset. The shape of the distribution is noticeably right-skewed, with most values concentrated in the 25–30 range, which aligns with the clinical classification of being overweight. A substantial number of individuals fall between 20 and 40 BMI, while only a few cases extend beyond 60, which may represent extreme outliers or possible data entry anomalies. The steep peak and long tail suggest the need for data transformation, such as logarithmic or square root scaling, especially if the BMI variable is used in machine learning models sensitive to skewed distributions. In summary, the dataset reflects a population with a high incidence of overweight and obesity, a factor likely relevant to diabetes prediction.
 
-### Boxplot of Age (proxy)
+### Boxplot of Age
 
 ```{r}
 ggplot(data, aes(x = as.factor(Diabetes_binary), y = Age)) +
