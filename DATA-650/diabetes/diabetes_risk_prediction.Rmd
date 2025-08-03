@@ -40,6 +40,11 @@ The dataset contains 253,680 records and 22 variables related to health, lifesty
 
 Self-reported health metrics such as general health, mental health, and physical health reveal that although most people rate their health positively, some experience chronic issues—evident in skewed distributions and maximum values. Demographics show a largely middle-aged, moderately educated, and middle-income population. For modeling, transformations, encoding of ordinal variables, and handling of outliers and interactions will be essential to improve performance and interpretability.
 
+### Check for missing values
+```{r}
+sapply(data, function(x) sum(is.na(x)))
+```
+
 ### Check class balance
 ```{r}
 table(data$Diabetes_binary)
@@ -76,6 +81,21 @@ data <- data %>%
   ungroup()
 ```
 The code removes outliers from the `Age` variable using the IQR method, applied separately within each diabetes group (`Diabetes_binary`). This group-wise filtering ensures that extreme age values are excluded based on the distribution of each group, resulting in a cleaner dataset (`data`) for more accurate analysis, visualizations, and modeling.
+
+### Scatterplots
+Function to create Scatter plots
+```{r scatterfunction}
+DiabetesScatter <- function(point1, point2){
+  ggplot(data, aes(x = .data[[point1]],
+                       y = .data[[point2]],
+                       color = Diabetes_binary)) +
+    geom_point(size = 2) + theme_test() +
+    geom_smooth(method = "lm", se = FALSE, color = "blue", formula = y ~ x) +
+    labs(title = paste("Scatterplot of", point1, "by", point2),
+       x = point1, y = point2, color = "Heart Disease")
+}
+```
+
 
 ### Correlation among numeric variables
 ```{r}
@@ -191,7 +211,7 @@ Key metrics:
 * Accuracy
 * Sensitivity (Recall)
 * Specificity
-* AUC (already calculated above)
+* AUC 
 
 ### Variable importance
 ```{r}
