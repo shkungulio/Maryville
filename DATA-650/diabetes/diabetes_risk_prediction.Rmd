@@ -87,6 +87,14 @@ The correlation matrix provides insight into the linear relationships among four
 
 ## Data Preparation
 ### Handle duplicates
+Check for duplicates
+```{r}
+dupes <- data[duplicated(data) | duplicated(data, fromLast = TRUE), ]
+print(dupes)
+```
+The dataset contains 35,575 duplicate rows across 22 health-related variables, including indicators like diabetes, BMI, smoking, and cholesterol status. These duplicates can distort analysis and bias model results if not addressed. It is recommended to review and remove duplicates to ensure accurate and reliable insights.
+
+Remove duplicates
 ```{r}
 data <- distinct(data)
 dim(data)
@@ -146,6 +154,7 @@ data_prep <- data_prep %>%
 
 
 ## Modeling: Logistic Regression (Baseline)
+<hr>
 ### Split data
 ```{r}
 set.seed(123)
