@@ -1,0 +1,78 @@
+---
+title: "Diabetes Risks Predictions"
+author: "Seif Kungulio"
+output:
+  html_document:
+    theme: readable
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<hr>
+
+## Business Understanding
+<hr>
+Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
+### Problem Statement
+
+Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+## Data Understanding
+<hr>
+Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+
+### Data Dictionary
+Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
+Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+## Data Preparation
+<hr>
+Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
+Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+## Visualization
+<hr>
+Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. 
+
+### Boxplots
+Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. 
+
+### Scatterplots
+Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
+### Heatmaps
+Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. 
+
+### Barchat
+Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+## Modeling
+<hr>
+### Logistic Regression (Baseline Model)
+Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
+### Random Forest Model
+Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+## Evaluation
+<hr>
+### Logistic Regression Model Evaluation
+Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
+### Random Forest Model Evaluation
+Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+## Deployment
+<hr>
+
+## References
+<hr>
