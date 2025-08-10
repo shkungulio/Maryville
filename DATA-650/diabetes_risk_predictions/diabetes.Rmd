@@ -12,67 +12,335 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
-<hr>
+<hr style="height:5px; border:none; color:#FF0000; background-color:#FF0000;" />
 
 ## Business Understanding
-<hr>
-Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+### Business Objective
+The primary business objective of this project is to support the **Texas Department of State Health Services** in enhancing diabetes prevention efforts across the state. By leveraging self-reported health behavior and demographic data, the goal is to develop a predictive model by **2026** that identifies **Texas adults with a 30% or higher risk** of developing diabetes within the next five years. This model aims to facilitate **early detection**, reduce **long-term healthcare costs**, promote **health equity**, and **optimize resource allocation** in vulnerable communities.
 
 ### Problem Statement
+How can public health agencies in Texas use self-reported behavioral and demographic data to **identify adults at 30%+ risk of developing diabetes within 5 years**, using markers like **HbA1c (>5.7%)** and **BMI (>30)**, and implement targeted interventions by **2026**?.
 
-Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+### Business Success Criteria
+The project will be considered successful if it:
+
+- Produces a validated predictive model with practical thresholds for decision-making
+- Demonstrates improved identification of high-risk populations compared to current screening protocols
+- Supports targeted outreach that aligns with state health equity goals
+- Provides actionable insights for stakeholders through dashboards or visual summaries
+
+<br>
 
 ## Data Understanding
-<hr>
-Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+### Data Collection
+The primary dataset used is the **Diabetes Health Indicators Dataset** sourced from **Kaggle**, based on the **2015 Behavioral Risk Factor Surveillance System (BRFSS)**. This dataset includes over **253,000 observations** and **22 attributes**, offering a rich foundation for predictive modeling using demographic, behavioral, and clinical health indicators.
+
+### Data Description
+The dataset contains 253,680 records and 22 variables relevant to diabetes risk prediction. The target variable is binary (Diabetes_binary), while the predictors include behavioral, clinical, and demographic factors such as blood pressure, cholesterol, BMI, physical activity, general health, and income. Most variables (17) are binary categorical, with the remaining 5 being numeric or ordinal. This structure supports classification modeling and offers strong coverage of key health indicators needed to identify individuals at risk for diabetes.
+
+### Load the data
+```{r}
+diabetes.df <- read.csv("diabetes_health_indicators_BRFSS2015.csv")
+```
+### Check for dimension and structure
+```{r}
+dim(diabetes.df)
+str(diabetes.df)
+```
+### Check for statistical summary
+```{r}
+summary(diabetes.df)
+```
+The dataset contains 253,680 records and 22 variables related to health, lifestyle, and demographics, with the goal of predicting diabetes diagnosis. The target variable (`Diabetes_binary`) shows only 13.9% of individuals are diabetic, highlighting a class imbalance that must be addressed. Common health issues include high blood pressure (44.3%), high cholesterol (42.4%), and a high average BMI (33.2), indicating an overweight population. While most individuals report access to healthcare (94.2%) and healthy behaviors like physical activity and fruit/vegetable intake, nearly 20% cite cost as a barrier to care.
+
+Self-reported health metrics such as general health, mental health, and physical health reveal that although most people rate their health positively, some experience chronic issues—evident in skewed distributions and maximum values. Demographics show a largely middle-aged, moderately educated, and middle-income population. For modeling, transformations, encoding of ordinal variables, and handling of outliers and interactions will be essential to improve performance and interpretability.
 
 ### Data Dictionary
 Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
 
 Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
 
-## Data Preparation
-<hr>
-Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+### Data Quality Assessment
+- **Completeness**: No traditional missing values; however, several variables use domain-specific placeholders (e.g., `88`, `77`, `99`) that denote "None", "Don't know", or "Refused".
+- **Duplicates**: 24,206 duplicate rows were removed.
+- **Validity**: No string-based categorical variables; all attributes are encoded numerically.
+- **Outliers**: Variables such as `BMI` have values up to `98`, suggesting the need for outlier treatment or binning.
+- **Skewness**: Continuous variables like `BMI`, `MentHlth`, and `PhysHlth` are skewed, potentially impacting model performance.
 
-Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+<br>
+
+## Data Preparation
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+### Install Libraries
+Install the following libraries if required
+```{r}
+if(!requireNamespace("tidyverse", quietly = TRUE)){
+  # If not installed, then install it
+  install.packages("tidyverse")
+}
+if(!requireNamespace("caret", quietly = TRUE)){
+  # If not installed, then install it
+  install.packages("caret")
+}
+if(!requireNamespace("ggplot2", quietly = TRUE)){
+  # If not installed, then install it
+  install.packages("ggplot2")
+}
+if(!requireNamespace("corrplot", quietly = TRUE)){
+  # If not installed, then install it
+  install.packages("corrplot")
+}
+if(!requireNamespace("ROCR", quietly = TRUE)){
+  # If not installed, then install it
+  install.packages("ROCR")
+}
+if(!requireNamespace("randomForest", quietly = TRUE)){
+  # If not installed, then install it
+  install.packages("randomForest")
+}
+```
+
+### Load Libraries
+```{r}
+library(tidyverse)
+library(caret)
+library(ggplot2)
+library(corrplot)
+library(ROCR)
+library(randomForest)
+```
+
+### Check for missing values
+```{r}
+sapply(diabetes.df, function(x) sum(is.na(x)))
+```
+
+### Check class balance
+```{r}
+table(diabetes.df$Diabetes_binary)
+prop.table(table(diabetes.df$Diabetes_binary))
+```
+The class balance check for the `Diabetes_binary` variable reveals a significant imbalance: 86.1% of individuals are non-diabetic, while only 13.9% are diabetic. This disparity can bias predictive models toward the majority class, leading to poor detection of diabetic cases. To build an effective model, techniques like resampling or class weighting should be used, and evaluation metrics such as precision, recall, and AUC should be prioritized over accuracy to ensure balanced performance.
+
+### Histogram of BMI
+
+```{r}
+ggplot(diabetes.df, aes(x = BMI)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "black") +
+  theme_minimal() + labs(title = "Distribution of BMI")
+```
+
+The histogram reveals the distribution of Body Mass Index (BMI) across the dataset. The shape of the distribution is noticeably right-skewed, with most values concentrated in the 25–30 range, which aligns with the clinical classification of being overweight. A substantial number of individuals fall between 20 and 40 BMI, while only a few cases extend beyond 60, which may represent extreme outliers or possible data entry anomalies. The steep peak and long tail suggest the need for data transformation, such as logarithmic or square root scaling, especially if the BMI variable is used in machine learning models sensitive to skewed distributions. In summary, the dataset reflects a population with a high incidence of overweight and obesity, a factor likely relevant to diabetes prediction.
+
+<!-- ### Boxplot of BMI vs Diabetes_binary -->
+<!-- ```{r} -->
+<!-- ggplot(diabetes.df, aes(x = factor(Diabetes_binary), y = BMI)) + -->
+<!--   geom_boxplot(fill = "lightblue") + -->
+<!--   labs(x = "Diabetes Status", y = "BMI", title = "BMI Distribution by Diabetes Status") -->
+<!-- ``` -->
+
+<!-- ### Boxplot of PhysHlth -->
+<!-- ```{r} -->
+<!-- ggplot(diabetes.df, aes(x = factor(Diabetes_binary), y = PhysHlth)) + -->
+<!--   geom_boxplot(fill = "lightgreen") + -->
+<!--   labs(x = "Diabetes Status", y = "Physically Unhealthy Days", title = "Physical Health by Diabetes Status") -->
+<!-- ``` -->
+
+<!-- ### Boxplot of MentHlth -->
+<!-- ```{r} -->
+<!-- ggplot(diabetes.df, aes(x = factor(Diabetes_binary), y = MentHlth)) + -->
+<!--   geom_boxplot(fill = "lightcoral") + -->
+<!--   labs(x = "Diabetes Status", y = "Mentally Unhealthy Days", title = "Mental Health by Diabetes Status") -->
+<!-- ``` -->
+
+
+### Boxplot of Age
+
+```{r}
+ggplot(diabetes.df, aes(x = as.factor(Diabetes_binary), y = Age)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Age vs Diabetes Status", x = "Diabetes", y = "Age Group")
+```
+
+The boxplot compares the age distribution (represented as age groups) between individuals with and without diabetes. From the visualization, it's clear that those with diabetes tend to be older. The median age for non-diabetic individuals appears lower than for diabetic individuals, and the overall spread (interquartile range) is wider for the non-diabetic group. This suggests greater variability in the age of people without diabetes. Conversely, the diabetic group shows a more concentrated age range with a higher median, indicating that diabetes is more prevalent among older individuals. The presence of several lower-end outliers in the diabetic group also highlights that a small subset of younger individuals are affected. Overall, age appears to be a significant factor and potentially a strong predictor of diabetes in this dataset.
+
+Remove outliers from Age within each Diabetes group
+```{r}
+diabetes.df <- diabetes.df %>%
+  group_by(Diabetes_binary) %>%
+  filter(
+    Age > quantile(Age, 0.25) - 1.5 * IQR(Age) &
+    Age < quantile(Age, 0.75) + 1.5 * IQR(Age)
+  ) %>%
+  ungroup()
+```
+The code removes outliers from the `Age` variable using the IQR method, applied separately within each diabetes group (`Diabetes_binary`). This group-wise filtering ensures that extreme age values are excluded based on the distribution of each group, resulting in a cleaner dataset (`diabetes.df`) for more accurate analysis, visualizations, and modeling.
+
+
+
+
+
+
+
+### Correlation among numeric variables
+```{r}
+numeric_vars <- diabetes.df %>% select(BMI, MentHlth, PhysHlth, Age)
+corrplot(cor(numeric_vars), method = "color", type = "upper")
+```
+
+The correlation matrix provides insight into the linear relationships among four numeric variables: BMI, Mental Health (MentHlth), Physical Health (PhysHlth), and Age. The results show that there is minimal correlation between these variables. For instance, BMI shows very weak correlations with both mental and physical health days, and age exhibits only a modest positive correlation with physical health. This lack of strong multicollinearity suggests that these variables contribute independent information to the dataset and are not redundant. As such, each of them may be valuable in a predictive model for diabetes. However, the low pairwise correlations also indicate that any potential interactions or nonlinear effects should be explored through feature engineering or more complex modeling approaches.
+
+
+
+<br><br>
+
+### Handle duplicates
+```{r}
+diabetes.df <- distinct(diabetes.df)
+dim(diabetes.df)
+```
+The output shows that duplicate records were removed from the dataset using the distinct(data) function from the dplyr package in R. This function retains only unique rows by eliminating exact duplicates across all columns. Following this step, the dimensions of the dataset changed from 253,680 to 229,474 rows, indicating that 24,206 duplicate entries were found and removed.
+
+### Binning Mental and Physical Health
+```{r}
+diabetes.df$MentHlth_binned <- cut(diabetes.df$MentHlth,
+                                   breaks = c(-1, 0, 10, 20, 30),
+                                   labels = c("None", "Low", "Moderate", "High"))
+diabetes.df$PhysHlth_binned <- cut(diabetes.df$PhysHlth,
+                                   breaks = c(-1, 0, 10, 20, 30),
+                                   labels = c("None", "Low", "Moderate", "High"))
+```
+The code bins the `MentHlth` and `PhysHlth` variables—representing the number of unhealthy days—into four categorical levels: "None," "Low," "Moderate," and "High." This simplifies analysis, improves interpretability, and supports visualizations or modeling, especially for skewed data. The binning enhances clarity but should be evaluated to ensure meaningful thresholds and balanced group sizes.
+
+### Scale BMI
+```{r}
+diabetes.df$BMI_scaled <- scale(diabetes.df$BMI)
+```
+
+### Age Groups
+```{r}
+diabetes.df$Age_group <- cut(diabetes.df$Age,
+                             breaks = c(0, 4, 8, 13),
+                             labels = c("18–34", "35–54", "55+"))
+```
+
+### Feature Engineering:
+#### Chronic Risk Load
+```{r}
+diabetes.df$Chronic_Risk_Load <- with(diabetes.df, HighBP + HighChol + Stroke + HeartDiseaseorAttack)
+```
+The `Chronic_Risk_Load` variable is a newly engineered feature that sums four binary health indicators—high blood pressure, high cholesterol, stroke, and heart disease—to reflect an individual’s total chronic disease burden. Ranging from 0 to 4, it provides a simplified, interpretable measure of health risk that can enhance predictive modeling and population stratification. This feature helps capture the compounded effect of comorbidities and supports deeper analysis of how chronic conditions relate to diabetes and other health outcomes.
+
+#### Healthcare Barrier Index
+```{r}
+diabetes.df$Healthcare_Barrier_Index <- with(diabetes.df, NoDocbcCost + (1 - AnyHealthcare))
+```
+The `Healthcare_Barrier_Index` is a new feature that combines lack of insurance and inability to afford doctor visits into a single score ranging from 0 to 2. It captures the extent of healthcare access barriers, with higher values indicating greater difficulty in obtaining care. This index enhances analysis by incorporating structural health risk factors and can be used to examine how access issues relate to health outcomes like diabetes.
+
+### Drop or convert unused columns
+```{r}
+data_prep <- diabetes.df %>%
+  select(Diabetes_binary, BMI_scaled, MentHlth_binned, PhysHlth_binned, Age_group,
+         Chronic_Risk_Load, Healthcare_Barrier_Index, GenHlth, Education, Income,
+         Smoker, PhysActivity, DiffWalk, HvyAlcoholConsump, Sex)
+```
+
+### Convert other categorical to factor
+```{r}
+data_prep <- data_prep %>%
+  mutate(across(where(is.character), as.factor),
+         across(c(Diabetes_binary, GenHlth, Education, Income, Smoker, PhysActivity,
+                  DiffWalk, HvyAlcoholConsump, Sex, Age_group,
+                  MentHlth_binned, PhysHlth_binned), as.factor))
+```
+
+<br>
 
 ## Visualization
-<hr>
-Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. 
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
 
-### Boxplots
-Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. 
+### Histogram of BMI
 
-### Scatterplots
-Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
 
-### Heatmaps
-Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. 
+### Boxplot of Age
 
-### Barchat
-Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+### 
+ 
+
+
+
+<br>
 
 ## Modeling
-<hr>
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+### Split data
+```{r}
+set.seed(123)
+train_idx <- createDataPartition(data_prep$Diabetes_binary, p = 0.8, list = FALSE)
+train <- data_prep[train_idx, ]
+test <- data_prep[-train_idx, ]
+```
 ### Logistic Regression (Baseline Model)
-Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+```{r}
+model_logit <- glm(Diabetes_binary ~ ., data = train, family = binomial)
+```
+#### Model Summary
+```{r}
+summary(model_logit)
+```
+#### Predict probabilities and classes
+```{r}
+test_probs <- predict(model_logit, newdata = test, type = "response")
+test_pred <- ifelse(test_probs > 0.5, 1, 0)
+```
+#### Confusion Matrix
+```{r}
+confusionMatrix(as.factor(test_pred), test$Diabetes_binary, positive = "1")
+```
+#### ROC Curve
+```{r}
+library(pROC)
+roc_obj <- roc(test$Diabetes_binary, test_probs)
+plot(roc_obj, main = "ROC Curve - Logistic Regression")
+auc(roc_obj)
+```
+
+
 
 ### Random Forest Model
-Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+
+<br>
 
 ## Evaluation
-<hr>
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+
+
 ### Logistic Regression Model Evaluation
-Donec viverra leo sit amet sem egestas, vitae posuere risus rutrum. Suspendisse euismod diam a nulla aliquet lobortis. Sed maximus augue nunc, ac tempus magna dapibus sed. Cras lectus massa, maximus eget finibus eu, dapibus ac dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris varius ullamcorper ante at molestie. Vivamus convallis at magna eget posuere. Duis non felis tincidunt, tempus justo sed, pharetra ex. Vestibulum id luctus velit, vel luctus tortor. Praesent condimentum neque non pulvinar luctus. Donec pulvinar tempor ipsum, non luctus nibh tincidunt a. Proin dignissim tortor justo, sed porttitor est molestie ultricies. Fusce a ligula blandit, eleifend purus scelerisque, viverra erat. Nullam egestas tristique purus, vel accumsan leo. In quis interdum neque. Phasellus ut turpis id est feugiat lobortis.
+
 
 ### Random Forest Model Evaluation
-Proin volutpat justo lectus, non efficitur neque scelerisque vehicula. Mauris eros erat, sagittis ut lobortis efficitur, posuere nec nunc. Quisque non imperdiet quam. Ut aliquam lacus sit amet orci egestas consectetur. Morbi vitae rutrum nulla. Aliquam ut malesuada nisi, id blandit est. Sed consectetur suscipit aliquam. Donec pellentesque tempus eros vitae dictum. Curabitur nibh ante, mollis ut metus a, finibus hendrerit nunc. Phasellus rhoncus pulvinar luctus. Vivamus in risus nec augue euismod iaculis. Nulla nec arcu nec velit ultrices rhoncus.
+
+
+<br>
 
 ## Deployment
-<hr>
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+<br>
 
 ## References
-<hr>
+<hr style="height:2px; border:none; color:#006000; background-color:#006000;" />
+
+
+
