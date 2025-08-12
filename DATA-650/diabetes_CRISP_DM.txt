@@ -1,0 +1,344 @@
+# CRISP‑DM End‑to‑End R Script: Diabetes Risk Prediction (BRFSS 2015)
+# Author: Seif H. Kungulio  |  Date: Sys.Date()
+# Project goal: Identify Texas adults at high risk for diabetes using BRFSS-derived health indicators
+# Notes: This script follows CRISP‑DM phases end‑to‑end and is designed to be reproducible.
+# Data source (uploaded): /mnt/data/diabetes_health_indicators_BRFSS2015.csv
+
+# =============================
+# 0) SETUP & REPRODUCIBILITY
+# =============================
+
+# Install/load packages (install lines are commented; uncomment on first run)
+# install.packages(c("tidyverse","janitor","skimr","gt","ggplot2","GGally","vip",
+#                    "tidymodels","themis","rlang","fastshap","shapviz","pROC"))
+
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(gt)
+library(GGally)
+library(vip)
+library(tidymodels)
+library(themis)      # for SMOTE (optional)
+library(fastshap)    # SHAP for any model with predict function
+library(shapviz)     # SHAP visualizations (summary, beeswarm, force)
+library(pROC)
+
+set.seed(650) # Reproducibility for splits/tuning
+
+# Helper: pretty printing of key metrics
+metrics_table <- function(df_metrics, title = "Model Performance"){
+  df_metrics |> 
+    mutate(.metric = toupper(.metric)) |> 
+    select(Model, .metric, .estimate) |> 
+    pivot_wider(names_from = .metric, values_from = .estimate) |> 
+    gt() |> 
+    tab_header(title = title) |> 
+    fmt_number(columns = where(is.numeric), decimals = 3)
+}
+
+# ==================================================
+# 1) BUSINESS UNDERSTANDING (documented via comments)
+# ==================================================
+# Objective: Build a predictive model to flag adults with \u226530% 5‑year diabetes risk,
+# prioritizing RECALL (sensitivity) to minimize missed high‑risk individuals.
+# Primary stakeholder persona: Director of Chronic Disease Prevention (Texas DSHS).
+# Success criteria (technical):
+#   * Test Recall > 0.60 with acceptable AUC (>0.80) and stable CV variance.
+# Guardrails (responsible AI): subgroup audits by Age, Sex; document top drivers;
+# avoid over‑reliance on socioeconomic proxies.
+
+# =====================================
+# 2) DATA UNDERSTANDING
+# =====================================
+
+raw <- read_csv("/mnt/data/diabetes_health_indicators_BRFSS2015.csv", show_col_types = FALSE) |> 
+  clean_names()
+
+# Quick shape & preview
+nrow(raw); ncol(raw)
+glimpse(raw)
+
+# NOTE on BRFSS coding: Some surveys use special codes like 77/88/99. In this version of
+# the Kaggle dataset, conventional NAs are already handled, but we defensively map where relevant.
+
+# Check duplicates
+raw <- distinct(raw)
+
+# Basic summaries
+skim(raw)
+
+# Class balance of target
+raw %>% 
+  count(Diabetes_binary) %>% 
+  mutate(pct = n/sum(n))
+
+# =====================================
+# 3) DATA PREPARATION
+# =====================================
+
+# ---- 3.1 Defensive cleaning for MentHlth / PhysHlth special codes ----
+# In some BRFSS releases, 88 can mean 0 days. We convert 88 -> 0; 77/99 -> NA.
+# If these codes are not present, the mutate() calls are no‑ops.
+
+cleaned <- raw |> 
+  mutate(
+    MentHlth = case_when(MentHlth %in% c(88) ~ 0, MentHlth %in% c(77,99) ~ NA, TRUE ~ MentHlth),
+    PhysHlth = case_when(PhysHlth %in% c(88) ~ 0, PhysHlth %in% c(77,99) ~ NA, TRUE ~ PhysHlth)
+  )
+
+# ---- 3.2 Feature engineering (domain‑informed) ----
+# Chronic Risk Load: sum of cardio/metabolic conditions
+cleaned <- cleaned |> 
+  mutate(
+    chronic_risk_load = high_bp + high_chol + stroke + heart_diseaseor_attack,
+    # Healthcare Barrier Index: access barriers (0..2)
+    healthcare_barrier_index = (1 - AnyHealthcare) + NoDocbcCost
+  )
+
+# ---- 3.3 Binning & recoding ----
+# Age groups from BRFSS code (1..13)
+map_age <- c(
+  "1" = "18-24","2"="25-29","3"="30-34","4"="35-39","5"="40-44","6"="45-49",
+  "7" = "50-54","8"="55-59","9"="60-64","10"="65-69","11"="70-74","12"="75-79","13"="80+"
+)
+
+prepared <- cleaned |> 
+  mutate(
+    age_group = factor(map_age[as.character(age)],
+                       levels = c("18-24","25-29","30-34","35-39","40-44","45-49",
+                                  "50-54","55-59","60-64","65-69","70-74","75-79","80+")),
+    # Binning skewed days metrics for interpretability
+    MentHlth_bin = cut(MentHlth, breaks = c(-Inf,0,10,20,30), labels = c("0","1-10","11-20","21-30"), right = TRUE),
+    PhysHlth_bin = cut(PhysHlth, breaks = c(-Inf,0,10,20,30), labels = c("0","1-10","11-20","21-30"), right = TRUE),
+    Sex = factor(if_else(Sex == 1, "Male","Female")),
+    GenHlth = factor(GenHlth, levels = 1:5, labels = c("Excellent","Very good","Good","Fair","Poor")),
+    Education = factor(Education, levels = 1:6, labels = c("<HS","HS","Some college","College 1-3y","College 4y","Postgrad")),
+    Income = factor(Income, levels = 1:8, labels = c("<10k","10-15k","15-20k","20-25k","25-35k","35-50k","50-75k","75k+"))
+  )
+
+# Optional: drop near‑constant variables (e.g., chol_check is ~96% = 1). Keep for transparency; can remove after model compare.
+
+# ---- 3.4 Train/Test split (stratified) ----
+set.seed(650)
+split <- initial_split(prepared, prop = 0.8, strata = Diabetes_binary)
+train <- training(split)
+test  <- testing(split)
+
+# ---- 3.5 Recipe (scaling + dummy encoding + optional down/up‑sampling) ----
+
+base_recipe <- recipe(Diabetes_binary ~ BMI + GenHlth + DiffWalk + Smoker + PhysActivity + HvyAlcoholConsump +
+                        Sex + Age_group + Education + Income + chronic_risk_load + healthcare_barrier_index +
+                        MentHlth_bin + PhysHlth_bin,
+                      data = train) |> 
+  step_string2factor(all_nominal()) |> 
+  step_nzv(all_predictors()) |> 
+  step_dummy(all_nominal_predictors(), one_hot = TRUE) |> 
+  step_normalize(all_numeric_predictors())
+
+# Optional class imbalance handling (try variants):
+#   * step_smote(Diabetes_binary) from themis (works when outcome is factor)
+# For recall priority, we’ll also tune threshold after training.
+
+# Prepare outcome as factor for tidymodels classification
+train <- train |> mutate(Diabetes_binary = factor(Diabetes_binary, levels = c(0,1)))
+test  <- test  |> mutate(Diabetes_binary = factor(Diabetes_binary, levels = c(0,1)))
+
+# =====================================
+# 4) MODELING
+# =====================================
+
+# ---- 4.1 Baseline: Logistic Regression ----
+log_spec <- logistic_reg(mode = "classification") |> 
+  set_engine("glm")
+
+log_wf <- workflow() |> 
+  add_model(log_spec) |> 
+  add_recipe(base_recipe)
+
+set.seed(650)
+log_fit <- fit(log_wf, data = train)
+
+# Predict (default threshold 0.5)
+log_preds <- predict(log_fit, test, type = "prob") |> bind_cols(predict(log_fit, test), test |> select(Diabetes_binary))
+
+# Metrics (default threshold)
+log_metrics <- yardstick::metric_set(accuracy, precision, recall, f_meas, roc_auc)
+log_perf <- log_metrics(log_preds, truth = Diabetes_binary, estimate = .pred_class, .pred_1)
+log_perf <- mutate(log_perf, Model = "Logistic Regression")
+
+# ---- 4.2 Alternative: Random Forest (ranger) with tuning ----
+rf_spec <- rand_forest(
+  mtry = tune(),
+  trees = tune(),
+  min_n = tune()
+) |> 
+  set_mode("classification") |> 
+  set_engine("ranger", importance = "impurity", probability = TRUE)
+
+rf_wf <- workflow() |> add_model(rf_spec) |> add_recipe(base_recipe)
+
+set.seed(650)
+cv5 <- vfold_cv(train, v = 5, strata = Diabetes_binary)
+
+rf_grid <- grid_latin_hypercube(
+  mtry(range = c(3L, 20L)),
+  trees(range = c(300L, 1200L)),
+  min_n(range = c(2L, 20L)),
+  size = 20
+)
+
+rf_tuned <- tune_grid(
+  rf_wf, resamples = cv5, grid = rf_grid,
+  metrics = metric_set(roc_auc, accuracy, precision, recall, f_meas)
+)
+
+show_best(rf_tuned, metric = "recall")
+
+best_rf <- select_best(rf_tuned, metric = "roc_auc")
+rf_final_wf <- finalize_workflow(rf_wf, best_rf)
+
+rf_fit <- fit(rf_final_wf, data = train)
+
+rf_preds <- predict(rf_fit, test, type = "prob") |> bind_cols(predict(rf_fit, test), test |> select(Diabetes_binary))
+
+rf_perf <- log_metrics(rf_preds, truth = Diabetes_binary, estimate = .pred_class, .pred_1)
+rf_perf <- mutate(rf_perf, Model = "Random Forest (ranger)")
+
+# ---- 4.3 Threshold tuning (recall‑prioritized) ----
+# We’ll scan thresholds and choose the one that maximizes F1 with recall >= target (e.g., 0.60)
+
+scan_threshold <- function(probs, truth, target_recall = 0.60){
+  ths <- seq(0.1, 0.9, by = 0.01)
+  res <- map_dfr(ths, function(t){
+    est <- factor(if_else(probs >= t, 1, 0), levels = c(0,1))
+    tibble(
+      threshold = t,
+      recall = recall_vec(truth, est, event_level = "second"),
+      precision = precision_vec(truth, est, event_level = "second"),
+      f1 = f_meas_vec(truth, est, event_level = "second"),
+      accuracy = accuracy_vec(truth, est)
+    )
+  })
+  res |> filter(recall >= target_recall) |> arrange(desc(f1)) |> slice_head(n=1)
+}
+
+best_th_rf <- scan_threshold(rf_preds$.pred_1, rf_preds$Diabetes_binary, target_recall = 0.60)
+
+# Apply tuned threshold (fallback to 0.5 if none meets target)
+th_use <- if(nrow(best_th_rf)==0) 0.5 else best_th_rf$threshold[1]
+
+rf_preds_thr <- rf_preds |> 
+  mutate(.pred_class_thr = factor(if_else(.pred_1 >= th_use, 1, 0), levels = c(0,1)))
+
+rf_perf_thr <- metric_set(accuracy, precision, recall, f_meas)(rf_preds_thr, truth = Diabetes_binary, estimate = .pred_class_thr)
+rf_perf_thr <- bind_rows(rf_perf_thr, roc_auc(rf_preds_thr, truth = Diabetes_binary, .pred_1)) |> mutate(Model = paste0("RF (thr=", round(th_use,2), ")"))
+
+=============================================
+Simple Random Forest
+=============================================
+# Train Random Forest Model
+rf_model <- randomForest(Diabetes_binary ~ ., data = train, ntree = 600)
+
+# Make predictions on random forest model
+rf_preds <- predict(rf_model, newdata = test)
+
+# Evaluate random forest model
+confusionMatrix(rf_preds, test$Diabetes_binary)
+
+
+
+
+# =============================
+# 5) EVALUATION & REPORTING
+# =============================
+
+# Compare tables
+perf_tbl <- bind_rows(log_perf, rf_perf, rf_perf_thr) |> select(Model, .metric, .estimate)
+print(metrics_table(perf_tbl, title = "Test Metrics: Baseline vs Random Forest"))
+
+# Confusion matrix for RF at tuned threshold
+rf_cm <- rf_preds_thr |> conf_mat(truth = Diabetes_binary, estimate = .pred_class_thr)
+rf_cm
+
+# ROC curves (AUC)
+roc_obj <- roc(response = as.integer(test$Diabetes_binary)-1, predictor = rf_preds$.pred_1)
+auc(roc_obj)
+
+# Subgroup audit: Recall by Age Group
+subgroup_recall <- rf_preds_thr |> 
+  bind_cols(test |> select(age_group)) |> 
+  group_by(age_group) |> 
+  yardstick::recall(Diabetes_binary, .pred_class_thr)
+subgroup_recall
+
+# =============================
+# 6) INTERPRETATION (SHAP)
+# =============================
+# Compute fastSHAP using model’s predict_proba
+
+# Prepare objects for SHAP: Hold a fitted model and a predict function returning prob for class 1
+rf_fit_object <- extract_fit_parsnip(rf_fit)$fit
+
+# Matrix of predictors used by the model (after recipe). We’ll bake the recipe.
+rf_prep <- prep(base_recipe, training = train)
+X_train_baked <- bake(rf_prep, new_data = train) |> select(-Diabetes_binary)
+X_test_baked  <- bake(rf_prep, new_data = test)  |> select(-Diabetes_binary)
+
+pred_fun <- function(object, newdata){
+  # object: ranger model; newdata: baked predictors (data.frame)
+  as.numeric(predict(object, data = newdata, type = "response")$predictions[,"1"]) # probability of class 1
+}
+
+set.seed(650)
+sh_values <- fastshap::explain(
+  rf_fit_object,
+  X = as.data.frame(X_train_baked),
+  newdata = as.data.frame(X_test_baked),
+  pred_wrapper = pred_fun,
+  nsim = 50 # increase for more stable estimates
+)
+
+# SHAP visualization with shapviz
+sv <- shapviz(sh_values, X = as.data.frame(X_test_baked))
+
+# Global summary (beeswarm)
+# -> sv_plot(sv)           # uncomment to render in an interactive session
+# Feature importance bar
+# -> sv_importance(sv)
+
+# Pick one high‑risk case for a force plot
+idx_high <- which.max(rf_preds$.pred_1)
+sv1 <- shapviz(sh_values[idx_high, , drop = FALSE], X = as.data.frame(X_test_baked[idx_high, , drop = FALSE]))
+
+# -> sv_force(sv1)         # force plot for the single instance (interactive / html device)
+
+# =============================
+# 7) DEPLOYMENT ARTIFACTS
+# =============================
+
+# Save: final workflow, recipe, and threshold
+saveRDS(rf_fit, file = "rf_final_workflow.rds")
+saveRDS(rf_prep, file = "recipe_prepped.rds")
+write_lines(as.character(th_use), "rf_threshold.txt")
+
+# Inference helper
+predict_diabetes_risk <- function(new_df){
+  wf <- readRDS("rf_final_workflow.rds")
+  rec <- readRDS("recipe_prepped.rds")
+  thr <- as.numeric(readLines("rf_threshold.txt", n = 1))
+  baked <- bake(rec, new_data = new_df)
+  probs <- predict(wf, baked, type = "prob")[".pred_1"][[1]]
+  tibble(prob_diabetes = probs, high_risk_flag = probs >= thr)
+}
+
+# =============================
+# 8) OPTIONAL NEXT STEPS
+# =============================
+# * Try gradient boosting (xgboost, lightgbm via {bonsai}) and compare under same CV.
+# * Add cost‑sensitive evaluation (assign higher cost to FN) and optimize threshold accordingly.
+# * Expand subgroup audits (Sex, Education, Income) and monitor drift quarterly.
+# * Create a model card (gt table) summarizing purpose, data, metrics, limitations, ethics.
+
+# =============================
+# END OF SCRIPT
