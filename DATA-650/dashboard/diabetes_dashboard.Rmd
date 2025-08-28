@@ -1,0 +1,274 @@
+---
+title: "Diabetes Risks Prediction Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#131A22"
+      #bg: "#101010"
+      fg: "#FDF7F7" 
+      primary: "#ED79F9"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+
+```{r setup, include=FALSE}
+# ---- Packages ----
+suppressPackageStartupMessages({
+  library(flexdashboard)   # layout + valueBox
+  library(shiny)           # interactivity
+  library(tidyverse)       # dplyr, tidyr, ggplot2, readr
+  library(scales)          # percent labels
+  library(treemapify)      # treemap
+  library(plotly)          # hover tooltips for ggplot
+  library(knitr)           # kable
+  library(kableExtra)      # kable styling
+  library(DT)              # data table
+})
+
+options(scipen = 999)
+theme_set(theme_minimal(base_size = 13))
+
+# ---- Helper: read data ----
+# The app reads from a hard-coded path (no upload UI).
+default_path <- "diabetes_data.csv"   # <- replace with your local path if desired
+
+read_diabetes <- function(path) {
+  readr::read_csv(path, show_col_types = FALSE)
+}
+
+# ---- Reactive data source ----
+raw_data <- reactive({
+  req(file.exists(default_path))
+  read_diabetes(default_path)
+})
+
+# ---- Clean/select variables + derive fields ----
+base_df <- reactive({
+  df <- raw_data()
+  
+  # Ensure expected columns exist
+  expected <- c("Diabetes_binary","BMI","BMI_scaled","MentHlth_binned","PhysHlth_binned",
+                "Age_group","Chronic_Risk_Load","Healthcare_Barrier_Index","GenHlth",
+                "Education","Income","Smoker","PhysActivity","DiffWalk",
+                "HvyAlcoholConsump","Sex")
+  missing <- setdiff(expected, names(df))
+  validate(
+    need(length(missing) == 0, paste0("Missing columns: ", paste(missing, collapse = ", ")))
+  )
+
+  df <- df %>%
+    dplyr::select(dplyr::all_of(expected)) %>%
+    # make strings/factors consistent
+    mutate(
+      across(c(Age_group, GenHlth, Education, Income, Sex), as.factor),
+      across(c(Smoker, PhysActivity, DiffWalk, HvyAlcoholConsump, Diabetes_binary), ~as.integer(.x))
+    )
+  
+  # Recover approximate BMI from scaled BMI if present; else use BMI directly
+  if ("BMI_scaled" %in% names(df) && all(is.finite(df$BMI)) && sd(df$BMI, na.rm = TRUE) > 0) {
+    mean_bmi <- mean(df$BMI, na.rm = TRUE)
+    sd_bmi   <- sd(df$BMI, na.rm = TRUE)
+    df$approx_BMI <- (df$BMI_scaled * sd_bmi) + mean_bmi
+  } else {
+    df$approx_BMI <- df$BMI
+  }
+  
+  df
+})
+
+# ---- Filtered dataset according to inputs ----
+filtered_df <- reactive({
+  df <- base_df()
+  
+  # Apply sidebar filters (reduced set)
+  if (!is.null(input$age)) df <- df %>% filter(is.na(Age_group) | Age_group %in% input$age)
+  if (!is.null(input$sex)) df <- df %>% filter(is.na(Sex) | Sex %in% input$sex)
+  if (!is.null(input$edu)) df <- df %>% filter(is.na(Education) | Education %in% input$edu)
+  if (!is.null(input$inc)) df <- df %>% filter(is.na(Income) | Income %in% input$inc)
+  if (!is.null(input$gh))  df <- df %>% filter(is.na(GenHlth) | GenHlth %in% input$gh)
+  if (!is.null(input$smk)) df <- df %>% filter(is.na(Smoker) | Smoker %in% input$smk)
+  
+  # numeric/range filters
+  if (!is.null(input$crl))    df <- df %>% filter(is.na(Chronic_Risk_Load) | dplyr::between(Chronic_Risk_Load, input$crl[1], input$crl[2]))
+  if (!is.null(input$hbi))    df <- df %>% filter(is.na(Healthcare_Barrier_Index) | dplyr::between(Healthcare_Barrier_Index, input$hbi[1], input$hbi[2]))
+  if (!is.null(input$bmirng)) df <- df %>% filter(is.na(approx_BMI) | dplyr::between(approx_BMI, input$bmirng[1], input$bmirng[2]))
+  
+  # optional: exclude known diabetes cases from pool (so HighRisk compares among non-diabetics)
+  if (isTRUE(input$exclude_known)) {
+    df <- df %>% filter(Diabetes_binary == 0)
+  }
+  
+  # High-risk flag based on adjustable BMI cutoff
+  df <- df %>% mutate(HighRisk = if_else(approx_BMI > input$bmi_cutoff & Diabetes_binary == 0, 1L, 0L))
+  df
+})
+
+# ---- Initialize dynamic choices when data loads ----
+observeEvent(base_df(), {
+  df <- base_df()
+  updateSelectizeInput(inputId = "age", choices = sort(unique(na.omit(df$Age_group))), server = TRUE)
+  updateSelectizeInput(inputId = "sex", choices = sort(unique(na.omit(df$Sex))), server = TRUE)
+  updateSelectizeInput(inputId = "edu", choices = sort(unique(na.omit(df$Education))), server = TRUE)
+  updateSelectizeInput(inputId = "inc", choices = sort(unique(na.omit(df$Income))), server = TRUE)
+  updateSelectizeInput(inputId = "gh",  choices = sort(unique(na.omit(df$GenHlth))), server = TRUE)
+  updateSelectizeInput(inputId = "smk", choices = sort(unique(na.omit(df$Smoker))), server = TRUE)
+  
+  # sensible numeric ranges
+  updateSliderInput(inputId = "crl",
+                    min = floor(min(df$Chronic_Risk_Load, na.rm = TRUE)),
+                    max = ceiling(max(df$Chronic_Risk_Load, na.rm = TRUE)),
+                    value = c(floor(min(df$Chronic_Risk_Load, na.rm = TRUE)),
+                              ceiling(max(df$Chronic_Risk_Load, na.rm = TRUE))))
+  updateSliderInput(inputId = "hbi",
+                    min = floor(min(df$Healthcare_Barrier_Index, na.rm = TRUE)),
+                    max = ceiling(max(df$Healthcare_Barrier_Index, na.rm = TRUE)),
+                    value = c(floor(min(df$Healthcare_Barrier_Index, na.rm = TRUE)),
+                              ceiling(max(df$Healthcare_Barrier_Index, na.rm = TRUE))))
+  updateSliderInput(inputId = "bmirng",
+                    min = floor(min(df$approx_BMI, na.rm = TRUE)),
+                    max = ceiling(max(df$approx_BMI, na.rm = TRUE)),
+                    value = c(18, 45))
+})
+
+# KPI data
+kpi <- reactive({
+  df <- filtered_df()
+  tibble(
+    pct_high_risk     = mean(df$HighRisk == 1, na.rm = TRUE) * 100,
+    total_high_risk   = sum(df$HighRisk == 1, na.rm = TRUE),
+    avg_BMI_high_risk = mean(df$approx_BMI[df$HighRisk == 1], na.rm = TRUE),
+    avg_chronic_load  = mean(df$Chronic_Risk_Load[df$HighRisk == 1], na.rm = TRUE)
+  )
+})
+```
+
+Sidebar {.sidebar}
+--------------------------------------------------------------------------------
+
+#### Filters
+```{r}
+checkboxInput("exclude_known", "Exclude known diabetes cases", value = TRUE)
+numericInput("bmi_cutoff", "BMI threshold for High-Risk (>=):", value = 30, min = 18, max = 60, step = 0.5)
+
+selectizeInput("age", "Age group", choices = NULL, multiple = TRUE, options = list(placeholder = "All"))
+selectizeInput("sex", "Sex",       choices = NULL, multiple = TRUE, options = list(placeholder = "All"))
+selectizeInput("edu", "Education", choices = NULL, multiple = TRUE, options = list(placeholder = "All"))
+selectizeInput("inc", "Income",    choices = NULL, multiple = TRUE, options = list(placeholder = "All"))
+
+actionButton("reset", "Reset filters")
+
+observeEvent(input$reset, {
+  updateSelectizeInput(inputId = "age", selected = character(0))
+  updateSelectizeInput(inputId = "sex", selected = character(0))
+  updateSelectizeInput(inputId = "edu", selected = character(0))
+  updateSelectizeInput(inputId = "inc", selected = character(0))
+})
+```
+
+Column {data-height=130, .tabset}
+--------------------------------------------------------------------------------
+
+### KPI Overview
+
+```{r}
+
+uiOutput("kpi_table")
+
+# HTML table of KPIs
+output$kpi_table <- renderUI({
+  kb <- kpi()
+  tbl <- kb %>%
+    mutate(across(everything(), ~ifelse(is.finite(.), ., NA))) %>%
+    kable(format = "html", digits = 2, caption = "KPI Summary", align = "c") %>%
+    kable_styling(full_width = TRUE, 
+                  bootstrap_options = c("striped", "hover"),
+                  font_size = 20)
+  HTML(as.character(tbl))
+})
+```
+
+### Problem Statement
+
+Public health agencies in Texas need a fast way to spot adults **at or above 30%** risk of developing diabetes within 5 years, using an accessible proxy. This dashboard uses **BMI ≥ adjustable threshold (default 30)** among adults who **do not currently have diabetes** to flag **High-Risk** individuals, then lets you slice by **age, sex, and socio-economic indicators** to target **preventive outreach**.
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### % High Risk
+
+```{r}
+plotlyOutput("age_sex_plot")
+
+output$age_sex_plot <- renderPlotly({
+  df <- filtered_df(); req(nrow(df) > 0)
+  p1 <- ggplot(df, aes(x = Age_group, fill = Sex)) +
+    geom_bar(position = "fill", na.rm = TRUE) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(
+      title = "% Distribution by Age and Sex",
+      x = "Age Group", y = "Percentage within group", fill = "Sex"
+    ) +
+    theme_test(base_size = 13)
+  ggplotly(p1)
+})
+```
+
+### High-Risk Prevalence
+
+```{r}
+plotOutput("treemap_plot", height = "600px")
+
+output$treemap_plot <- renderPlot({
+  df <- filtered_df(); req(nrow(df) > 0)
+  df_treemap <- df %>%
+    group_by(Education, Income) %>%
+    summarise(
+      count = dplyr::n(),
+      pct_high_risk = mean(HighRisk == 1, na.rm = TRUE) * 100,
+      .groups = "drop"
+    )
+
+  ggplot(df_treemap, aes(area = count, fill = pct_high_risk,
+                         label = paste(Education, "\n", Income,
+                                       "\n", sprintf("%.1f%%",
+                                                     pct_high_risk)))) +
+    geom_treemap() +
+    geom_treemap_text(colour = "white", place = "centre", grow = TRUE, reflow = TRUE) +
+    scale_fill_gradient(low = "lightblue", high = "red") +
+    labs(title = "High-Risk % by Education & Income", fill = "% High Risk") +
+    theme_test(base_size = 13)
+})
+```
+
+### General Health Ratings
+
+```{r}
+plotlyOutput("genhlth_plot")
+
+output$genhlth_plot <- renderPlotly({
+  df <- filtered_df(); req(nrow(df) > 0)
+  df <- df %>%
+    mutate(GenHlth = factor(GenHlth,
+                            labels = c("Excellent", "Very Good", 
+                                       "Good", "Fair", "Poor")))
+  
+  p4 <- ggplot(df, aes(x = GenHlth, fill = factor(HighRisk,
+                                                  levels = c(0,1),
+                                                  labels = c("No", "Yes")))) +
+    geom_bar(position = "fill", na.rm = TRUE) +
+    scale_y_continuous(labels = scales::percent) +
+    labs(
+      title = "General Health Ratings vs Risk Status",
+      x = "General Health", y = "Percentage", fill = "High Risk"
+    ) +
+    theme_test(base_size = 13)
+  ggplotly(p4)
+})
+```

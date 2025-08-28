@@ -1,0 +1,767 @@
+---
+title: "Diabetes Risks Prediction"
+author: "Seif Kungulio"
+output:
+  html_document:
+    theme: readable
+    highlight: espresso
+    css: "styles.css"
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      fig.width = 10, fig.height = 6
+                      )
+
+#Install the following libraries if required
+req_pkgs <- c(
+  "tidyverse", "readr", "caret", "ranger", "corrplot", "pROC", "fastshap", 
+  "shapviz", "vip", "MLmetrics", "tidyr","kableExtra", "skimr","doParallel"
+)
+to_install <- req_pkgs[!req_pkgs %in% installed.packages()[, "Package"]]
+if (length(to_install)) install.packages(to_install, Ncpus = max(1, parallel::detectCores()-1))
+invisible(lapply(req_pkgs, library, character.only = TRUE))
+```
+
+<hr style="height:5px; border:none; color:#FF0000; background-color:#FF0000;" />
+
+<br>
+
+## **Business Understanding**
+<hr>
+
+### Business objective
+The primary business objective of this project is to support the Texas Department of State Health Services in enhancing diabetes prevention efforts across the state. By leveraging self-reported health behavior and demographic data, the goal is to develop a predictive model by 2026 that identifies Texas adults with a 30% or higher risk of developing diabetes within the next five years. This model aims to facilitate early detection, reduce long-term healthcare costs, promote health equity, and optimize resource allocation in vulnerable communities.
+
+### Problem statement
+How can public health agencies in Texas use self-reported behavioral and demographic data to identify adults at 30%+ risk of developing diabetes within 5 years, using BMI (>30) marker, and implement targeted interventions by 2026?.
+
+### Business success criteria
+The project will be considered successful if it:
+
+- Produces a validated predictive model with practical thresholds for decision-making
+- Demonstrates improved identification of high-risk populations compared to current screening protocols
+- Supports targeted outreach that aligns with state health equity goals
+- Provides actionable insights for stakeholders through dashboards or visual summaries
+
+<br>
+
+## **Data Understanding**
+<hr/>
+
+### Data collection
+The primary dataset used is the **Diabetes Health Indicators Dataset** sourced from **Kaggle**, based on the 2015 Behavioral Risk Factor Surveillance System (BRFSS). This dataset includes over **253,000 observations** and **22 attributes**, offering a rich foundation for predictive modeling using demographic, behavioral, and clinical health indicators.
+
+### Load the data
+```{r 1}
+diabetes <- read.csv("diabetes_health_indicators_BRFSS2015.csv")
+```
+
+### Sanity check
+Sanity check for expected columns
+```{r 2}
+stopifnot(all(c("Diabetes_binary","HighBP","HighChol","CholCheck","BMI",
+                "Smoker","Stroke","HeartDiseaseorAttack","PhysActivity",
+                "Fruits","Veggies","HvyAlcoholConsump","AnyHealthcare",
+                "NoDocbcCost","GenHlth","MentHlth","PhysHlth","DiffWalk",
+                "Sex","Age","Education","Income") %in% names(diabetes)))
+```
+
+### Check for dimension and structure
+Check for dimension and structure
+```{r 3}
+dim(diabetes)
+str(diabetes)
+```
+
+### Check summary
+#### Basic summary
+```{r 4}
+skim(diabetes)
+```
+The BRFSS diabetes dataset contains 253,680 rows and 22 columns, with all variables stored as numeric and no missing values. The target variable is imbalanced (Diabetes_binary mean = 0.14, ≈14% positive), suggesting that analyses should employ stratified cross-validation, report both ROC–AUC and PR–AUC, and consider threshold tuning or class-weighting/SMOTE. Prevalence estimates include HighBP 43%, HighChol 42%, CholCheck 96%, Smoker 44%, Stroke 4%, HeartDisease/Attack 9%, PhysActivity 76%, Fruits 63%, Veggies 81%, heavy alcohol consumption 6%, AnyHealthcare 95%, NoDocbcCost 8%, DiffWalk 17%, and Sex coded “1” at 44% (coding to be confirmed). Continuous variables are right-skewed: BMI averages 28.38 (IQR 24–31) with extreme values up to 98, while MentHlth and PhysHlth are zero-inflated (medians 0, upper quartiles ~2–3, maxima 30). Ordinal variables stored as numbers are best treated as ordered factors: GenHlth centers near “Good/Very good” (mean 2.51); Age (1–13) centers at 8 (skewing toward middle-to-older groups); Education (1–6) averages 5.05 (many with some college/college graduate); and Income (1–8) averages 6.05 (median 7, upper quartile 8), indicating comparatively higher income levels within the sample.
+
+#### Statistical summary
+```{r 5}
+summary(diabetes)
+```
+
+### Class balance of target
+```{r 6}
+diabetes %>% 
+  count(Diabetes_binary) %>% 
+  mutate(pct = n/sum(n)*100)
+```
+
+### Data description
+The dataset contains 253,680 records and 22 variables relevant to diabetes risk prediction. The target variable is binary (Diabetes_binary), while the predictors include behavioral, clinical, and demographic factors such as blood pressure, cholesterol, BMI, physical activity, general health, and income. Most variables (17) are binary categorical, with the remaining 5 being numeric or ordinal. This structure supports classification modeling and offers strong coverage of key health indicators needed to identify individuals at risk for diabetes.
+
+### Data dictionary
+
+| **Variable** | **Data Type** | **Descriptions**                  | **Constraints** |
+|:-------------|:--------------|:----------------------------------|:----------------|
+| Diabetes_binary | Number | Diabetes status includes prediabetes. | Values: 0 or 1 |
+| HighBP | Number | Ever told you have high blood pressure. | Values: 0 or 1 |
+| HighChol | Number | Ever told you have high cholesterol. | Values: 0 or 1 |
+| CholCheck | Number | Cholesterol checked within the past 5 years. | Values: 0 or 1 |
+| BMI | Number | Body Mass Index (kg/m^2), calculated from self-reported height & weight. | Ranges: ~ 12 to 100 |
+| Smoker | Number | Smoked at least 100 cigarettes in lifetime. | Values: 0 or 1 |
+| Stroke | Number | Ever told you had a stroke. | Values: 0 or 1 |
+| HeartDiseaseorAttack | Number | Ever told you had coronary heart disease (CHD) or myocardial infarction (MI). | Values: 0 or 1 |
+| PhysActivity | Number | Any physical activity or exercise in past 30 days, not including job. | Values: 0 or 1 |
+| Fruits | Number | Consume fruit 1 or more times per day. | Values: 0 or 1 |
+| Veggies | Number | Consume vegetables 1 or more times per day. | Values: 0 or 1 |
+| HvyAlcoholConsump | Number | Heavy alcohol consumption (men >14 drinks/week; women >7 drinks/week). | Values: 0 or 1 |
+| AnyHealthcare | Number | Have any kind of health care coverage. | Values: 0 or 1 |
+| NoDocbcCost | Number | Could not see a doctor in the past 12 months because of cost. | Values: 0 or 1 |
+| GenHlth | Number | Self-rated general health (1 = Excellent, 2 = Very good, 3 = Good, 4 = Fair, 5 = Poor). | Ranges: 1 to 5 |
+| MentHlth | Number | Number of days mental health not good in past 30 days. | Ranges: 0 to 30 |
+| PhysHlth | Number | Number of days physical health not good in past 30 days. | Ranges: 0 to 30 |
+| DiffWalk | Number | Serious difficulty walking or climbing stairs. | Values: 0 or 1 |
+| Sex | Number | Sex (0 = Female, 1 = Male). | Values: 0 or 1 |
+| Age | Number | Age category (1=18 to 24, 2=25 to 29, 3=30 to 34, 4=35 to 39, 5=40 to 44, 6=45 to 49, 7=50 to 54, 8=55 to 59, 9=60 to 64, 10=65 to 69, 11=70 to 74, 12=75 to 79, 13=80+). | Values: 0 or 1 |
+| Education | Number | Education level ranges  (1=Never attended/Kindergarten only, 2=Grades 1 to 8, 3=Grades 9 to 11, 4=Grade 12 or GED, 5=Some college or technical school, 6=College 4 years or more). | Ranges: 1 to 6 |
+| Income | Number | Household income ranges (1=<\$10,000, 2=\$10,000 to \$15,000, 3=\$15,000 to \$20,000, 4=\$20,000 to \$25,000, 5=\$25,000 to \$35,000, 6=\$35,000 to \$50,000, 7=\$50,000 to \$75,000, 8=\$75,000+).. | Ranges: 1 to 8 |
+| | | | |
+
+### Pre-analysis visualization
+#### BMI Histogram
+```{r 7}
+ggplot(diabetes, aes(x = BMI)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "black") +
+  theme_test() + labs(title = "Distribution of BMI")
+```
+The distribution is unimodal and strongly right-skewed. Most observations cluster in the mid-20s to low-30s, with a central mass near the overweight/obesity threshold (25–30) and very few values below ~18. A long, sparse tail stretches toward extremely high BMI values—up to ~100—consistent with earlier summary stats (mean ≈ 28.4, IQR ≈ 24–31, max ≈ 98). These far-right observations are rare but drive the skew.
+
+Practically, the heavy right tail inflates the mean, so median and IQR are better summary measures. Values above ~60–70 may be genuine but uncommon or potential entry errors; they should be inspected and, if needed, capped or winsorized before modeling. Given the skew, BMI’s relationship to diabetes is unlikely to be purely linear, so prefer nonlinear treatments (e.g., categories based on WHO cut points or spline terms) when building predictive models.
+
+#### Age Boxplots
+```{r 8}
+ggplot(diabetes, aes(x = as.factor(Diabetes_binary), y = Age)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Age vs Diabetes Status", x = "Diabetes", y = "Age Group") +
+  theme_test()
+```
+The diabetes group has a higher median age and an upper-shifted interquartile range compared with the non-diabetes group (roughly median ≈10 vs. ≈8). A few younger diabetics appear as low-age outliers, but overall the pattern is clear: older age groups are more common among diabetics, while younger age groups dominate among non-diabetics.
+
+#### Correlation among numeric variables
+```{r 9}
+numeric_vars <- diabetes %>% select(BMI, MentHlth, PhysHlth, Age)
+corrplot(cor(numeric_vars), method = "color", type = "upper")
+```
+The notable relationship is a moderate positive correlation between MentHlth and PhysHlth (≈ 0.3). In practice, people who report more days of poor physical health also tend to report more days of poor mental health. BMI has negligible linear associations with all three variables. Age shows only weak links—a slight increase with PhysHlth, a slight decrease with MentHlth, and essentially no association with BMI.
+
+For modeling, this pattern indicates low multicollinearity, so including all four predictors in a logistic regression is reasonable (a quick VIF check is still wise). Keep an eye on possible shared variance or interactions between MentHlth and PhysHlth, though their correlation isn’t high enough to be problematic. Note that Pearson correlations may understate relationships here because MentHlth and PhysHlth are zero-inflated, right-skewed counts and BRFSS Age is typically ordinal; consider treating Age as an ordered factor (or mapping to band midpoints) and using rank-based measures (e.g., Spearman) for a more faithful read.
+
+### Data quality assessment
+- **Completeness**: No traditional missing values; however, several variables use domain-specific placeholders (e.g., `88`, `77`, `99`) that denote `None`, `Don't know`, or `Refused`.
+- **Duplicates**: 24,206 duplicate rows were removed.
+- **Validity**: No string-based categorical variables; all attributes are encoded numerically.
+- **Outliers**: Variables such as `BMI` have values up to `98`, suggesting the need for outlier treatment or binning.
+- **Skewness**: Continuous variables like `BMI`, `MentHlth`, and `PhysHlth` are skewed, potentially impacting model performance.
+
+<br>
+
+## **Data Preparation**
+<hr/>
+
+### Remove duplicates
+Check and remove duplicates if exist
+```{r 10}
+diabetes <- distinct(diabetes)
+```
+
+### Handle BRFSS placeholders
+Handle BRFSS placeholders for MentHlth, PhysHlth, and GenHlth special codes/ placeholders.
+In some BRFSS releases, 88 can mean zero **0** days. Hence I will convert 77, 88, and 99 to NA.
+```{r 11}
+placeholder_vals <- c(77, 88, 99)
+diabetes <- diabetes %>% 
+  mutate(
+    MentHlth = ifelse(MentHlth %in% placeholder_vals, NA, MentHlth),
+    PhysHlth = ifelse(PhysHlth %in% placeholder_vals, NA, PhysHlth),
+    GenHlth  = ifelse(GenHlth  %in% placeholder_vals, NA, GenHlth)
+  )
+```
+
+### Remove outliers
+Remove outliers from BMI using IQR method
+```{r 12}
+# Calculate IQR bounds for BMI
+Q1 <- quantile(diabetes$BMI, 0.25, na.rm = TRUE)
+Q3 <- quantile(diabetes$BMI, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Remove rows with BMI outliers
+diabetes <- diabetes %>%
+  filter(BMI >= lower_bound & BMI <= upper_bound)
+```
+
+### Feature engineering
+```{r 13}
+diabetes <- diabetes %>%
+  mutate(
+    # Target as factor with positive class "Yes"
+    Diabetes_binary = factor(ifelse(Diabetes_binary == 1, "Yes", "No"),
+                             levels = c("Yes","No")),
+
+    # Engineered features
+    Chronic_Risk_Load = HighBP + HighChol + Stroke + HeartDiseaseorAttack,
+    # AnyHealthcare: 1=has coverage, 0=no coverage
+    Healthcare_Barrier_Index = (1 - AnyHealthcare) + NoDocbcCost,
+
+    # Binned mental & physical health (reduce skew)
+    MentHlth_bin = cut(MentHlth, breaks = c(-Inf, 0, 10, 20, 30),
+                       labels = c("None","Low","Moderate","High"), right = TRUE),
+    PhysHlth_bin = cut(PhysHlth, breaks = c(-Inf, 0, 10, 20, 30),
+                       labels = c("None","Low","Moderate","High"), right = TRUE),
+
+    # Age life-stage buckets from BRFSS age codes (1..13)
+    AgeGroup3 = dplyr::case_when(
+      Age %in% 1:4  ~ "18-34",
+      Age %in% 5:8  ~ "35-54",
+      Age %in% 9:13 ~ "55+",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  mutate(
+    across(c(Smoker, PhysActivity, Fruits, Veggies, HvyAlcoholConsump,
+             AnyHealthcare, NoDocbcCost, DiffWalk, Sex,
+             HighBP, HighChol, Stroke, HeartDiseaseorAttack), ~ factor(.x)),
+    GenHlth      = factor(GenHlth, levels = 1:5, 
+                          labels = c("Excellent","VeryGood","Good","Fair","Poor"), 
+                          ordered = TRUE),
+    Education    = factor(Education, levels = 1:6, ordered = TRUE),
+    Income       = factor(Income, levels = 1:8, ordered = TRUE),
+    Age          = factor(Age, levels = 1:13, ordered = TRUE),
+    AgeGroup3    = factor(AgeGroup3, levels = c("18-34","35-54","55+")),
+    MentHlth_bin = factor(MentHlth_bin),
+    PhysHlth_bin = factor(PhysHlth_bin)
+  )
+```
+The code prepares the dataset for reliable modeling and interpretation. It first standardizes the target by setting Diabetes_binary to a factor with "Yes" as the positive class, ensuring metrics and ROC/AUC treat “Yes” correctly. It then engineers two compact, interpretable indices: Chronic_Risk_Load (0–4) summing key comorbidities to approximate cardio-metabolic burden, and Healthcare_Barrier_Index (0–2) combining insurance and cost barriers to reflect access to care. To handle zero-inflated, right-skewed health-day counts, it bins MentHlth and PhysHlth into ordered categories (None/Low/Moderate/High). Age is simplified from 13 codes to three life-stage buckets (18–34, 35–54, 55+). Finally, it enforces correct data types by converting binaries to factors and setting ordinal variables (e.g., general health, education, income, age) as ordered factors, with the new binned features also cast appropriately.
+
+Together, these steps stabilize simpler models like GLMs, prevent metric/ROC direction errors, compress multi-signal information into interpretable features, and produce outputs that are easier to explain to stakeholders. The end result is a dataset that both models well and communicates well.
+
+### Train/Test split
+```{r 14}
+set.seed(123)
+train_idx <- caret::createDataPartition(diabetes$Diabetes_binary,
+                                        p = 0.8, list = FALSE)
+train <- diabetes[train_idx, ]
+test  <- diabetes[-train_idx, ]
+```
+
+### Near-zero variance prune
+```{r 15}
+predictor_candidates <- setdiff(names(train), "Diabetes_binary")
+nzv_info <- caret::nearZeroVar(train[, predictor_candidates], saveMetrics = TRUE)
+keep_cols <- rownames(nzv_info)[!nzv_info$nzv]
+train <- train[, c("Diabetes_binary", keep_cols)]
+test  <- test [, c("Diabetes_binary", keep_cols)]
+```
+
+### Scale numeric features
+```{r 16}
+num_cols <- names(train)[sapply(train, is.numeric)]
+if (length(num_cols)) {
+  pp <- caret::preProcess(train[, num_cols, drop = FALSE], 
+                          method = c("center", "scale"))
+  train[num_cols] <- predict(pp, train[num_cols, drop = FALSE])
+  test [num_cols] <- predict(pp, test [num_cols,  drop = FALSE])
+}
+```
+
+### Remove incomplete cases
+```{r 17}
+train <- tidyr::drop_na(train)
+test  <- tidyr::drop_na(test)
+```
+
+### Helper objects
+```{r 18}
+predictor_cols <- setdiff(names(train), "Diabetes_binary")
+pos_class <- "Yes"
+threshold <- 0.5
+```
+
+<br>
+
+## **Modeling**
+<hr/>
+
+### Logistic Regression
+This is initial baseline model.
+```{r 19}
+train_glm <- train
+train_glm$y <- ifelse(train_glm$Diabetes_binary == pos_class, 1, 0)
+
+glm_basic <- glm(y ~ ., 
+                 data = train_glm[, c("y", predictor_cols)], 
+                 family = binomial())
+
+glm_prob_basic <- predict(glm_basic, 
+                          newdata = test[, predictor_cols, drop = FALSE],
+                          type = "response")
+
+glm_pred_basic <- factor(ifelse(glm_prob_basic >= threshold, 
+                                pos_class, "No"), levels = c("Yes","No"))
+
+glm_cm_basic  <- caret::confusionMatrix(glm_pred_basic, 
+                                        test$Diabetes_binary, 
+                                        positive = pos_class)
+
+glm_auc_basic <- pROC::auc(pROC::roc(response = test$Diabetes_binary, 
+                                     predictor = glm_prob_basic, 
+                                     levels = c("No","Yes")))
+
+glm_f1_basic  <- MLmetrics::F1_Score(y_pred = glm_pred_basic, 
+                                     y_true = test$Diabetes_binary, 
+                                     positive = pos_class)
+
+# Print model results
+cat(sprintf("GLM  -> Acc: %.3f | F1: %.3f | AUC: %.3f | Sens: %.3f | Spec: %.3f\n",
+            glm_cm_basic$overall["Accuracy"], 
+            glm_f1_basic, as.numeric(glm_auc_basic),
+            glm_cm_basic$byClass["Sensitivity"], 
+            glm_cm_basic$byClass["Specificity"]))
+
+# Print ROC Curve
+roc_obj <- roc(response = test$Diabetes_binary, predictor = glm_prob_basic, quiet = TRUE)
+
+plot(roc_obj,
+     main = "ROC Curve - GLM (Logistic Regression)",
+     col = "blue",
+     lwd = 2,
+     print.auc = TRUE,
+     print.auc.pattern = "AUC = %.3f",
+     print.auc.cex = 1.1,
+     print.auc.x = 0.65, print.auc.y = 0.2)
+abline(a = 0, b = 1, lty = 2, col = "red")
+```
+
+Predicted probabilities on the test set were thresholded at 0.50 to assign class labels. The reported metrics are Accuracy = 0.856, F1 = 0.235, ROC–AUC = 0.808, Sensitivity (Recall) = 0.149, and Specificity = 0.979.
+
+These results show the model ranks cases reasonably well (AUC = 0.808), but the current cutoff causes it to miss most positives (Sensitivity = 0.149, F1 = 0.235). The very high Specificity (0.979) and seemingly strong Accuracy (0.856) indicate it predicts “No” most of the time and looks correct mainly because the dataset is imbalanced (~14% positives in BRFSS). In short, the model separates cases, but the threshold is too conservative for an imbalanced target, yielding weak recall and a low F1.
+
+This occurs because class imbalance, combined with a default 0.50 cutoff, biases predictions toward the majority class (“No”), inflating specificity and accuracy while suppressing recall. The baseline, unweighted GLM further optimizes overall error rather than minority-class performance, limiting its ability to detect positives.
+
+### Random Forest
+```{r 20}
+rf_basic <- ranger::ranger(Diabetes_binary ~ .,
+                           data = train,
+                           num.trees = 500,
+                           probability = TRUE,
+                           seed = 123
+                           )
+
+rf_prob_basic <- predict(rf_basic, 
+                         data = test)$predictions[, pos_class]
+
+rf_pred_basic <- factor(ifelse(rf_prob_basic >= threshold, 
+                               pos_class, "No"), levels = c("Yes","No"))
+
+rf_cm_basic  <- caret::confusionMatrix(rf_pred_basic, 
+                                       test$Diabetes_binary, 
+                                       positive = pos_class)
+
+rf_auc_basic <- pROC::auc(pROC::roc(response = test$Diabetes_binary, 
+                                    predictor = rf_prob_basic, 
+                                    levels = c("No","Yes")))
+
+rf_f1_basic  <- MLmetrics::F1_Score(y_pred = rf_pred_basic, 
+                                    y_true = test$Diabetes_binary, 
+                                    positive = pos_class)
+
+# Print model results
+cat(sprintf("RF   -> Acc: %.3f | F1: %.3f | AUC: %.3f | Sens: %.3f | Spec: %.3f\n",
+            rf_cm_basic$overall["Accuracy"], 
+            rf_f1_basic, as.numeric(rf_auc_basic),
+            rf_cm_basic$byClass["Sensitivity"], 
+            rf_cm_basic$byClass["Specificity"]))
+
+
+# ROC object + plot
+rf_roc_obj <- pROC::roc(response = test$Diabetes_binary,
+                        predictor = rf_prob_basic,
+                        levels = c("No","Yes"),
+                        direction = "<")
+plot(rf_roc_obj,
+     main = "ROC Curve - Random Forest",
+     col = "blue", lwd = 2,
+     print.auc = TRUE, 
+     print.auc.pattern = "AUC = %.3f",
+     print.auc.cex = 1.1, 
+     print.auc.x = 0.65, 
+     print.auc.y = 0.2)
+abline(a = 0, b = 1, lty = 2, col = "red")
+```
+
+The model’s test metrics are: accuracy 0.856, F1 0.204, AUC 0.801, sensitivity (recall) 0.125, and specificity 0.983. Together, these indicate decent probability ranking ability but poor positive-class capture at the chosen decision rule.
+
+Interpreting these numbers, the AUC near 0.80 shows the model can separate classes reasonably well. However, using the current cutoff (likely 0.50) it predicts most cases as “No,” yielding very high specificity—rarely flagging non-diabetics—but very low sensitivity, meaning it misses most true diabetics. Given the class imbalance in BRFSS (~14% “Yes”), accuracy appears inflated while F1 remains low, both consistent with an overly conservative threshold and unweighted training.
+
+This behavior arises mainly from two factors: the combination of class imbalance with a 0.5 threshold, which biases decisions toward the majority “No” class, and the absence of class weighting or re-sampling, which leads the forest to optimize overall error rather than recall for the minority class.
+
+### Models Tuning
+#### 5-fold cross validation models
+```{r 22}
+ctrl <- caret::trainControl(
+  method = "cv", number = 5,
+  classProbs = TRUE,
+  summaryFunction = caret::twoClassSummary,
+  savePredictions = "final",
+  verboseIter = FALSE
+)
+```
+
+#### Tuned Logistic Regression
+```{r 23}
+set.seed(123)
+
+glm_cv <- caret::train(
+  Diabetes_binary ~ .,
+  data = train,
+  method = "glm",
+  family = binomial(),
+  trControl = ctrl,
+  metric = "Sens"
+)
+
+glm_cv_prob <- predict(glm_cv, 
+                       newdata = test, 
+                       type = "prob")[, pos_class]
+
+glm_cv_pred <- factor(ifelse(glm_cv_prob >= threshold, pos_class, "No"), 
+                      levels = c("Yes","No"))
+
+glm_cv_cm   <- caret::confusionMatrix(glm_cv_pred, 
+                                      test$Diabetes_binary, 
+                                      positive = pos_class)
+
+glm_cv_auc  <- pROC::auc(pROC::roc(response = test$Diabetes_binary, 
+                                   predictor = glm_cv_prob, 
+                                   levels = c("No","Yes")))
+
+glm_cv_f1   <- MLmetrics::F1_Score(y_pred = glm_cv_pred, 
+                                   y_true = test$Diabetes_binary, 
+                                   positive = pos_class)
+
+# Print the models test results
+cat(sprintf("GLM-CV -> Acc: %.3f | F1: %.3f | AUC: %.3f | Sens: %.3f | Spec: %.3f\n",
+            glm_cv_cm$overall["Accuracy"], 
+            glm_cv_f1, as.numeric(glm_cv_auc),
+            glm_cv_cm$byClass["Sensitivity"], 
+            glm_cv_cm$byClass["Specificity"]))
+```
+The model discriminates reasonably well (ROC–AUC = 0.808), but at the current decision threshold it misses most positives (Sensitivity = 0.149; F1 = 0.235). The very high Specificity (0.979) and seemingly strong Accuracy (0.856) reflect that it predicts “No” most of the time—an artifact of the imbalanced outcome (~14% “Yes” in BRFSS). In short, separation is decent, but the threshold is too conservative, yielding poor recall of diabetics.
+
+This stems from pairing a default 0.50 cutoff with class imbalance, which biases predictions toward the majority class and inflates accuracy/specificity while suppressing recall and F1. Also, setting metric = "Sens" for a GLM in caret doesn’t tune anything—there are no hyperparameters—so the threshold choice ends up driving the confusion-matrix metrics.
+
+```{r include=FALSE}
+#knitr::knit_exit()
+```
+
+<!-- #### Tuned Random Forest -->
+<!-- ```{r 24} -->
+<!-- # Parallel backend -->
+<!-- n_cores <- max(1, parallel::detectCores() - 1) -->
+<!-- cl <- makePSOCKcluster(n_cores) -->
+<!-- registerDoParallel(cl) -->
+
+<!-- # Remove highly correlated numeric predictors (speeds things up) -->
+<!-- num_cols <- names(train)[sapply(train, is.numeric)] -->
+<!-- if (length(num_cols) > 1) { -->
+<!--   cm <- cor(train[, num_cols], use = "pairwise.complete.obs") -->
+<!--   hi <- caret::findCorrelation(cm, cutoff = 0.90) -->
+<!--   if (length(hi)) { -->
+<!--     drop_corr <- num_cols[hi] -->
+<!--     keep <- setdiff(names(train), drop_corr) -->
+<!--     train <- train[, keep] -->
+<!--     test  <- test [, keep] -->
+<!--   } -->
+<!-- } -->
+
+<!-- # Random search + parallel -->
+<!-- set.seed(123) -->
+<!-- ctrl_fast <- caret::trainControl( -->
+<!--   method = "repeatedcv", number = 5, repeats = 2, -->
+<!--   classProbs = TRUE, summaryFunction = caret::twoClassSummary, -->
+<!--   savePredictions = "final", -->
+<!--   allowParallel = TRUE, -->
+<!--   search = "random" -->
+<!--   # , sampling = "down"  # <- uncomment if you want downsampling for Sens -->
+<!-- ) -->
+
+<!-- rf_cv <- caret::train( -->
+<!--   Diabetes_binary ~ ., data = train, -->
+<!--   method = "ranger", -->
+<!--   trControl = ctrl_fast, -->
+<!--   tuneLength = 30,              # random combos ~30 is a good start -->
+<!--   metric = "Sens",              # or use "ROC" and tune threshold afterward -->
+<!--   importance = "none",          # off during tuning (speed) -->
+<!--   num.trees = 100,              # modest during tuning -->
+<!--   max.depth = 20,               # cap tree depth for speed -->
+<!--   sample.fraction = 0.632, replace = FALSE,  # subsample each tree -->
+<!--   respect.unordered.factors = "order", -->
+<!--   num.threads = n_cores -->
+<!-- ) -->
+
+<!-- cat("\n=== RF Best Tune (random search) ===\n"); print(rf_cv$bestTune) -->
+
+<!-- # Refit once with more trees + importance on the best hyperparams -->
+<!-- best <- rf_cv$bestTune -->
+<!-- rf_final <- ranger::ranger( -->
+<!--   Diabetes_binary ~ ., data = train, -->
+<!--   mtry = best$mtry, -->
+<!--   splitrule = as.character(best$splitrule), -->
+<!--   min.node.size = best$min.node.size, -->
+<!--   num.trees = 300, -->
+<!--   max.depth = 20, -->
+<!--   sample.fraction = 0.632, replace = FALSE, -->
+<!--   importance = "permutation", -->
+<!--   probability = TRUE, -->
+<!--   num.threads = n_cores, -->
+<!--   seed = 123 -->
+<!-- ) -->
+
+<!-- # Clean up parallel workers -->
+<!-- stopCluster(cl); registerDoSEQ() -->
+
+<!-- # Predict & evaluate (uses your existing pos_class/threshold) -->
+<!-- rf_cv_prob <- predict(rf_final, data = test)$predictions[, pos_class] -->
+<!-- rf_cv_pred <- factor(ifelse(rf_cv_prob >= threshold, pos_class, "No"), -->
+<!--                      levels = c("Yes","No")) -->
+
+<!-- rf_cv_cm  <- caret::confusionMatrix(rf_cv_pred, test$Diabetes_binary, positive = pos_class) -->
+<!-- rf_cv_auc <- pROC::auc(pROC::roc(response = test$Diabetes_binary, -->
+<!--                                  predictor = rf_cv_prob, levels = c("No","Yes"))) -->
+<!-- rf_cv_f1  <- MLmetrics::F1_Score(y_pred = rf_cv_pred, y_true = test$Diabetes_binary, -->
+<!--                                  positive = pos_class) -->
+
+<!-- # Print the model results -->
+<!-- cat(sprintf("RF-CV  -> Acc: %.3f | F1: %.3f | AUC: %.3f | Sens: %.3f | Spec: %.3f\n", -->
+<!--             rf_cv_cm$overall["Accuracy"], -->
+<!--             rf_cv_f1, as.numeric(rf_cv_auc), -->
+<!--             rf_cv_cm$byClass["Sensitivity"], -->
+<!--             rf_cv_cm$byClass["Specificity"])) -->
+
+<!-- ``` -->
+
+```{r include=FALSE}
+#knitr::knit_exit()
+```
+
+<br>
+
+## **Evaluation**
+<hr/>
+
+### Model comparison table
+
+```{r 25}
+model_comp_tbl <- tibble::tibble(
+  Metric = c("Accuracy", "F1", "AUC", "Sensitivity", "Specificity"),
+  GLM = c(
+    unname(glm_cm_basic$overall[["Accuracy"]]),
+    as.numeric(glm_f1_basic),
+    as.numeric(glm_auc_basic),
+    unname(glm_cm_basic$byClass[["Sensitivity"]]),
+    unname(glm_cm_basic$byClass[["Specificity"]])
+  ),
+  RF = c(
+    unname(rf_cm_basic$overall[["Accuracy"]]),
+    as.numeric(rf_f1_basic),
+    as.numeric(rf_auc_basic),
+    unname(rf_cm_basic$byClass[["Sensitivity"]]),
+    unname(rf_cm_basic$byClass[["Specificity"]])
+  ),
+  GLM_CV = c(
+    unname(glm_cv_cm$overall[["Accuracy"]]),
+    as.numeric(glm_cv_f1),
+    as.numeric(glm_cv_auc),
+    unname(glm_cv_cm$byClass[["Sensitivity"]]),
+    unname(glm_cv_cm$byClass[["Specificity"]])
+  )
+) %>%
+  mutate(across(-Metric, ~ round(., 3)))
+
+knitr::kable(
+  model_comp_tbl,
+  caption = "Model comparison: GLM vs. Random Forest vs. GLM_CV",
+  align = c("l", "c", "c")
+)
+```
+GLM and GLM_CV are effectively the same model. They yield identical metrics—Accuracy 0.856, AUC 0.808, Sensitivity 0.149, Specificity 0.979, and F1 0.235—because a binomial glm has no tunable hyperparameters, so cross-validation doesn’t change the fitted coefficients.
+
+The headline Accuracy (~0.856) is misleading. It’s inflated by very high Specificity (~0.98) and very low Sensitivity (~0.13–0.15) on an outcome with only ~14% positives. A more balanced summary is Balanced Accuracy: GLM ≈ 0.564 and RF ≈ 0.554, indicating performance only modestly better than chance once imbalance is considered.
+
+Both models discriminate similarly: AUC is ~0.80 for GLM (0.808) and RF (0.801), so neither clearly outperforms the other in ranking risk.
+
+The key issue is the decision threshold, not the algorithm. The default 0.50 cutoff is too conservative for an imbalanced target; lowering it should increase recall and F1. Practically, keep GLM for simplicity unless a tuned RF/XGBoost surpasses it, and prioritize threshold tuning and cost-sensitive or resampling strategies over switching algorithms.
+
+### Model selection justification
+GLM (logistic regression) is the recommended model for deployment with the following justifications:
+
+**Performance justification.** The GLM offers the best balance of classification performance for this imbalanced problem: it achieves the highest F1 (0.235) and AUC (0.808), with higher Sensitivity (0.149) than the Random Forest while maintaining high Specificity (~0.98). Because the outcome is imbalanced, F1 and AUC are more informative than raw Accuracy—which is essentially identical across models—and they indicate the GLM will identify more true positives without a disproportionate rise in false alarms.
+
+**Operational justification.** The GLM is simple, stable, and efficient to maintain. It requires no hyperparameter tuning, retrains quickly, and is less prone to overfitting than a small, untuned Random Forest. Its coefficients map directly to odds/risk, which improves interpretability for stakeholders and simplifies quality assurance, documentation, and ongoing monitoring.
+
+
+```{r include=FALSE}
+#knitr::knit_exit()
+```
+
+### SHAP for Logistic Regression
+```{r 27}
+# Set up background and explanation datasets
+# Use training features as background; explain a manageable sample from test
+bg_X <- train[, predictor_cols, drop = FALSE]
+X_explain_all <- test[, predictor_cols, drop = FALSE]
+
+set.seed(123)
+n_explain <- min(2000L, nrow(X_explain_all))  # adjust for speed/coverage
+X_explain <- X_explain_all[sample(seq_len(nrow(X_explain_all)), n_explain),
+                           , drop = FALSE]
+
+# Define prediction wrappers
+# For logistic regression, use the logit (link) scale for exact additivity
+pred_link <- function(model, newdata) {
+  predict(model, newdata = newdata, type = "link")
+}
+pred_prob <- function(model, newdata) {
+  predict(model, newdata = newdata, type = "response")
+}
+
+# Compute SHAP values on the logit scale
+set.seed(123)
+shap_logit <- fastshap::explain(
+  object       = glm_basic,
+  X            = bg_X,            # background ("training-like") features
+  newdata      = X_explain,       # rows to explain
+  pred_wrapper = pred_link,       # log-odds predictions
+  nsim         = 64,              # ↑ for more accuracy; ↓ for speed
+  adjust       = TRUE             # enforce local accuracy vs. baseline
+)
+
+# Build a shapviz object and global importance
+sv <- shapviz::shapviz(shap_logit, X = X_explain)  # baseline is carried over
+
+# Numeric vector of mean(|SHAP|) importances
+imp <- shapviz::sv_importance(sv, kind = "no")
+kable(data.frame(Feature = names(imp), MeanAbsSHAP_Logit = as.numeric(imp)),
+      digits = 3, align = "lr",
+      caption = "Global feature importance (mean |SHAP| on logit scale)")
+
+# Beeswarm + bar (ranked) summary
+print(shapviz::sv_importance(sv, kind = "both", alpha = 0.3, width = 0.25))
+
+# Dependence plots for top features
+top_feats <- names(imp)[1:min(4, length(imp))]
+for (v in top_feats) {
+  print(shapviz::sv_dependence(sv, v = v))  # colored by interacting feature
+}
+
+# Local (per-person) explanation: highest predicted risk in X_explain ---
+# Find the row in X_explain with the highest predicted probability
+pexp <- pred_prob(glm_basic, X_explain)
+i <- which.max(pexp)
+
+# Waterfall plot on the logit scale
+print(shapviz::sv_waterfall(sv, row = i, max_display = 12))
+
+# Sanity check: show baseline and predicted probabilities
+base_logit <- attr(shap_logit, "baseline")
+base_prob  <- plogis(base_logit)
+pred_i_logit <- as.numeric(pred_link(glm_basic, X_explain[i, , drop = FALSE]))
+pred_i_prob  <- plogis(pred_i_logit)
+
+cat(sprintf("\nBaseline (avg) prob: %.3f | Selected case prob: %.3f\n",
+            base_prob, pred_i_prob))
+
+# Verify additivity on the logit scale
+recon_logit <- base_logit + sum(shap_logit[i, ])
+cat(sprintf("Reconstructed prob from SHAP (should match): %.3f\n",
+            plogis(recon_logit)))
+
+```
+
+<br>
+
+## **Deployment**
+<hr/>
+
+```{r 28}
+# Choose which fitted model to export
+selected_model <- "GLM"   # options: "GLM", "RF", "GLM_CV"
+
+# Helper: map name -> model object
+get_model <- function(name){
+  switch(name,
+    "GLM"    = list(obj = glm_basic),
+    "RF"     = list(obj = rf_basic),
+    "GLM_CV" = list(obj = glm_cv),
+    stop(sprintf("Unknown selected_model: %s", name))
+  )
+}
+
+# Helper: consistent probability predictions
+predict_prob <- function(mdl, newdata, pos = "Yes"){
+  if (inherits(mdl, "train")) {
+    # caret model
+    pp <- predict(mdl, newdata = newdata, type = "prob")[, pos]
+  } else if (inherits(mdl, "glm")) {
+    # base glm (binomial)
+    pp <- predict(mdl, newdata = newdata, type = "response")
+  } else if (inherits(mdl, "ranger")) {
+    # ranger random forest
+    pp <- predict(mdl, data = newdata)$predictions[, pos]
+  } else {
+    stop("Unsupported model class for probability prediction.")
+  }
+  return(pp)
+}
+
+# Fetch model and score the TEST set
+m <- get_model(selected_model)
+
+X_test <- test[, predictor_cols, drop = FALSE]
+prob_yes <- predict_prob(m$obj, X_test, pos = pos_class)
+pred_lab <- factor(ifelse(prob_yes >= threshold, pos_class, "No"),
+                   levels = c("Yes","No"))
+
+# Keep a compact set of useful columns for dashboarding (auto-intersect)
+feature_keep <- intersect(
+  c("BMI","Age","GenHlth","Chronic_Risk_Load","Healthcare_Barrier_Index",
+    "MentHlth","PhysHlth","DiffWalk","Sex","Income","Education"),
+  names(test)
+)
+
+scored_test <- tibble::tibble(
+  row_id   = seq_len(nrow(test)),
+  truth    = test$Diabetes_binary,
+  prob_yes = prob_yes,
+  pred     = pred_lab
+) %>% dplyr::bind_cols(test[, feature_keep, drop = FALSE])
+
+# Write CSV + RDS
+csv_file <- sprintf("%s_scored_test.csv", tolower(selected_model))
+readr::write_csv(scored_test, csv_file)
+
+rds_file <- sprintf("%s_model.rds", tolower(selected_model))
+saveRDS(m$obj, rds_file)
+
+# Inline download links in the knitted HTML
+cat(sprintf("**Saved files**  \n- CSV: [%s](%s)  \n- RDS: [%s](%s)\n",
+            csv_file, csv_file, rds_file, rds_file))
+
+```
+
+--------------------------------------EOF---------------------------------------
